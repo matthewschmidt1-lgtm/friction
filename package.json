@@ -1,0 +1,12 @@
+{
+  "name": "friction",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Friction — find what's getting in the way. A guided diagnosis.",
+  "scripts": {
+    "start": "serve -s . -l $PORT"
+  },
+  "dependencies": {
+    "serve": "^14.2.1"
+  }
+}
