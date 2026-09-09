@@ -183,6 +183,8 @@ const SCREENS = {
     const goal = gi != null ? (goalQ.options[gi].other && state.other.goal ? state.other.goal : goalQ.options[gi].t) : null;
     const symptomQ = QUESTIONS[1]; const symptoms = (state.answers.symptoms || []).map(i => symptomQ.options[i].t);
     const book = (b, label = 'From the reading') => b ? `<div class="book"><span class="book-k">${label}</span><span class="book-t">${esc(b.title)}${b.author ? ` <span class="book-a">· ${esc(b.author)}</span>` : ''}</span><p>${esc(b.idea)}</p></div>` : '';
+    // every reading block on an item: legacy book/book2 plus the books array
+    const reading = (x) => [x.book, x.book2, ...(x.books || [])].filter(Boolean).map((b, i) => book(b, i ? 'And' : 'From the reading')).join('');
     const evidence = (key) => {
       const rows = r.evidence[key] || [];
       if (!rows.length) return '';
@@ -190,7 +192,7 @@ const SCREENS = {
     };
     const lensRead = (k) => {
       const L = LENS_DEPTH[k];
-      return `<details class="more lens-${k}"><summary><span class="lens-dot"></span><b>${names[k]}</b><span class="sum-line">${esc(LENSES[k].line)}</span><i class="caret"></i></summary><div class="more-body"><p>${esc(L.what)}</p><p><strong>When it's weak.</strong> ${esc(L.weak)}</p>${book(L.book)}${book(L.book2, 'And')}</div></details>`;
+      return `<details class="more lens-${k}"><summary><span class="lens-dot"></span><b>${names[k]}</b><span class="sum-line">${esc(LENSES[k].line)}</span><i class="caret"></i></summary><div class="more-body"><p>${esc(L.what)}</p><p><strong>When it's weak.</strong> ${esc(L.weak)}</p>${reading(L)}</div></details>`;
     };
     return `<section class="screen result">
       <div class="stagger">
@@ -218,7 +220,7 @@ const SCREENS = {
           ${evidence(r.primary)}
           <p><strong>What this usually looks like.</strong> ${esc(P.looksLike)}</p>
           <details class="more"><summary><b>Go deeper</b><span class="sum-line">The mechanism, and the reading behind it</span><i class="caret"></i></summary>
-            <div class="more-body"><p>${esc(P.mechanism)}</p>${book(P.book)}${book(P.book2, 'And')}</div>
+            <div class="more-body"><p>${esc(P.mechanism)}</p>${reading(P)}</div>
           </details>
         </div>
         <div class="friction-item">
@@ -226,7 +228,7 @@ const SCREENS = {
           <p class="lead">${esc(S.secondary)}</p>
           ${evidence(r.secondary)}
           <details class="more"><summary><b>Go deeper</b><span class="sum-line">What this usually looks like</span><i class="caret"></i></summary>
-            <div class="more-body"><p>${esc(S.looksLike)}</p><p>${esc(S.mechanism)}</p>${book(S.book)}</div>
+            <div class="more-body"><p>${esc(S.looksLike)}</p><p>${esc(S.mechanism)}</p>${reading(S)}</div>
           </details>
         </div>
         ${r.hypothesisNote ? `<div class="hyp ${r.hypothesisNote.kind}">${esc(r.hypothesisNote.t)}</div>` : ''}
@@ -238,7 +240,7 @@ const SCREENS = {
         <h2 class="display md">${esc(r.blind.t)}</h2>
         <p>${esc(r.blind.why)}</p>
         <details class="more on-dark"><summary><b>Go deeper</b><span class="sum-line">Why this is hard to see, and what to do about it</span><i class="caret"></i></summary>
-          <div class="more-body"><p>${esc(r.blind.deeper)}</p>${book(r.blind.book)}</div>
+          <div class="more-body"><p>${esc(r.blind.deeper)}</p>${reading(r.blind)}</div>
         </details>
       </div>
 
@@ -254,7 +256,7 @@ const SCREENS = {
         <div class="rule" style="margin:.4rem 0"></div>
         <div class="move"><p class="eyebrow">Your next move</p><p class="t">${esc(r.move.t)}</p><p class="d">${esc(r.move.d)}</p>
           <details class="more"><summary><b>How to do it</b><span class="sum-line">Three steps, and what to watch for</span><i class="caret"></i></summary>
-            <div class="more-body"><ol class="steps">${r.move.how.map(h => `<li>${esc(h)}</li>`).join('')}</ol><p class="watch"><strong>You'll know it worked when</strong> ${esc(r.move.watch)}</p>${book(r.move.book)}</div>
+            <div class="more-body"><ol class="steps">${r.move.how.map(h => `<li>${esc(h)}</li>`).join('')}</ol><p class="watch"><strong>You'll know it worked when</strong> ${esc(r.move.watch)}</p>${reading(r.move)}</div>
           </details>
         </div>
       </div>
