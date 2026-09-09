@@ -1,7 +1,7 @@
 /* Friction — Low Tide */
 :root{
   --foam:#F7F3EA; --foam-raised:#FFFDF8;
-  --sand:#E9DCC4; --sand-deep:#B8996A; --sand-line:rgba(120,92,50,.16);
+  --sand:#E9DCC4; --sand-deep:#8A6A38; --sand-mid:#B8996A; --sand-line:rgba(120,92,50,.16);
   --shallow:#BFE3E6; --tide:#2C8C9E; --tide-deep:#1E6E7E; --deep:#123F5A;
   --sun:#F08A3E; --sun-deep:#D8702A; --sun-soft:#FBE3D0;
   --kelp:#3E8A6A; --kelp-deep:#2F6E53; --kelp-soft:#D6E9DC;
@@ -118,7 +118,7 @@ button{font:inherit; color:inherit}
 .choice[aria-pressed="true"]::before{transform:scaleX(1)}
 .choice.lens-S[aria-pressed="true"]{border-color:var(--tide)}.choice.lens-P[aria-pressed="true"]{border-color:var(--kelp)}
 .choice>*{position:relative}
-.choice .ind{flex:none; width:20px; height:20px; margin-top:.2rem; border:1.5px solid var(--sand-deep); border-radius:50%; display:grid; place-items:center; transition:background .2s, border-color .2s}
+.choice .ind{flex:none; width:20px; height:20px; margin-top:.2rem; border:1.5px solid var(--sand-mid); border-radius:50%; display:grid; place-items:center; transition:background .2s, border-color .2s}
 .choice.multi .ind{border-radius:6px}
 .choice .ind::after{content:''; width:10px; height:10px; border-radius:50%; background:#fff; transform:scale(0); transition:transform .25s var(--ease-out)}
 .choice.multi .ind::after{border-radius:2px; width:8px; height:8px}
@@ -151,7 +151,7 @@ button{font:inherit; color:inherit}
 .card{background:var(--foam-raised); border:1px solid var(--sand-line); border-radius:22px; padding:clamp(1.2rem,4vw,1.8rem); box-shadow:var(--shadow)}
 .map-wrap{display:grid; gap:1.2rem}
 .map{width:100%; max-width:440px; margin:0 auto; display:block; overflow:visible}
-.map .edge{fill:none; stroke:var(--sand-deep); stroke-linecap:round; opacity:.5; stroke-dasharray:600; stroke-dashoffset:600; animation:draw 1.3s var(--ease-out) forwards}
+.map .edge{fill:none; stroke:var(--sand-mid); stroke-linecap:round; opacity:.5; stroke-dasharray:600; stroke-dashoffset:600; animation:draw 1.3s var(--ease-out) forwards}
 .map .edge.primary{stroke:var(--sun); opacity:1; animation-delay:.25s}
 .map .edge.secondary{opacity:.75; animation-delay:.15s}
 @keyframes draw{to{stroke-dashoffset:0}}
@@ -184,9 +184,9 @@ button{font:inherit; color:inherit}
 
 .blind{background:var(--deep); color:#fff; border-radius:22px; padding:clamp(1.4rem,4.5vw,2rem); position:relative; overflow:hidden}
 .blind::after{content:''; position:absolute; width:260px; height:260px; right:-90px; bottom:-140px; border-radius:50%; background:radial-gradient(circle, rgba(240,138,62,.55), transparent 65%); filter:blur(10px)}
-.blind .eyebrow{color:rgba(255,255,255,.55)}
+.blind .eyebrow{color:rgba(255,255,255,.72)}
 .blind .display{color:#fff; font-style:italic; font-weight:300}
-.blind p{position:relative; margin-top:1rem; color:rgba(255,255,255,.75)}
+.blind p{position:relative; margin-top:1rem; color:rgba(255,255,255,.92); font-size:1.05rem}
 
 .action-grid{display:grid; gap:1.1rem}
 .q-inv{font-family:var(--font-display); font-size:clamp(1.35rem,4vw,1.8rem); line-height:1.25; color:var(--deep); letter-spacing:-.015em}
@@ -234,3 +234,56 @@ textarea::placeholder{color:var(--ink-faint)}
   .blind{background:#fff; color:#000; border:1px solid #000}
   .blind .display,.blind p{color:#000}
 }
+
+/* ---------- depth: expanders, evidence, reading ---------- */
+.friction-item .lead{color:var(--ink); font-size:1.05rem}
+.friction-item p+p{margin-top:.8rem}
+.friction-item p strong{color:var(--deep); font-weight:600}
+.evidence{margin:.9rem 0 .4rem; padding:.9rem 1rem; border-radius:14px; background:rgba(184,153,106,.1)}
+.evidence .k{display:block; font-family:var(--font-mono); font-size:.68rem; letter-spacing:.16em; text-transform:uppercase; color:var(--sand-deep); margin-bottom:.5rem}
+.evidence ul{list-style:none; margin:0; padding:0; display:grid; gap:.5rem}
+.evidence li{display:flex; gap:.6rem; align-items:flex-start; font-size:.95rem; line-height:1.45}
+.evidence .dot{flex:none; width:9px; height:9px; border-radius:50%; background:var(--sand-mid); margin-top:.45rem}
+.evidence .dot.lens-B{background:var(--lens-B)}.evidence .dot.lens-S{background:var(--lens-S)}.evidence .dot.lens-P{background:var(--lens-P)}
+.evidence q{quotes:'“' '”'; color:var(--deep); font-weight:500}
+.evidence small{display:block; color:var(--ink-faint); font-size:.78rem; margin-top:.1rem}
+.decision-echo{padding-top:1.2rem; border-top:1px solid var(--sand-line)}
+.decision-echo .k{font-family:var(--font-mono); font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--sand-deep)}
+.decision-echo .n-sm{font-family:var(--font-display); font-size:1.25rem; color:var(--deep); margin:.4rem 0 .5rem; letter-spacing:-.01em}
+.decision-echo p:last-child{color:var(--ink-dim)}
+
+details.more{margin-top:.9rem; border:1px solid var(--sand-line); border-radius:14px; background:rgba(255,253,248,.7); overflow:hidden}
+details.more summary{list-style:none; cursor:pointer; display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; padding:.8rem 1rem; min-height:48px; color:var(--deep); font-weight:600; font-size:.95rem}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary:hover{background:rgba(18,63,90,.04)}
+details.more summary:focus-visible{outline:3px solid var(--sun); outline-offset:-3px; border-radius:14px}
+details.more .sum-line{flex:1 1 12rem; font-weight:400; color:var(--ink-dim); font-size:.88rem}
+details.more .caret{margin-left:auto; width:9px; height:9px; border-right:2px solid var(--sand-deep); border-bottom:2px solid var(--sand-deep); transform:rotate(45deg); transition:transform .25s var(--ease-out); flex:none}
+details.more[open] .caret{transform:rotate(-135deg)}
+details.more .more-body{padding:.2rem 1rem 1.1rem; color:var(--ink-dim); display:grid; gap:.8rem; animation:rise .35s var(--ease-out)}
+details.more .more-body p{margin:0}
+details.more .more-body strong{color:var(--deep); font-weight:600}
+details.more.on-dark{border-color:rgba(255,255,255,.22); background:rgba(255,255,255,.07); position:relative}
+details.more.on-dark summary{color:#fff}
+details.more.on-dark summary:hover{background:rgba(255,255,255,.06)}
+details.more.on-dark .sum-line{color:rgba(255,255,255,.75)}
+details.more.on-dark .caret{border-color:rgba(255,255,255,.7)}
+details.more.on-dark .more-body{color:rgba(255,255,255,.9)}
+details.more.on-dark .book{background:rgba(255,255,255,.08)}
+details.more.on-dark .book-t{color:#fff}
+details.more.on-dark .book-k{color:rgba(255,255,255,.65)}
+details.more.on-dark .book p{color:rgba(255,255,255,.85)}
+.lens-reads{display:grid; gap:.5rem}
+.lens-reads details.more{margin-top:0}
+.lens-dot{width:10px; height:10px; border-radius:50%; background:var(--sand-mid); flex:none}
+details.lens-B .lens-dot{background:var(--lens-B)}details.lens-S .lens-dot{background:var(--lens-S)}details.lens-P .lens-dot{background:var(--lens-P)}
+.book{padding:.85rem 1rem; border-radius:12px; background:rgba(44,140,158,.08); display:grid; gap:.25rem}
+.book-k{font-family:var(--font-mono); font-size:.66rem; letter-spacing:.16em; text-transform:uppercase; color:var(--tide-deep)}
+.book-t{font-family:var(--font-display); font-style:italic; color:var(--deep); font-size:1.05rem}
+.book-a{font-family:var(--font-body); font-style:normal; font-size:.82rem; color:var(--ink-faint)}
+.book p{color:var(--ink-dim); font-size:.95rem; margin:0}
+.steps{margin:0; padding-left:1.2rem; display:grid; gap:.5rem; color:var(--ink)}
+.steps li::marker{color:var(--sun-deep); font-weight:600}
+.watch{padding:.8rem 1rem; border-radius:12px; background:var(--kelp-soft); color:var(--ink)}
+.choice.nudge{animation:nudge .35s var(--ease)}
+@keyframes nudge{0%,100%{transform:none}30%{transform:translateX(-4px)}60%{transform:translateX(4px)}}

@@ -52,7 +52,20 @@ export function analyze(answers, decisionKey) {
   const question = NEXT_QUESTIONS[decision][primary];
   const move = NEXT_MOVES[decision][primary];
 
-  return { lens, lensNorm, edgeScore, edgeNorm, edgesRanked, primary, secondary, tags, decisionsRanked, decisionScore, decision, bs, hyp, blind, question, move, hypothesisNote: hypothesisNote(hyp, primary) };
+  return { lens, lensNorm, edgeScore, edgeNorm, edgesRanked, primary, secondary, tags, decisionsRanked, decisionScore, decision, bs, hyp, blind, question, move,
+    hypothesisNote: hypothesisNote(hyp, primary), evidence: { [primary]: evidenceFor(answers, primary), [secondary]: evidenceFor(answers, secondary) } };
+}
+
+// The user's own answers that pulled toward an edge, strongest first.
+export function evidenceFor(answers, edgeKey, limit = 4) {
+  const { a, b } = EDGES[edgeKey];
+  const rows = [];
+  for (const { q, opt } of selectedOptions(answers)) {
+    if (q.lensPick) continue;
+    const score = (opt.e[edgeKey] || 0) + 0.35 * ((opt.l[a] || 0) + (opt.l[b] || 0));
+    if (score >= 0.3) rows.push({ t: opt.t, q: q.title, lens: q.lens || null, score });
+  }
+  return rows.sort((x, y) => y.score - x.score).slice(0, limit);
 }
 
 export function hypothesisNote(hyp, primary) {

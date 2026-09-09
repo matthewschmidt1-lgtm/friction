@@ -137,7 +137,7 @@ Conversion goal: a small, private moment of "hm."
 
 **03 Lenses.** The framework is introduced only now, in three cards. The user
 picks where they *think* the friction lives (their hypothesis, kept for the
-reveal). Then seven questions, grouped under the three lenses with a coloured
+reveal). Then five questions, grouped under the three lenses with a coloured
 header. Conversion goal: the framework feels earned, not imposed.
 
 **04 Decision.** Four synthesised statements, ordered by fit to the answers but

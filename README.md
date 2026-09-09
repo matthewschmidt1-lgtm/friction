@@ -2,7 +2,7 @@
 
 *Find what's getting in the way.*
 
-A guided diagnosis, not an assessment. Eleven questions, about four minutes,
+A guided diagnosis, not an assessment. Nine questions, about three minutes,
 no score. The output is a Friction Map showing where the constraint lives
 between **Business**, **System** and **People**, one likely blind spot, one
 question worth investigating and one next move. Come back after acting and the
