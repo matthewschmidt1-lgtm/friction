@@ -270,7 +270,7 @@ const SCREENS = {
           <button class="btn btn-ghost" data-go="begin">Start again</button>
           <span class="saved" id="savedNote">✓ Saved on this device</span>
         </div>
-        <p class="quiet" style="margin-top:1.2rem">The thinking behind this: <a href="https://matthew-schmidt-production.up.railway.app/" rel="noopener">The Three Lenses, the Blind Spot and the Learning Loop</a>. The reading it draws on: <em>High Output Management</em>, <em>How Google Works</em>, <em>Trillion Dollar Coach</em>, <em>What the CEO Wants You to Know</em>, <em>The 15 Commitments of Conscious Leadership</em> and <em>Poor Charlie's Almanack</em>.</p>
+        <p class="quiet" style="margin-top:1.2rem">The thinking behind this: <a href="https://matthew-schmidt-production.up.railway.app/" rel="noopener">The Three Lenses, the Blind Spot and the Learning Loop</a>.</p>
       </div>
     </section>`;
   },
