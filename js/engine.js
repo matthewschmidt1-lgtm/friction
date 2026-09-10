@@ -27,7 +27,9 @@ export function analyze(answers, decisionKey) {
   const edgeScore = {};
   for (const k in EDGES) {
     const { a, b } = EDGES[k];
-    edgeScore[k] = edge[k] + 0.35 * (lens[a] + lens[b]);
+    // direct conflict evidence, plus the pull of both lenses, weighted toward the weaker one:
+    // friction between two lenses needs both to be carrying signal
+    edgeScore[k] = edge[k] + 0.2 * (lens[a] + lens[b]) + 0.4 * Math.min(lens[a], lens[b]);
   }
   const edgesRanked = Object.keys(edgeScore).sort((x, y) => edgeScore[y] - edgeScore[x] || x.localeCompare(y));
   const primary = edgesRanked[0], secondary = edgesRanked[1];
@@ -62,8 +64,8 @@ export function evidenceFor(answers, edgeKey, limit = 4) {
   const rows = [];
   for (const { q, opt } of selectedOptions(answers)) {
     if (q.lensPick) continue;
-    const score = (opt.e[edgeKey] || 0) + 0.35 * ((opt.l[a] || 0) + (opt.l[b] || 0));
-    if (score >= 0.3) rows.push({ t: opt.t, q: q.title, lens: q.lens || null, score });
+    const score = (opt.e[edgeKey] || 0) + 0.25 * ((opt.l[a] || 0) + (opt.l[b] || 0));
+    if (score >= 0.3) rows.push({ t: opt.t, q: q.evidenceLabel || q.title, lens: q.lens || null, score });
   }
   return rows.sort((x, y) => y.score - x.score).slice(0, limit);
 }

@@ -31,7 +31,7 @@ function progressFor() {
 function stageFor() {
   if (state.screen === 'question') return STAGES[QUESTIONS[state.q].stage];
   if (state.screen === 'decision') return STAGES[3];
-  if (state.screen === 'result') return STAGES[4];
+  if (state.screen === 'result') return { code: '●', name: 'Your result' };
   if (state.screen === 'learning') return { code: '07', name: 'Learning' };
   return null;
 }
@@ -182,97 +182,88 @@ const SCREENS = {
     const goalQ = QUESTIONS[0]; const gi = (state.answers.goal || [])[0];
     const goal = gi != null ? (goalQ.options[gi].other && state.other.goal ? state.other.goal : goalQ.options[gi].t) : null;
     const symptomQ = QUESTIONS[1]; const symptoms = (state.answers.symptoms || []).map(i => symptomQ.options[i].t);
-    const book = (b, label = 'From the reading') => b ? `<div class="book"><span class="book-k">${label}</span><span class="book-t">${esc(b.title)}${b.author ? ` <span class="book-a">· ${esc(b.author)}</span>` : ''}</span><p>${esc(b.idea)}</p></div>` : '';
-    // every reading block on an item: legacy book/book2 plus the books array
-    const reading = (x) => [x.book, x.book2, ...(x.books || [])].filter(Boolean).map((b, i) => book(b, i ? 'And' : 'From the reading')).join('');
+    const book = (b, label = 'The thinking behind it') => b ? `<div class="book"><span class="book-k">${label}</span><span class="book-t">${esc(b.title)}${b.author ? ` <span class="book-a">· ${esc(b.author)}</span>` : ''}</span><p>${esc(b.idea)}</p></div>` : '';
+    const reading = (x) => book(x.book) + (x.more ? `<details class="more further"><summary><b>Further reading</b><i class="caret"></i></summary><div class="more-body">${book(x.more, '')}</div></details>` : '');
     const evidence = (key) => {
       const rows = r.evidence[key] || [];
-      if (!rows.length) return '';
-      return `<div class="evidence"><span class="k">What pointed here</span><ul>${rows.map(x => `<li><i class="dot ${x.lens ? 'lens-' + x.lens : ''}"></i><span><q>${esc(x.t)}</q><small>${esc(x.q)}</small></span></li>`).join('')}</ul></div>`;
+      if (!rows.length) return '<p class="quiet">No single answer stood out here. This one comes from the overall pattern.</p>';
+      return `<ul class="evidence-list">${rows.map(x => `<li><i class="dot ${x.lens ? 'lens-' + x.lens : ''}"></i><span><q>${esc(x.t)}</q><small>${esc(x.q)}</small></span></li>`).join('')}</ul>`;
     };
     const lensRead = (k) => {
       const L = LENS_DEPTH[k];
       return `<details class="more lens-${k}"><summary><span class="lens-dot"></span><b>${names[k]}</b><span class="sum-line">${esc(LENSES[k].line)}</span><i class="caret"></i></summary><div class="more-body"><p>${esc(L.what)}</p><p><strong>When it's weak.</strong> ${esc(L.weak)}</p>${reading(L)}</div></details>`;
     };
-    return `<section class="screen result">
-      <div class="stagger">
-        <p class="eyebrow">05 — Friction</p>
-        <h1 class="display lg">Your Friction Map</h1>
-        <p class="lede" style="margin-top:.6rem">${goal ? `You came here to improve <strong>${esc(goal.toLowerCase())}</strong>. ` : ''}${symptoms.length ? `You described ${symptoms.length === 1 ? 'one symptom' : symptoms.length + ' symptoms'}, and your answers concentrated where two lenses meet.` : 'Here\'s where your answers concentrated.'}</p>
+    const exp = (title, sub, body, cls = '') => `<details class="more ${cls}"><summary><b>${title}</b>${sub ? `<span class="sum-line">${sub}</span>` : ''}<i class="caret"></i></summary><div class="more-body">${body}</div></details>`;
+    const step = (n, name, tag) => `<div class="step-head"><span class="step-n">${n}</span><span class="step-name">${name}</span>${tag ? `<span class="step-tag">${tag}</span>` : ''}</div>`;
+
+    return `<section class="screen result journey">
+
+      <div class="jstep stagger">
+        ${step('01', 'Your signal', 'What you told us')}
+        <blockquote class="own-words"><p>“${esc(DECISIONS[r.decision].t)}”</p></blockquote>
+        <p class="signal-line">${goal ? `Trying to improve <strong>${esc(goal.toLowerCase())}</strong>.` : ''}${symptoms.length ? ` Seeing ${symptoms.map(x => `<span class="chip">${esc(x.replace(/\.$/, ''))}</span>`).join('')}` : ''}</p>
       </div>
-      <div class="card map-wrap stagger">
+
+      <div class="jstep stagger">
+        ${step('02', 'Your friction', 'Where your answers point')}
+        <p class="eyebrow">The strongest signal is</p>
+        <h1 class="display lg edge-name">${esc(P.name)}</h1>
+        <p class="lead">${esc(P.primary)}</p>
         ${frictionMap(r)}
-        <div class="bars">
-          ${['B', 'S', 'P'].map(k => `<div class="bar"><b>${names[k]}<small>${LENSES[k].verb}</small></b><div class="track"><div class="fill" style="--c:var(--lens-${k})" data-w="${Math.round(20 + 80 * r.lensNorm[k])}"></div></div></div>`).join('')}
+        ${r.hypothesisNote ? `<p class="hyp ${r.hypothesisNote.kind}">${esc(r.hypothesisNote.t)}</p>` : ''}
+        <div class="expanders">
+          ${exp('What pointed here', 'Your own answers, strongest first', evidence(r.primary))}
+          ${exp('Why we think this', 'What it usually looks like, and the mechanism', `<p>${esc(P.looksLike)}</p><p>${esc(P.mechanism)}</p><p class="quiet">Nine questions can\'t diagnose an organization. They can point. Treat this as the hypothesis most worth testing first.</p>`)}
+          ${exp('Your secondary friction', esc(S.name), `<p class="lead-sm">${esc(S.secondary)}</p>${evidence(r.secondary)}<p>${esc(S.looksLike)}</p>`)}
+          ${exp('The real problem, in your words', '', `<p class="lead-sm">“${esc(DECISIONS[r.decision].t)}”</p><p>${esc(DECISION_DEPTH[r.decision])}</p>`)}
+          ${exp('The thinking behind it', esc(P.book.title), reading(P))}
+          ${exp('How to read this map', 'Business, System, People, and the gaps between them', `<p>Each corner is a lens: a question the organization has to be able to answer. The pools show how strongly your answers pulled toward each one. The friction point sits on the edge where the pull was strongest, because the interesting problems rarely live inside one lens. They live in the gap between two.</p><div class="bars">${['B', 'S', 'P'].map(k => `<div class="bar"><b>${names[k]}<small>${LENSES[k].verb}</small></b><div class="track"><div class="fill" style="--c:var(--lens-${k})" data-w="${Math.round(20 + 80 * r.lensNorm[k])}"></div></div></div>`).join('')}</div><div class="lens-reads">${lensRead('B')}${lensRead('S')}${lensRead('P')}</div>`)}
         </div>
-        <details class="more how-read"><summary><b>How to read this</b><span class="sum-line">The three lenses, and why the friction is drawn between them</span><i class="caret"></i></summary>
-          <div class="more-body">
-            <p>Each corner is a lens: a question the organization has to be able to answer. The pools show how strongly your answers pulled toward each one. The friction point sits on the edge where the pull was strongest, because the interesting problems rarely live inside one lens. They live in the gap between two, where one lens is asking for something the other isn't built to give.</p>
-            <div class="lens-reads">${lensRead('B')}${lensRead('S')}${lensRead('P')}</div>
+      </div>
+
+      <div class="jstep stagger">
+        ${step('03', 'Your blind spot', 'What you may be missing')}
+        <div class="blind">
+          <p class="eyebrow">A hypothesis worth testing</p>
+          <h2 class="display md">${esc(r.blind.t)}</h2>
+          <p>${esc(r.blind.why)}</p>
+          ${exp('Go deeper', 'Why this is hard to see, and what to do about it', `<p>${esc(r.blind.deeper)}</p>${reading(r.blind)}`, 'on-dark')}
+        </div>
+      </div>
+
+      <div class="jstep stagger">
+        ${step('04', 'The question', 'What to investigate')}
+        <p class="q-inv">${esc(r.question)}</p>
+        <div class="expanders">${exp('Why this question', '', `<p>${esc(QUESTION_WHY[r.decision])}</p>`)}</div>
+      </div>
+
+      <div class="jstep stagger">
+        ${step('05', 'One move', 'What to change')}
+        <div class="card move">
+          <p class="t">${esc(r.move.t)}</p>
+          <p class="d">${esc(r.move.d)}</p>
+          <p class="watch"><strong>You'll know it's working when</strong> ${esc(r.move.watch)}</p>
+          <div class="expanders">
+            ${exp('How to do it', 'Three steps', `<ol class="steps">${r.move.how.map(h => `<li>${esc(h)}</li>`).join('')}</ol>`)}
+            ${exp('The thinking behind it', esc(r.move.book.title), reading(r.move))}
           </div>
-        </details>
-      </div>
-
-      <div class="card friction-block stagger">
-        <div class="friction-item primary">
-          <span class="k">Primary friction</span><span class="n">${esc(P.name)}</span>
-          <p class="lead">${esc(P.primary)}</p>
-          ${evidence(r.primary)}
-          <p><strong>What this usually looks like.</strong> ${esc(P.looksLike)}</p>
-          <details class="more"><summary><b>Go deeper</b><span class="sum-line">The mechanism, and the reading behind it</span><i class="caret"></i></summary>
-            <div class="more-body"><p>${esc(P.mechanism)}</p>${reading(P)}</div>
-          </details>
-        </div>
-        <div class="friction-item">
-          <span class="k">Secondary friction</span><span class="n">${esc(S.name)}</span>
-          <p class="lead">${esc(S.secondary)}</p>
-          ${evidence(r.secondary)}
-          <details class="more"><summary><b>Go deeper</b><span class="sum-line">What this usually looks like</span><i class="caret"></i></summary>
-            <div class="more-body"><p>${esc(S.looksLike)}</p><p>${esc(S.mechanism)}</p>${reading(S)}</div>
-          </details>
-        </div>
-        ${r.hypothesisNote ? `<div class="hyp ${r.hypothesisNote.kind}">${esc(r.hypothesisNote.t)}</div>` : ''}
-        <div class="decision-echo"><span class="k">The real problem, in your words</span><p class="n-sm">“${esc(DECISIONS[r.decision].t)}”</p><p>${esc(DECISION_DEPTH[r.decision])}</p></div>
-      </div>
-
-      <div class="blind stagger">
-        <p class="eyebrow">Your likely blind spot</p>
-        <h2 class="display md">${esc(r.blind.t)}</h2>
-        <p>${esc(r.blind.why)}</p>
-        <details class="more on-dark"><summary><b>Go deeper</b><span class="sum-line">Why this is hard to see, and what to do about it</span><i class="caret"></i></summary>
-          <div class="more-body"><p>${esc(r.blind.deeper)}</p>${reading(r.blind)}</div>
-        </details>
-      </div>
-
-      <div class="stagger">
-        <p class="eyebrow">06 — Action</p>
-        <h2 class="display lg">One question. One move.</h2>
-        <p class="lede" style="margin-top:.6rem">Not a list of recommendations. One question worth sitting with, and one change small enough to make this month.</p>
-      </div>
-      <div class="card action-grid stagger">
-        <div><p class="eyebrow">The question to investigate</p><p class="q-inv">${esc(r.question)}</p>
-          <details class="more"><summary><b>Why this question</b><i class="caret"></i></summary><div class="more-body"><p>${esc(QUESTION_WHY[r.decision])}</p></div></details>
-        </div>
-        <div class="rule" style="margin:.4rem 0"></div>
-        <div class="move"><p class="eyebrow">Your next move</p><p class="t">${esc(r.move.t)}</p><p class="d">${esc(r.move.d)}</p>
-          <details class="more"><summary><b>How to do it</b><span class="sum-line">Three steps, and what to watch for</span><i class="caret"></i></summary>
-            <div class="more-body"><ol class="steps">${r.move.how.map(h => `<li>${esc(h)}</li>`).join('')}</ol><p class="watch"><strong>You'll know it worked when</strong> ${esc(r.move.watch)}</p>${reading(r.move)}</div>
-          </details>
         </div>
       </div>
 
-      <div class="card stagger">
-        <p class="eyebrow">Don't stop at the diagnosis</p>
-        <div class="loop"><b>Signal</b><i>→</i>Understanding<i>→</i>Decision<i>→</i>Action<i>→</i><b>Learning</b></div>
-        <p class="lede" style="font-size:1rem">Come back after you've acted. What changed, what surprised you and what you learned becomes the next signal. This page will remember where you left off.</p>
-        <div class="rule"></div>
-        <div class="result-actions">
-          <button class="btn btn-deep" data-copy>Copy summary</button>
-          <button class="btn btn-ghost" data-expand>Expand everything</button>
-          <button class="btn btn-ghost" data-go="begin">Start again</button>
-          <span class="saved" id="savedNote">✓ Saved on this device</span>
+      <div class="jstep stagger">
+        ${step('06', 'Learn', 'Come back with what happened')}
+        <div class="card">
+          <div class="loop"><b>Signal</b><i>→</i>Understanding<i>→</i>Decision<i>→</i>Action<i>→</i><b>Learning</b></div>
+          <p class="lede" style="font-size:1rem">Treat the move as an experiment. Come back after you've run it. What changed, what surprised you and what you learned becomes the next signal. This page will remember where you left off.</p>
+          <div class="rule"></div>
+          <div class="result-actions">
+            <button class="btn btn-deep" data-copy>Copy summary</button>
+            <button class="btn btn-ghost" data-expand>Expand everything</button>
+            <button class="btn btn-ghost" data-go="begin">Start again</button>
+            <span class="saved" id="savedNote">✓ Saved on this device</span>
+          </div>
+          <p class="quiet" style="margin-top:1.2rem">The thinking behind this: <a href="https://matthew-schmidt-production.up.railway.app/" rel="noopener">The Three Lenses, the Blind Spot and the Learning Loop</a>.</p>
         </div>
-        <p class="quiet" style="margin-top:1.2rem">The thinking behind this: <a href="https://matthew-schmidt-production.up.railway.app/" rel="noopener">The Three Lenses, the Blind Spot and the Learning Loop</a>.</p>
       </div>
     </section>`;
   },
@@ -307,26 +298,27 @@ const SCREENS = {
 
 /* ---------- the map ---------- */
 function frictionMap(r) {
-  const V = { B: [200, 48], S: [352, 300], P: [48, 300] };
-  const lbl = { B: [200, 24, 'middle'], S: [352, 336, 'middle'], P: [48, 336, 'middle'] };
+  const V = { B: [200, 44], S: [352, 290], P: [48, 290] };
+  const lbl = { B: [200, 22], S: [352, 324], P: [48, 324] };
   const edges = ['BS', 'SP', 'PB'].map(k => {
     const { a, b } = EDGES[k];
     const cls = k === r.primary ? 'primary' : k === r.secondary ? 'secondary' : '';
-    const w = 1.5 + 9 * r.edgeNorm[k];
-    return `<line class="edge ${cls}" x1="${V[a][0]}" y1="${V[a][1]}" x2="${V[b][0]}" y2="${V[b][1]}" stroke-width="${w.toFixed(1)}"/>`;
-  }).join('');
-  const pools = ['B', 'S', 'P'].map(k => {
-    const rad = 10 + 30 * r.lensNorm[k];
-    return `<g class="pool-c"><circle cx="${V[k][0]}" cy="${V[k][1]}" r="${rad.toFixed(1)}" fill="var(--lens-${k})" opacity=".22"/><circle cx="${V[k][0]}" cy="${V[k][1]}" r="6" fill="var(--lens-${k})"/></g>`;
+    const w = k === r.primary ? 7 : k === r.secondary ? 2.5 : 1.5;
+    return `<line class="edge ${cls}" x1="${V[a][0]}" y1="${V[a][1]}" x2="${V[b][0]}" y2="${V[b][1]}" stroke-width="${w}"/>`;
   }).join('');
   const { a, b } = EDGES[r.primary];
+  const pools = ['B', 'S', 'P'].map(k => {
+    const on = k === a || k === b;
+    const rad = 8 + 22 * r.lensNorm[k];
+    return `<g class="pool-c ${on ? 'on' : ''}"><circle cx="${V[k][0]}" cy="${V[k][1]}" r="${rad.toFixed(1)}" fill="var(--lens-${k})" opacity="${on ? .22 : .1}"/><circle cx="${V[k][0]}" cy="${V[k][1]}" r="6" fill="var(--lens-${k})" opacity="${on ? 1 : .45}"/></g>`;
+  }).join('');
   const wa = r.lensNorm[a] + .01, wb = r.lensNorm[b] + .01;
-  let t = wb / (wa + wb); t = .3 + .4 * t; // keep it on the edge, biased toward the heavier lens
-  const fx = V[a][0] + (V[b][0] - V[a][0]) * t, fy = V[a][1] + (V[b][1] - V[a][1]) * t;
+  let tt = wb / (wa + wb); tt = .3 + .4 * tt;
+  const fx = V[a][0] + (V[b][0] - V[a][0]) * tt, fy = V[a][1] + (V[b][1] - V[a][1]) * tt;
   const labelAbove = fy > 200;
-  return `<svg class="map" viewBox="0 0 400 360" role="img" aria-label="Friction map: primary friction ${EDGES[r.primary].name}, secondary ${EDGES[r.secondary].name}">
+  return `<svg class="map" viewBox="0 0 400 340" role="img" aria-label="Friction map: primary friction ${EDGES[r.primary].name}, secondary ${EDGES[r.secondary].name}">
     ${edges}${pools}
-    ${['B', 'S', 'P'].map(k => `<text class="vertex" x="${lbl[k][0]}" y="${lbl[k][1]}" text-anchor="${lbl[k][2]}">${LENSES[k].name.toUpperCase()}</text>`).join('')}
+    ${['B', 'S', 'P'].map(k => `<text class="vertex ${k === a || k === b ? 'on' : ''}" x="${lbl[k][0]}" y="${lbl[k][1]}" text-anchor="middle">${LENSES[k].name.toUpperCase()}</text>`).join('')}
     <g class="fp"><circle class="ring" cx="${fx}" cy="${fy}" r="14"/><circle class="ring r2" cx="${fx}" cy="${fy}" r="14"/><circle cx="${fx}" cy="${fy}" r="9" fill="var(--sun)" stroke="#fff" stroke-width="3"/></g>
     <text class="fp-label" x="${fx}" y="${labelAbove ? fy - 24 : fy + 34}" text-anchor="middle">FRICTION</text>
   </svg>`;
@@ -436,14 +428,13 @@ function summaryText() {
   const r = state.result; const P = EDGES[r.primary], S = EDGES[r.secondary];
   const ev = k => (r.evidence[k] || []).map(x => `  · ${x.t}`).join('\n');
   return [
-    'FRICTION — Your Friction Map', '',
-    `PRIMARY FRICTION: ${P.name}`, P.primary, 'What pointed here:', ev(r.primary), '',
-    `SECONDARY FRICTION: ${S.name}`, S.secondary, ev(r.secondary) ? 'What pointed here:\n' + ev(r.secondary) : '', '',
-    `THE REAL PROBLEM (your words): ${DECISIONS[r.decision].t}`, '',
-    `LIKELY BLIND SPOT: ${r.blind.t}`, r.blind.why, '', r.blind.deeper, '',
-    `THE QUESTION TO INVESTIGATE: ${r.question}`, '',
-    `NEXT MOVE: ${r.move.t}`, r.move.d, ...r.move.how.map((h, i) => `  ${i + 1}. ${h}`), `You'll know it worked when ${r.move.watch}`, '',
-    'Signal → Understanding → Decision → Action → Learning',
+    'FRICTION', '',
+    `01 YOUR SIGNAL: "${DECISIONS[r.decision].t}"`, '',
+    `02 YOUR FRICTION: ${P.name}`, P.primary, ev(r.primary) ? 'What pointed here:\n' + ev(r.primary) : '', `Secondary: ${S.name}. ${S.secondary}`, '',
+    `03 YOUR BLIND SPOT: ${r.blind.t}`, r.blind.why, '',
+    `04 THE QUESTION: ${r.question}`, '',
+    `05 ONE MOVE: ${r.move.t}`, r.move.d, ...r.move.how.map((h, i) => `  ${i + 1}. ${h}`), `You'll know it's working when ${r.move.watch}`, '',
+    '06 LEARN: Signal → Understanding → Decision → Action → Learning',
     location.origin + location.pathname,
   ].join('\n');
 }

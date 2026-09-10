@@ -48,7 +48,7 @@ button{font:inherit; color:inherit}
 .mark i{display:block; height:4px; border-radius:2px; background:var(--tide); width:22px}
 .mark i+i{background:var(--sun); width:16px; justify-self:end; transition:transform .5s var(--ease-out)}
 .wordmark:hover .mark i+i{transform:translateX(-4px)}
-.stage-code{font-family:var(--font-mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint)}
+.stage-code{font-family:var(--font-mono); font-size:.8rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint)}
 .tideline{position:relative; height:3px; background:var(--sand)}
 .tideline-fill{position:absolute; left:0; top:0; bottom:0; width:0; background:linear-gradient(90deg, var(--tide), var(--sun)); transition:width .9s var(--ease-out)}
 .tideline-marks{position:absolute; inset:0; display:flex; justify-content:space-evenly}
@@ -288,3 +288,49 @@ details.lens-B .lens-dot{background:var(--lens-B)}details.lens-S .lens-dot{backg
 .watch{padding:.8rem 1rem; border-radius:12px; background:var(--kelp-soft); color:var(--ink)}
 .choice.nudge{animation:nudge .35s var(--ease)}
 @keyframes nudge{0%,100%{transform:none}30%{transform:translateX(-4px)}60%{transform:translateX(4px)}}
+
+/* ---------- result as a journey ---------- */
+.journey{gap:0}
+.jstep{position:relative; padding:0 0 2.4rem 0; margin-bottom:.4rem}
+.jstep+.jstep{padding-top:2.2rem; border-top:1px solid var(--sand-line)}
+.step-head{display:flex; align-items:baseline; gap:.7rem; margin-bottom:1.1rem; flex-wrap:wrap}
+.step-n{font-family:var(--font-mono); font-size:.9rem; letter-spacing:.14em; color:var(--sun-deep); font-weight:500}
+.step-name{font-family:var(--font-display); font-size:1.35rem; color:var(--deep); letter-spacing:-.01em}
+.step-tag{font-size:.9rem; color:var(--ink-faint)}
+.own-words{margin:0; padding:1.3rem 1.4rem; border-radius:20px; background:var(--foam-raised); border:1px solid var(--sand-line); border-left:5px solid var(--sun); box-shadow:var(--shadow)}
+.own-words p{font-family:var(--font-display); font-size:clamp(1.5rem,4.6vw,2.1rem); line-height:1.2; color:var(--deep); letter-spacing:-.015em; margin:0}
+.signal-line{margin-top:.9rem; color:var(--ink-dim); font-size:.95rem; line-height:1.9}
+.signal-line strong{color:var(--deep); font-weight:600}
+.chip{display:inline-block; padding:.15rem .6rem; margin:0 .25rem .2rem 0; border-radius:999px; background:rgba(44,140,158,.1); color:var(--tide-deep); font-size:.82rem; font-weight:500; vertical-align:middle}
+.edge-name{margin:.2rem 0 .7rem}
+.jstep .lead{font-size:1.12rem; color:var(--ink); max-width:38rem}
+.lead-sm{font-family:var(--font-display); font-size:1.15rem; color:var(--deep); letter-spacing:-.01em}
+.journey .map{max-width:360px; margin:1.4rem auto .6rem}
+.journey .hyp{margin:.4rem 0 0}
+.expanders{display:grid; gap:.5rem; margin-top:1.2rem}
+.expanders details.more{margin-top:0}
+.map .edge:not(.primary){stroke:var(--sand-mid); opacity:.45; stroke-dasharray:none}
+.map .edge.secondary{opacity:.6}
+.map .vertex{fill:var(--ink-faint)}
+.map .vertex.on{fill:var(--deep); font-weight:500}
+.journey .q-inv{font-size:clamp(1.5rem,4.6vw,2rem); max-width:36rem}
+.journey .move{display:grid; gap:.6rem}
+.journey .move .t{font-size:clamp(1.5rem,4.4vw,1.9rem); margin:0}
+.journey .move .d{font-size:1.05rem; color:var(--ink)}
+.journey .move .watch{margin-top:.3rem}
+.journey .move .expanders{margin-top:.6rem}
+.journey .blind{margin:0}
+.journey .blind details.more{margin-top:1rem}
+details.further{margin-top:.2rem; background:transparent; border-style:dashed}
+details.further summary{min-height:40px; padding:.5rem .9rem; font-size:.88rem}
+details.further .more-body{padding-top:0}
+details.further .book{background:transparent; padding:.2rem .9rem .6rem}
+details.more.on-dark details.further{border-color:rgba(255,255,255,.25)}
+details.more.on-dark details.further summary{color:#fff}
+.evidence-list{list-style:none; margin:0; padding:0; display:grid; gap:.55rem}
+.evidence-list li{display:flex; gap:.6rem; align-items:flex-start; font-size:.97rem; line-height:1.45}
+.evidence-list .dot{flex:none; width:9px; height:9px; border-radius:50%; background:var(--sand-mid); margin-top:.45rem}
+.evidence-list .dot.lens-B{background:var(--lens-B)}.evidence-list .dot.lens-S{background:var(--lens-S)}.evidence-list .dot.lens-P{background:var(--lens-P)}
+.evidence-list q{quotes:'\201C' '\201D'; color:var(--deep); font-weight:500}
+.evidence-list small{display:block; color:var(--ink-faint); font-size:.78rem; margin-top:.1rem}
+.book-k:empty{display:none}

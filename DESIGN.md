@@ -144,9 +144,12 @@ header. Conversion goal: the framework feels earned, not imposed.
 not labelled. `Which feels closest?` Conversion goal: the user co-authors the
 diagnosis.
 
-**05 Friction.** The Friction Map draws in. Primary friction (edge), secondary
-friction, and a comparison of the user's hypothesis to the pattern. Then the
-blind spot: one provocative observation. Conversion goal: "that's interesting."
+**05 Friction.** The result is a six-step journey: your signal (their own words,
+large), your friction (the edge, the map with that edge emphasised, everything
+else behind expanders), your blind spot, the question, one move framed as an
+experiment with a success signal, and learn. Headline → evidence → explanation
+→ depth. One book per part, a second only under "Further reading". Conversion
+goal: "that's interesting."
 
 **06 Action.** One question to investigate. One next move. The learning loop
 `Signal → Understanding → Decision → Action → Learning`, with the invitation to
