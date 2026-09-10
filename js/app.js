@@ -262,7 +262,7 @@ const SCREENS = {
             <button class="btn btn-ghost" data-go="begin">Start again</button>
             <span class="saved" id="savedNote">✓ Saved on this device</span>
           </div>
-          <p class="quiet" style="margin-top:1.2rem">The thinking behind this: <a href="https://matthew-schmidt-production.up.railway.app/" rel="noopener">The Three Lenses, the Blind Spot and the Learning Loop</a>.</p>
+          <p class="quiet" style="margin-top:1.2rem">The thinking behind this: <a href="https://matthew-schmidt-production.up.railway.app/#lenses" rel="noopener">The Three Lenses, the Blind Spot and the Learning Loop</a>.</p>
         </div>
       </div>
     </section>`;
