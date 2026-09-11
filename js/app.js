@@ -236,17 +236,23 @@ const SCREENS = {
       </div>
 
       <div class="jstep stagger">
-        ${step('07', 'One question', 'Take it into the business')}
+        ${step('07', 'From the reading', 'Your constraint, in the authors\' words')}
+        <p class="lead" style="font-size:1rem;color:var(--ink-dim)">You are not the first to run into this. Two ideas that describe it precisely, and what they suggest.</p>
+        <div class="reading">${play.reading.map(b => `<div class="book"><span class="book-t">${esc(b.title)} <span class="book-a">· ${esc(b.author)}</span></span><p>${esc(b.idea)}</p></div>`).join('')}</div>
+      </div>
+
+      <div class="jstep stagger">
+        ${step('08', 'One question', 'Take it into the business')}
         <p class="q-inv">${esc(play.question)}</p>
       </div>
 
       <div class="jstep stagger">
-        ${step('08', 'One metric to watch', 'Did the friction decrease?')}
+        ${step('09', 'One metric to watch', 'Did the friction decrease?')}
         <div class="metric"><p class="metric-t">${esc(play.metric.t)}</p><p>${esc(play.metric.d)}</p></div>
       </div>
 
       <div class="jstep stagger">
-        ${step('09', 'Learn', 'Close the loop')}
+        ${step('10', 'Learn', 'Close the loop')}
         <div class="card">
           <div class="loop"><b>Signal</b><i>→</i>Understand<i>→</i>Decide<i>→</i>Act<i>→</i><b>Learn</b></div>
           <p class="lede" style="font-size:1rem">Treat the move as an experiment. Run it, watch the metric, and come back. The goal isn't a better score. It's to find out whether the gap has narrowed. This page will remember where you left off.</p>
@@ -399,6 +405,7 @@ function summaryText() {
     `POSSIBLE BLIND SPOT: ${p.blind}`, '',
     `WHAT NOT TO DO: ${p.notDo.t} ${p.notDo.d}`, '',
     `GUIDING PRINCIPLE: ${p.policy}`, `ONE MOVE: ${p.move.t}`, ...p.move.steps.map((s, i) => `  ${i + 1}. ${s}`), '',
+    'FROM THE READING:', ...p.reading.map(b => `  ${b.title} (${b.author}): ${b.idea}`), '',
     `ONE QUESTION: ${p.question}`, '', `ONE METRIC: ${p.metric.t}. ${p.metric.d}`, '',
     'Signal → Understand → Decide → Act → Learn', location.origin + location.pathname,
   ].filter(x => x !== null).join('\n');

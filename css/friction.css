@@ -386,3 +386,8 @@ details.more.on-dark details.further summary{color:#fff}
 .metric{padding:1.1rem 1.3rem; border-radius:18px; background:var(--kelp-soft)}
 .metric-t{font-family:var(--font-display); font-size:clamp(1.25rem,3.8vw,1.55rem); color:var(--kelp-deep); letter-spacing:-.015em; margin-bottom:.3rem}
 .metric p:last-child{color:var(--ink)}
+
+.reading{display:grid; gap:.7rem; margin-top:1rem}
+.reading .book{padding:1.1rem 1.2rem; border-radius:16px; background:var(--foam-raised); border:1px solid var(--sand-line); border-left:4px solid var(--tide); box-shadow:var(--shadow)}
+.reading .book-t{font-size:1.15rem}
+.reading .book p{font-size:1rem; color:var(--ink); margin-top:.4rem}

@@ -7,6 +7,24 @@
 // The reading behind the playbooks (Buffett, Munger, Grove, Schmidt, Campbell, Charan, Rumelt)
 // shapes the content and is never named to the user.
 
+
+const BK = {
+  grove:       { title: 'High Output Management', author: 'Andrew S. Grove' },
+  google:      { title: 'How Google Works', author: 'Eric Schmidt & Jonathan Rosenberg' },
+  coach:       { title: 'Trillion Dollar Coach', author: 'Schmidt, Rosenberg & Eagle' },
+  charan:      { title: 'What the CEO Wants You to Know', author: 'Ram Charan' },
+  conscious:   { title: 'The 15 Commitments of Conscious Leadership', author: 'Dethmer, Chapman & Klemp' },
+  munger:      { title: 'Poor Charlie\'s Almanack', author: 'Charlie Munger' },
+  collins:     { title: 'Good to Great', author: 'Jim Collins' },
+  davenport:   { title: 'Competing on Analytics', author: 'Davenport & Harris' },
+  peters:      { title: 'In Search of Excellence', author: 'Peters & Waterman' },
+  drucker:     { title: 'The Practice of Management', author: 'Peter Drucker' },
+  christensen: { title: 'The Innovator\'s Dilemma', author: 'Clayton Christensen' },
+  meadows:     { title: 'Thinking in Systems', author: 'Donella Meadows' },
+  lencioni:    { title: 'The Five Dysfunctions of a Team', author: 'Patrick Lencioni' },
+};
+const bk = (k, idea) => ({ ...BK[k], idea });
+
 export const LENSES = {
   B: { key: 'B', name: 'Business', line: 'Do you know what matters?', mechs: ['direction', 'focus', 'economics'] },
   S: { key: 'S', name: 'System',   line: 'Can the organization execute?', mechs: ['decisions', 'execution', 'leverage'] },
@@ -221,6 +239,10 @@ export const ZONES = {
 // Structure follows diagnosis → guiding policy → coherent action.
 export const PLAYBOOKS = {
   direction: {
+    reading: [
+      bk('lencioni', 'Lencioni calls it artificial harmony: a leadership team that nods in the meeting and acts on its own interpretation afterwards. Real commitment only follows real disagreement. If your leaders\' top-three lists differ, the argument that would have produced one list has not been had yet, and the organization below can tell.'),
+      bk('collins', 'The hedgehog concept: the great companies knew the one thing they could be best at, what drove their economic engine, and what they cared about, and they said no to everything outside it. Several versions of "what matters" is what an organization looks like before it has chosen its hedgehog.'),
+    ],
     constraint: 'Leadership isn\'t aligned on what matters most',
     diagnosis: 'Your leadership team appears to hold different versions of what the business must accomplish. Each version is defensible, which is why it persists. The organization below is executing several strategies at once and experiencing it as slowness.',
     chain: ['Leaders hold different top priorities', 'Each function optimises its own version', 'Teams receive conflicting signals', 'Work is duplicated or cancelled mid-flight', 'Decisions get revisited', 'Effort rises, progress doesn\'t'],
@@ -235,6 +257,10 @@ export const PLAYBOOKS = {
     metric: { t: 'Distinct "top priorities" named across the leadership team', d: 'Ask each leader separately, once a quarter. The target is one list.' },
   },
   focus: {
+    reading: [
+      bk('collins', 'Collins found that the good-to-great companies kept a "stop doing" list and treated it as seriously as their to-do list. Discipline was defined less by what they started than by what they refused to continue. Your 20% cut is a stop-doing list with a deadline.'),
+      bk('drucker', 'Drucker\'s test for any activity: if we were not already doing this, would we start it now? If not, stop it. He argued that the systematic abandonment of yesterday is what frees the resources for tomorrow, and that most organizations never build the habit.'),
+    ],
     constraint: 'Too many priorities, and no clear sense of what to stop',
     diagnosis: 'Priorities accumulate and nothing is formally retired. Capacity is spread across more work than exists to do it, so everything moves slowly and the urgent displaces the important. The missing decision is not what to start. It is what to stop.',
     chain: ['Priorities are added, none are removed', 'Capacity is spread thin', 'Everything moves slowly', 'Urgent work displaces important work', 'More initiatives are added to compensate', 'Overload becomes the operating model'],
@@ -249,6 +275,10 @@ export const PLAYBOOKS = {
     metric: { t: 'Share of capacity on the top three priorities', d: 'Estimate it monthly from where people\'s time actually went, not from the plan.' },
   },
   economics: {
+    reading: [
+      bk('charan', 'Every business, however complex, runs on a small nucleus: customers, cash, margin, velocity and growth. Charan\'s argument is that anyone at any level can learn to see it, and that once people can trace their work to the nucleus, priorities stop being a matter of advocacy. Your one-line exercise is exactly that trace.'),
+      bk('davenport', 'Organizations that have analytics and organizations that compete on it are separated not by data but by choice: the ones that win pick a small number of decisions to be distinctively good at and aim the measurement there. Measuring everything is the sign that nothing has been chosen.'),
+    ],
     constraint: 'Priorities aren\'t clearly connected to how the business creates value',
     diagnosis: 'The economics of the business aren\'t explicit enough to test priorities against. So priorities are chosen by advocacy, resources follow the strongest case, and activity rises without margin following. Analysis multiplies to explain it.',
     chain: ['Value drivers aren\'t explicit', 'Priorities are chosen by advocacy, not economics', 'Resources flow to the loudest case', 'Activity rises, value doesn\'t', 'More analysis is produced to explain it', 'Confidence in the plan erodes'],
@@ -263,6 +293,10 @@ export const PLAYBOOKS = {
     metric: { t: 'Share of resources on priorities with a named value driver', d: 'Count it once. Then count it again next quarter.' },
   },
   decisions: {
+    reading: [
+      bk('grove', 'Grove\'s rule is that a decision should be made at the lowest level where the right knowledge exists, and that escalation beyond that point is a cost with no output. He treated a decision as a process with a named owner, defined inputs and a deadline, which is precisely what the five-decision exercise writes down.'),
+      bk('google', 'Decision velocity was treated at Google as a competitive advantage in its own right. The authors describe giving smart people context and then letting them decide, on the grounds that a good decision made quickly and corrected beats a perfect one made late. Stuck decisions are the opposite of that design.'),
+    ],
     constraint: 'Decisions get stuck',
     diagnosis: 'Important decisions don\'t have a clear owner, so they wait. They travel upward, management becomes the bottleneck, and leaders spend their time on decisions that should have been made two levels down. The organization reads this as caution. It is the absence of decision rights.',
     chain: ['Decision rights are unclear', 'People escalate to be safe', 'Management becomes a bottleneck', 'Execution slows', 'Leaders spend more time firefighting', 'Less capacity for strategic work'],
@@ -277,6 +311,10 @@ export const PLAYBOOKS = {
     metric: { t: 'Median time from issue raised to decision made', d: 'Track it for the five decisions you moved. It should fall within a quarter.' },
   },
   execution: {
+    reading: [
+      bk('charan', 'Charan\'s work on execution rests on one link: strategy connected to the people who will deliver it, with named accountability and a follow-through rhythm. A commitment without an owner, a date and the capacity to do it is, in his terms, not a commitment. It is a hope with a meeting attached.'),
+      bk('grove', 'Grove measured a manager by the output of the organization under them, not by the activity in it. Agreeing that something is important is activity. Protecting the capacity that makes it happen is output. The three-commitments move is a deliberate shift from the first to the second.'),
+    ],
     constraint: 'Agreed priorities don\'t reliably happen',
     diagnosis: 'The organization agrees that things are important and then they don\'t happen. Commitments are made without a capacity check, they collide with everything else that was also agreed, ownership blurs, and leaders re-plan. Over time, commitment stops meaning much.',
     chain: ['Commitments are made without a capacity check', 'They collide with competing priorities', 'Ownership blurs', 'Follow-through slips', 'Leaders re-plan', 'Commitment loses its meaning'],
@@ -291,6 +329,10 @@ export const PLAYBOOKS = {
     metric: { t: 'Share of priority initiatives completed as committed', d: 'Count it per quarter. The number matters less than whether it moves.' },
   },
   leverage: {
+    reading: [
+      bk('grove', 'Leverage, in Grove\'s sense, is output that does not depend on one person being present. Heroics are its opposite: high output that vanishes with the hero. He argued that a manager\'s highest-value work is building the systems and indicators that let many people produce the result, rather than producing it personally.'),
+      bk('meadows', 'Meadows named the pattern "shifting the burden": a symptomatic fix, such as a capable person absorbing the problem by hand, relieves the pressure that would otherwise force the real fix. Each rescue makes the system a little more dependent on the rescuer. Designing out the workaround is the direct intervention she recommends.'),
+    ],
     constraint: 'Performance depends on people working around the system',
     diagnosis: 'The system doesn\'t carry the work, so capable people carry it personally. Results still arrive, which is why the gap is invisible, and the heroics get rewarded, which is why it persists. This works at the current size and breaks at the next one.',
     chain: ['The process doesn\'t carry the work', 'Capable people fill the gap by hand', 'Results still arrive, so the gap stays hidden', 'Heroics become the norm and get rewarded', 'The system never gets fixed', 'Growth multiplies the workarounds'],
@@ -305,6 +347,10 @@ export const PLAYBOOKS = {
     metric: { t: 'Hours per week spent on recurring workarounds', d: 'Ask the same three people to estimate it monthly. It should fall as each workaround is designed out.' },
   },
   authority: {
+    reading: [
+      bk('google', 'The authors\' central idea is context, not control: give talented people the goal, the constraints and the reasoning, then get out of the way. They observed that most organizations say they do this and then require approval anyway. Authority that has not been written down and honoured is not authority.'),
+      bk('peters', 'Peters and Waterman found excellent companies were "loose-tight": tight on a few non-negotiable values, loose on how people achieved them. Autonomy inside clear guardrails produced both speed and discipline. Clarifying one decision right per team, with its guardrails, is that structure in miniature.'),
+    ],
     constraint: 'People are accountable for outcomes without the authority to deliver them',
     diagnosis: 'Accountability has been assigned without matching authority. So people check before acting, decisions queue upward, and speed drops. Leaders see the hesitancy and hold tighter, which shrinks the authority further. The loop is stable and it is getting worse.',
     chain: ['Accountability is assigned without authority', 'People check before acting', 'Decisions queue upward', 'Speed drops and escalation rises', 'Leaders see hesitancy and hold tighter', 'Authority shrinks further'],
@@ -319,6 +365,10 @@ export const PLAYBOOKS = {
     metric: { t: 'Share of key decisions made without escalation', d: 'Sample the decisions you moved. If they are coming back up, find out why before adding any control.' },
   },
   talent: {
+    reading: [
+      bk('collins', 'First who, then what. Collins found the great companies put their best people on their biggest opportunities, not their biggest problems. The reverse, spending the best people on rescue, is the pattern your answers describe, and it quietly caps the organization at the size its heroes can carry.'),
+      bk('coach', 'Bill Campbell\'s measure of a leader was whether the people around them got better. That requires putting them on work where they can grow and matter. A leader who uses the best people as an emergency service is spending them, not developing them, and Campbell would have said so directly.'),
+    ],
     constraint: 'Your best people aren\'t on the highest-value problems',
     diagnosis: 'Your most capable people have become the default fix for everything. Their time fills with urgent, low-leverage work, and the highest-value problems get whoever is free. Results plateau, the best people are stretched thinner, and eventually they leave or disengage.',
     chain: ['The best people become the default fix', 'Their time fills with urgent, low-leverage work', 'The highest-value problems get whoever is free', 'Results plateau', 'The best people are stretched thinner', 'They disengage or leave'],
@@ -333,6 +383,10 @@ export const PLAYBOOKS = {
     metric: { t: 'Share of top talent time on the top three priorities', d: 'Estimate it monthly from calendars, not from intentions.' },
   },
   trust: {
+    reading: [
+      bk('coach', 'Campbell built teams on trust and candour: people said the hard thing because they believed it would be used to help, not to judge. His method was to listen fully, then respond with a question, and the effect was that problems reached him early. Your changed meeting is an attempt to create that condition on purpose.'),
+      bk('lencioni', 'Trust is the base of Lencioni\'s pyramid. Without it there is no productive conflict, without conflict no commitment, and without commitment no accountability. If it isn\'t safe to raise a problem, every layer above trust is compromised, which is why this friction hides all the others.'),
+    ],
     constraint: 'It isn\'t safe to raise problems or disagree',
     diagnosis: 'Raising a problem carries risk, so problems surface late and decisions rest on filtered information. Bad decisions persist longer than they should, trust in leadership erodes, and even less gets said. This is the friction that hides all the others.',
     chain: ['Raising problems carries risk', 'Problems surface late or not at all', 'Decisions rest on filtered information', 'Bad decisions persist longer', 'Trust in leadership drops', 'Even less gets said'],
