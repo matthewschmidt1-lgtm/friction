@@ -1,88 +1,89 @@
-// Friction — scoring engine. Pure functions, no DOM.
-import { QUESTIONS, DECISIONS, BLIND_SPOTS, NEXT_QUESTIONS, NEXT_MOVES, EDGES } from './content.js';
+// Friction v2 — engine. Pure functions, no DOM.
+import { CORE, FOLLOWUPS, INVERSION, LENSES, MECH_LENS, ZONES, PLAYBOOKS } from './content.js';
 
-const byId = Object.fromEntries(QUESTIONS.map(q => [q.id, q]));
+const MECHS = Object.keys(MECH_LENS);
+const ALL = [...CORE, ...FOLLOWUPS, INVERSION];
+export const byId = Object.fromEntries(ALL.map(q => [q.id, q]));
+const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
 
-export function selectedOptions(answers) {
+// answers: { [questionId]: [optionIndex, ...] }
+export function selected(answers) {
   const out = [];
-  for (const q of QUESTIONS) {
-    const sel = answers[q.id];
-    if (!sel) continue;
-    for (const i of sel) if (q.options[i]) out.push({ q, opt: q.options[i] });
-  }
+  for (const q of ALL) for (const i of answers[q.id] || []) if (q.options[i]) out.push({ q, opt: q.options[i] });
   return out;
 }
 
-export function analyze(answers, decisionKey) {
-  const lens = { B: 0, S: 0, P: 0 };
-  const edge = { BS: 0, SP: 0, PB: 0 };
-  const tags = {};
-  for (const { q, opt } of selectedOptions(answers)) {
-    if (q.lensPick) continue; // the hypothesis carries no weight
-    for (const k in opt.l) lens[k] += opt.l[k];
-    for (const k in opt.e) edge[k] += opt.e[k];
-    for (const t of opt.tags) tags[t] = (tags[t] || 0) + 1;
+// Core severities only (used to decide follow-ups). Same shape as full mechanisms.
+export function mechanisms(answers, { includeSide = true } = {}) {
+  const m = Object.fromEntries(MECHS.map(k => [k, 0]));
+  for (const { q, opt } of selected(answers)) {
+    if (q.mech && MECHS.includes(q.mech) && q.type === 'single') m[q.mech] = Math.max(m[q.mech], opt.s || 0);
+    if (includeSide && opt.side) for (const k in opt.side) m[k] += opt.side[k];
   }
-  // an edge is the direct signals plus the pull of its two lenses
-  const edgeScore = {};
-  for (const k in EDGES) {
-    const { a, b } = EDGES[k];
-    // direct conflict evidence, plus the pull of both lenses, weighted toward the weaker one:
-    // friction between two lenses needs both to be carrying signal
-    edgeScore[k] = edge[k] + 0.2 * (lens[a] + lens[b]) + 0.4 * Math.min(lens[a], lens[b]);
-  }
-  const edgesRanked = Object.keys(edgeScore).sort((x, y) => edgeScore[y] - edgeScore[x] || x.localeCompare(y));
-  const primary = edgesRanked[0], secondary = edgesRanked[1];
-
-  const maxLens = Math.max(1, ...Object.values(lens));
-  const lensNorm = { B: lens.B / maxLens, S: lens.S / maxLens, P: lens.P / maxLens };
-  const totalEdge = Object.values(edgeScore).reduce((a, b) => a + b, 0) || 1;
-  const edgeNorm = Object.fromEntries(Object.keys(edgeScore).map(k => [k, edgeScore[k] / totalEdge]));
-
-  // decision statements ranked by tag fit
-  const decisionScore = {};
-  for (const k in DECISIONS) decisionScore[k] = DECISIONS[k].tags.reduce((s, t) => s + (tags[t] || 0), 0);
-  const decisionsRanked = Object.keys(DECISIONS).sort((x, y) => decisionScore[y] - decisionScore[x]);
-  const decision = decisionKey || decisionsRanked[0];
-
-  const hyp = (answers.hypothesis || []).map(i => byId.hypothesis.options[i].lens);
-  const bsIdx = (answers.blindspot || [])[0];
-  const bs = bsIdx != null ? byId.blindspot.options[bsIdx].tags.find(t => t.startsWith('bs-')) : null;
-
-  const ctx = { lens, edge: edgeScore, tags, primary, secondary, decision, bs, hyp, has: t => !!tags[t] };
-  const blind = BLIND_SPOTS.find(r => r.when(ctx));
-  const question = NEXT_QUESTIONS[decision][primary];
-  const move = NEXT_MOVES[decision][primary];
-
-  return { lens, lensNorm, edgeScore, edgeNorm, edgesRanked, primary, secondary, tags, decisionsRanked, decisionScore, decision, bs, hyp, blind, question, move,
-    hypothesisNote: hypothesisNote(hyp, primary), evidence: { [primary]: evidenceFor(answers, primary), [secondary]: evidenceFor(answers, secondary) } };
+  for (const k of MECHS) m[k] = clamp(m[k], 0, 3);
+  return m;
 }
 
-// The user's own answers that pulled toward an edge, strongest first.
-export function evidenceFor(answers, edgeKey, limit = 4) {
-  const { a, b } = EDGES[edgeKey];
-  const rows = [];
-  for (const { q, opt } of selectedOptions(answers)) {
-    if (q.lensPick) continue;
-    const score = (opt.e[edgeKey] || 0) + 0.25 * ((opt.l[a] || 0) + (opt.l[b] || 0));
-    if (score >= 0.3) rows.push({ t: opt.t, q: q.evidenceLabel || q.title, lens: q.lens || null, score });
-  }
-  return rows.sort((x, y) => y.score - x.score).slice(0, limit);
+// Which follow-ups to ask, given the core answers. At most three, strongest signal first.
+export function pickFollowups(answers) {
+  const m = mechanisms(answers);
+  return FOLLOWUPS.filter(f => f.when(m)).sort((x, y) => y.priority(m) - x.priority(m)).slice(0, 3);
 }
 
-export function hypothesisNote(hyp, primary) {
-  if (!hyp || !hyp.length) return null;
-  const { a, b } = EDGES[primary];
-  const names = { B: 'Business', S: 'System', P: 'People' };
-  const looked = hyp.map(k => names[k]);
-  const hitA = hyp.includes(a), hitB = hyp.includes(b);
-  const list = looked.length === 1 ? looked[0] : looked.slice(0, -1).join(', ') + ' and ' + looked.at(-1);
-  if (hitA && hitB) return { kind: 'agree', t: `You looked at ${list}. The pattern agrees. The question now is why it hasn't moved.` };
-  if (hitA || hitB) {
-    const missing = names[hitA ? b : a];
-    return { kind: 'partial', t: `You looked at ${list}. The pattern agrees, and adds ${missing}. The friction is in the connection between them.` };
+export function analyze(answers, cost) {
+  const m = mechanisms(answers);
+  const lens = {};
+  for (const k in LENSES) lens[k] = LENSES[k].mechs.reduce((s, x) => s + m[x], 0) / 3;
+
+  const direct = { BS: 0, SP: 0, PB: 0 };
+  for (const { opt } of selected(answers)) if (opt.e) for (const k in opt.e) direct[k] += opt.e[k];
+  const edge = {};
+  for (const k of ['BS', 'SP', 'PB']) {
+    const { a, b } = ZONES[k];
+    edge[k] = 0.5 * (lens[a] + lens[b]) + 0.5 * Math.min(lens[a], lens[b]) + 0.35 * direct[k];
   }
-  return { kind: 'miss', t: `You looked first at ${list}. Your answers concentrated between ${names[a]} and ${names[b]}. That gap is often where the blind spot lives.` };
+  const ranked = Object.keys(edge).sort((x, y) => edge[y] - edge[x] || x.localeCompare(y));
+  const vals = Object.values(lens);
+  const coherence = Math.min(...vals) >= 1.4 && (Math.max(...vals) - Math.min(...vals)) <= 0.7 && (edge[ranked[0]] - edge[ranked[1]]) < 0.35;
+  const zone = coherence ? 'BSP' : ranked[0];
+  const secondary = coherence ? ranked[0] : ranked[1];
+
+  // the constraint: the most severe mechanism inside the zone's lenses
+  const zoneLenses = coherence ? ['B', 'S', 'P'] : [ZONES[zone].a, ZONES[zone].b];
+  const candidates = zoneLenses.flatMap(k => LENSES[k].mechs);
+  const constraint = candidates.sort((x, y) => m[y] - m[x] || candidates.indexOf(x) - candidates.indexOf(y))[0];
+  const play = PLAYBOOKS[constraint];
+
+  // reinforcing forces: from answers first (follow-ups, inversion, decision detail), then the playbook pool
+  const answered = selected(answers).filter(x => x.opt.force).map(x => ({ t: x.opt.force, src: x.q.id }));
+  const seen = new Set(); const forces = [];
+  for (const f of [...answered.filter(x => x.src === 'inversion'), ...answered.filter(x => x.src !== 'inversion')]) {
+    if (!seen.has(f.t)) { seen.add(f.t); forces.push(f); }
+  }
+  for (const t of play.forces) if (forces.length < 4 && !seen.has(t)) { seen.add(t); forces.push({ t, src: 'pattern' }); }
+  const forcesOut = forces.slice(0, 4);
+
+  // confidence
+  const margin = coherence ? 0 : edge[ranked[0]] - edge[ranked[1]];
+  const followupsAnswered = FOLLOWUPS.filter(f => (answers[f.id] || []).length).length;
+  const spread = Math.max(...vals) - Math.min(...vals);
+  let confidence = 'emerging';
+  if (!coherence && margin >= 0.55 && followupsAnswered >= 1 && spread >= 0.6) confidence = 'high';
+  else if (coherence ? true : margin >= 0.25) confidence = 'moderate';
+  const maxSev = Math.max(...Object.values(m));
+  if (maxSev < 1.5) confidence = 'emerging';
+
+  // illustrative cost
+  let estimate = null;
+  if (cost && cost.managers > 0 && cost.hours > 0) {
+    const hoursYear = cost.managers * cost.hours * 48;
+    estimate = { managers: cost.managers, hours: cost.hours, hoursYear, rate: cost.rate || null, dollars: cost.rate ? hoursYear * cost.rate : null };
+  }
+
+  const maxLens = Math.max(1, ...vals);
+  const lensNorm = Object.fromEntries(Object.keys(lens).map(k => [k, lens[k] / maxLens]));
+
+  return { m, lens, lensNorm, edge, ranked, zone, secondary, coherence, constraint, play, forces: forcesOut, confidence, margin, estimate, maxSev, followupsAnswered };
 }
 
 export function isComplete(q, answers) {

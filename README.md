@@ -2,11 +2,16 @@
 
 *Find what's getting in the way.*
 
-A guided diagnosis, not an assessment. Nine questions, about three minutes,
-no score. The output is a Friction Map showing where the constraint lives
-between **Business**, **System** and **People**, one likely blind spot, one
-question worth investigating and one next move. Come back after acting and the
-tool closes the learning loop.
+A guided diagnosis, not an assessment. Nine questions about observable
+behaviour, a few adaptive follow-ups where the answers point, one inversion
+question, and an optional cost estimate. About three minutes. No score.
+
+The output is a **Friction Diagnosis**: the friction zone (Business ↔ System,
+System ↔ People, People ↔ Business, or Coherence), the constraint behind it, a
+causal chain, the forces reinforcing it, what it is costing, the lost leverage,
+a possible blind spot, what not to do, one move, one leadership question and
+one metric to watch. Come back after acting and the tool closes the learning
+loop.
 
 See [DESIGN.md](DESIGN.md) for the creative direction and experience architecture.
 
@@ -15,25 +20,33 @@ See [DESIGN.md](DESIGN.md) for the creative direction and experience architectur
 ```
 index.html        shell, meta, fonts
 css/friction.css  the Low Tide design system
-js/content.js     every question, weight, blind spot, question and move
-js/engine.js      pure scoring: lens totals, edge scores, decision ranking
-js/app.js         screens, transitions, storage, the Friction Map (SVG)
+js/content.js     questions, follow-ups, inversion, zones and the nine mechanism playbooks
+js/engine.js      pure scoring: mechanism severities, lens scores, zone, constraint, confidence
+js/app.js         adaptive question queue, screens, storage, the Friction Map (SVG)
 ```
 
 No build step, no framework, no backend. Answers and past diagnoses are stored
-in the browser's `localStorage` under `friction.v1` and never leave the device.
+in the browser's `localStorage` under `friction.v2` and never leave the device.
 
 ## Editing the diagnosis
 
-Everything a person reads lives in `js/content.js`. Each option carries silent
-weights:
+Everything a person reads lives in `js/content.js`.
 
-- `l` — pull toward a lens (`B`, `S`, `P`)
-- `e` — pull toward an edge (`BS`, `SP`, `PB`)
-- `tags` — signals used to rank the "real problem" statements and pick the blind spot
+- **Nine mechanisms**, three per lens: direction, focus, economics (Business);
+  decisions, execution, leverage (System); authority, talent, trust (People).
+  Each core question scores one mechanism 0 (fine) to 3 (severe). Answers can
+  also carry `side` bumps to other mechanisms, `e` bumps to a zone edge, and a
+  `force` sentence that appears under "What's reinforcing it".
+- **Follow-ups** carry a `when` gate and a `priority`; at most three are asked.
+- **Zones** are the four friction zones and their summaries.
+- **Playbooks** hold everything the diagnosis says about a constraint:
+  diagnosis, chain, forces, consequences, leverage, blind spot, what not to do,
+  guiding policy, move, question and metric.
 
-Blind spots are an ordered rule list; the first rule whose `when` matches wins.
-The question and the next move are a matrix of decision × primary edge.
+The engine (`js/engine.js`) takes lens score = mean of its mechanisms, zone
+edge = 0.5 × (A + B) + 0.5 × min(A, B) + direct edge signals, and calls the
+zone Coherence when all three lenses are elevated and close together. The
+constraint is the most severe mechanism inside the zone's lenses.
 
 ## Run locally
 

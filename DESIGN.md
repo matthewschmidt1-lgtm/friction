@@ -105,18 +105,25 @@ question and one move. Then be invited back.
 4. One output of each kind: one map, one blind spot, one question, one move.
 5. The tool remembers, so the diagnosis becomes a loop.
 
-### Stages
+### Stages (v2)
 
 ```
 00 Arrival      Something isn't working. Let's find out why.
-01 Signal       What are you trying to improve? What are you seeing?
-02 Blind Spot   Before we diagnose the problem, let's question the explanation.
-03 Lenses       Business · System · People — the framework, then the questions.
-04 Decision     What's the real problem? Which feels closest?
-05 Friction     The Friction Map. Primary and secondary friction. The blind spot.
-06 Action       The question to investigate. Your next move. The learning loop.
-07 Learning     (on return) Last time… What happened? What did you learn?
+01 Business     Do you know what matters? (direction, focus, economics)
+02 System       Can the organization execute? (decisions, execution, leverage)
+03 People       Can people act on it? (authority, talent, trust)
+04 Follow-ups   Up to three, only where the signal is strong.
+05 Inversion    If you wanted this to get worse, what would you do?
+06 Diagnosis    Optional cost inputs, then the Friction Diagnosis.
+07 Learning     (on return) Did the friction decrease? What did you learn?
 ```
+
+The diagnosis follows diagnosis → guiding policy → coherent action: primary
+friction zone with confidence, the constraint and its causal chain, reinforcing
+forces (the user's own answers first), the business cost and an illustrative
+estimate, lost leverage, a possible blind spot, what not to do, one move, one
+question, one metric, and the learning loop. The reading behind the playbooks is
+never named to the user.
 
 ### Section by section
 

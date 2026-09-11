@@ -334,3 +334,55 @@ details.more.on-dark details.further summary{color:#fff}
 .evidence-list q{quotes:'\201C' '\201D'; color:var(--deep); font-weight:500}
 .evidence-list small{display:block; color:var(--ink-faint); font-size:.78rem; margin-top:.1rem}
 .book-k:empty{display:none}
+
+/* ---------- v2: diagnosis ---------- */
+.display.md.q-title{font-size:clamp(1.4rem,4.2vw,1.8rem); line-height:1.25}
+.lens-row{display:flex; align-items:baseline; gap:.6rem; padding:.7rem 0; border-bottom:1px solid var(--sand-line); flex-wrap:wrap}
+.lens-row b{font-family:var(--font-display); font-weight:500; color:var(--deep); font-size:1.1rem}
+.lens-row span:last-child{color:var(--ink-dim)}
+.lens-row .lens-dot{align-self:center}
+.lens-row.lens-B .lens-dot{background:var(--lens-B)}.lens-row.lens-S .lens-dot{background:var(--lens-S)}.lens-row.lens-P .lens-dot{background:var(--lens-P)}
+.fields{display:grid; gap:.9rem; margin-top:1.4rem}
+.field{display:grid; gap:.35rem; font-size:.95rem; color:var(--deep); font-weight:500}
+.field input{min-height:52px; padding:.7rem 1rem; border:1.5px solid var(--sand-line); border-radius:12px; background:var(--foam-raised); font:inherit; font-size:1.05rem; color:var(--deep); width:100%}
+.field input::placeholder{color:var(--ink-faint); font-weight:400}
+.nav .btn-ghost[data-skip]{margin-left:auto}
+.conf{display:grid; grid-template-columns:auto auto; gap:.2rem .8rem; align-items:baseline; margin:.6rem 0 .2rem; padding:.9rem 1rem; border-radius:14px; background:rgba(184,153,106,.1)}
+.conf-k{font-family:var(--font-mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--sand-deep)}
+.conf-v{font-weight:700; color:var(--deep)}
+.conf-d{grid-column:1/-1; color:var(--ink-dim); font-size:.92rem}
+.conf-high .conf-v{color:var(--kelp-deep)}.conf-moderate .conf-v{color:var(--sun-deep)}.conf-emerging .conf-v{color:var(--tide-deep)}
+.chain{list-style:none; margin:1.4rem 0 0; padding:0; display:grid; gap:0; counter-reset:c}
+.chain li{position:relative; padding:.55rem 0 .55rem 2rem; color:var(--deep); font-weight:500; line-height:1.4}
+.chain li::before{content:''; position:absolute; left:.55rem; top:0; bottom:0; width:2px; background:var(--sand)}
+.chain li:first-child::before{top:50%}.chain li:last-child::before{bottom:50%}
+.chain li::after{content:''; position:absolute; left:.2rem; top:calc(50% - .4rem); width:.8rem; height:.8rem; border-radius:50%; background:var(--foam); border:2px solid var(--sun)}
+.chain li:last-child::after{background:var(--sun)}
+.chain li:last-child{color:var(--sun-deep); font-weight:600}
+.forces{margin-top:1.6rem}
+.forces ul{list-style:none; margin:0; padding:0; display:grid; gap:.6rem}
+.forces li{display:grid; gap:.1rem; padding:.8rem 1rem; border-radius:12px; background:var(--foam-raised); border:1px solid var(--sand-line); color:var(--ink)}
+.forces li.from-you{border-left:3px solid var(--tide)}
+.forces li small{font-family:var(--font-mono); font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color:var(--tide-deep)}
+.cons{list-style:none; margin:0; padding:0; display:grid; gap:.5rem}
+.cons li{display:grid; gap:.1rem}
+.cons b{color:var(--deep); font-weight:600}
+.cons span{color:var(--ink-dim); font-size:.95rem}
+.estimate{margin-top:1.4rem; padding:1.2rem 1.3rem; border-radius:18px; background:var(--foam-raised); border:1px solid var(--sand-line); box-shadow:var(--shadow); display:grid; gap:.3rem}
+.est-line{color:var(--ink-dim); font-size:.95rem}
+.est-big{font-family:var(--font-display); font-size:clamp(1.6rem,5vw,2.2rem); color:var(--deep); letter-spacing:-.02em; line-height:1.1}
+.est-big.est-sun{color:var(--sun-deep)}
+.leverage{margin-top:1.6rem}
+.leverage>p{color:var(--ink)}
+.leverage ul{list-style:none; margin:.8rem 0 0; padding:0; display:grid; gap:.5rem}
+.leverage li{display:grid; gap:.1rem; padding-left:1rem; border-left:3px solid var(--kelp)}
+.leverage b{color:var(--deep); font-weight:600}
+.leverage span{color:var(--ink-dim); font-size:.95rem}
+.dont{padding:1.2rem 1.3rem; border-radius:18px; background:#FFF3EA; border:1px solid rgba(240,138,62,.35)}
+.dont-t{font-family:var(--font-display); font-size:clamp(1.3rem,4vw,1.6rem); color:var(--sun-deep); letter-spacing:-.015em; margin-bottom:.5rem}
+.dont p:last-child{color:var(--ink)}
+.policy{font-family:var(--font-display); font-style:italic; font-size:clamp(1.3rem,4vw,1.6rem); color:var(--tide-deep); margin:-.4rem 0 1rem; letter-spacing:-.01em}
+.journey .move .steps{margin-top:.4rem}
+.metric{padding:1.1rem 1.3rem; border-radius:18px; background:var(--kelp-soft)}
+.metric-t{font-family:var(--font-display); font-size:clamp(1.25rem,3.8vw,1.55rem); color:var(--kelp-deep); letter-spacing:-.015em; margin-bottom:.3rem}
+.metric p:last-child{color:var(--ink)}
