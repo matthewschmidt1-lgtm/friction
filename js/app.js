@@ -99,7 +99,7 @@ const SCREENS = {
       <div class="lines">
         <p>Most organizations don't have a shortage of effort.</p>
         <p>They have friction between what the business needs, how the system operates, and what people are able to do.</p>
-        <p>Three lenses. Nine questions. One useful diagnosis.</p>
+        <p>Three lenses. About a dozen questions. One useful diagnosis.</p>
       </div>
       <div class="cta-row">
         <button class="btn btn-primary" data-go="begin">Begin <span class="arr">→</span></button>
@@ -112,7 +112,7 @@ const SCREENS = {
     return `<section class="screen stagger">
       <p class="eyebrow">How this works</p>
       <h1 class="display lg">A guided diagnosis, not an assessment.</h1>
-      <p class="lede" style="margin-top:1rem">Nine questions about observable behaviour, a few follow-ups where your answers point, and one inversion question. About three minutes. No score, no name, no email. Everything stays in this browser.</p>
+      <p class="lede" style="margin-top:1rem">Nine core questions about observable behaviour, two to four follow-ups where your answers point, and one inversion question. Twelve to fourteen in all, about four minutes. No score, no name, no email. Everything stays in this browser.</p>
       <div class="lens-reads" style="margin:1.4rem 0">
         ${['B', 'S', 'P'].map(k => `<div class="lens-row lens-${k}"><span class="lens-dot"></span><b>${LENSES[k].name}</b><span>${esc(LENSES[k].line)}</span></div>`).join('')}
       </div>
