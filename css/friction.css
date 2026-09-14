@@ -296,7 +296,7 @@ details.lens-B .lens-dot{background:var(--lens-B)}details.lens-S .lens-dot{backg
 .step-head{display:flex; align-items:baseline; gap:.7rem; margin-bottom:1.1rem; flex-wrap:wrap}
 .step-n{font-family:var(--font-mono); font-size:.9rem; letter-spacing:.14em; color:var(--sun-deep); font-weight:500}
 .step-name{font-family:var(--font-display); font-size:1.35rem; color:var(--deep); letter-spacing:-.01em}
-.step-tag{font-size:.9rem; color:var(--ink-faint)}
+.step-tag{font-size:1.02rem; color:var(--ink); font-weight:500}
 .own-words{margin:0; padding:1.3rem 1.4rem; border-radius:20px; background:var(--foam-raised); border:1px solid var(--sand-line); border-left:5px solid var(--sun); box-shadow:var(--shadow)}
 .own-words p{font-family:var(--font-display); font-size:clamp(1.5rem,4.6vw,2.1rem); line-height:1.2; color:var(--deep); letter-spacing:-.015em; margin:0}
 .signal-line{margin-top:.9rem; color:var(--ink-dim); font-size:.95rem; line-height:1.9}
