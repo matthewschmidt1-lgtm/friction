@@ -402,3 +402,42 @@ details.more.on-dark details.further summary{color:#fff}
 .statement{font-family:var(--font-body); font-weight:600; font-size:1.1rem; line-height:1.4}
 .lead-sm{font-family:var(--font-body); font-weight:600; font-size:1.08rem}
 .hero .lines p{font-size:1.1rem}
+
+/* ---------- mobile: lift the smallest sizes and keep room around them ---------- */
+@media (max-width:640px){
+  body{font-size:1.08rem}
+  .eyebrow{font-size:.92rem; line-height:1.5; margin-bottom:1rem}
+  .stage-code{font-size:.84rem}
+  .count{font-size:.84rem; line-height:1.6}
+  .help{font-size:1rem; margin-top:.6rem}
+  .quiet{font-size:.96rem; line-height:1.6}
+  .foot{font-size:.9rem; gap:1.2rem; padding-top:1.4rem}
+  .choice .sub{font-size:.98rem}
+  .intro .line{font-size:1.06rem}
+  .conf{gap:.35rem .9rem; padding:1rem 1.1rem}
+  .conf-k{font-size:.8rem}
+  .conf-d{font-size:.98rem; margin-top:.25rem}
+  .step-n{font-size:.95rem}
+  .forces li{padding:.9rem 1.05rem; gap:.25rem}
+  .forces li small{font-size:.76rem; margin-top:.15rem}
+  .cons span, .leverage span, .est-line{font-size:1rem}
+  .cons li, .leverage li{gap:.2rem}
+  .cons{gap:.7rem}
+  .leverage ul{gap:.7rem}
+  .book-a{font-size:.9rem}
+  .book-k{font-size:.76rem}
+  .reading .book p{font-size:1.02rem; line-height:1.6}
+  .loop{font-size:.84rem; gap:.4rem .6rem; line-height:1.8; margin:.8rem 0 1.2rem}
+  .metric p:last-child, .dont p:last-child{font-size:1.02rem}
+  .steps{gap:.65rem}
+  .recap .k{font-size:.78rem}
+  .field{font-size:1rem}
+  .stage-row code{font-size:.84rem}
+  .lens-row span:last-child{font-size:1rem}
+  details.more summary{font-size:1rem; padding:.9rem 1.05rem}
+  details.more .sum-line{font-size:.94rem}
+  details.more .more-body{padding:.3rem 1.05rem 1.2rem; gap:.9rem}
+  .journey .q-inv, .q-title{line-height:1.45}
+  .jstep{padding-bottom:2.6rem}
+}
+.jstep>h2.display.md{margin-bottom:.7rem}
