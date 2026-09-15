@@ -166,14 +166,38 @@ const SCREENS = {
     const step = (n, name, tag) => `<div class="step-head"><span class="step-n">${n}</span><span class="step-name">${name}</span>${tag ? `<span class="step-tag">${tag}</span>` : ''}</div>`;
     const est = r.estimate;
     const lensRow = k => `<div class="bar"><b>${LENSES[k].name}<small>${esc(LENSES[k].line)}</small></b><div class="track"><div class="fill" style="--c:var(--lens-${k})" data-w="${Math.round(15 + 85 * r.lensNorm[k])}"></div></div></div>`;
+
+    const chainAndForces = `<ol class="chain" aria-label="Causal chain">${play.chain.map(c => `<li>${esc(c)}</li>`).join('')}</ol>
+        <div class="forces">
+          <p class="eyebrow">What's reinforcing it</p>
+          <ul>${r.forces.map(f => `<li class="${f.src === 'pattern' ? '' : 'from-you'}"><span>${esc(f.t)}</span>${f.src !== 'pattern' ? `<small>from your answers</small>` : ''}</li>`).join('')}</ul>
+        </div>`;
+
+    const costBreakdown = `<ul class="cons">${play.consequences.map(c => `<li><b>${esc(c)}</b><span>${esc(CONSEQUENCE_WHY[c] || '')}</span></li>`).join('')}</ul>
+        ${est ? `<div class="estimate">
+            <p class="eyebrow">Illustrative estimate</p>
+            <p class="est-line">${fmt(est.managers)} managers × ${fmt(est.hours)} hours a week × 48 weeks</p>
+            <p class="est-big">${fmt(est.hoursYear)} hours a year</p>
+            ${est.dollars ? `<p class="est-big est-sun">≈ $${fmt(est.dollars)} a year</p><p class="quiet">at $${fmt(est.rate)} per loaded hour</p>` : ''}
+            <p class="quiet">Illustrative estimate based on your inputs, not a financial audit. The point isn't precision. It's that the cost of friction is real and mostly uncounted.</p>
+          </div>` : ''}
+        <div class="leverage">
+          <p class="eyebrow">What that capacity could be doing instead</p>
+          <ul>${play.leverage.map(l => `<li><b>${esc(l)}</b><span>${esc(LEVERAGE_WHY[l])}</span></li>`).join('')}</ul>
+        </div>`;
+
+    const reading = `<div class="reading">${play.reading.map(b => `<div class="book"><span class="book-t">${esc(b.title)} <span class="book-a">· ${esc(b.author)}</span></span><p>${esc(b.idea)}</p></div>`).join('')}</div>`;
+
     return `<section class="screen result journey">
 
       <div class="jstep stagger">
         ${step('01', 'Your primary friction', Z.label)}
-        <h1 class="display lg edge-name">${esc(Z.name)}</h1>
+        <div class="friction-head">
+          <h1 class="display lg edge-name">${esc(Z.name)}</h1>
+          <details class="conf-pill conf-${r.confidence}"><summary>Confidence: ${conf.label}<i class="caret"></i></summary><div class="conf-body">${esc(conf.d)}</div></details>
+        </div>
         <p class="lead">${esc(Z.summary)}</p>
         ${frictionMap(r)}
-        <div class="conf conf-${r.confidence}"><span class="conf-k">Diagnosis confidence</span><span class="conf-v">${conf.label}</span><span class="conf-d">${esc(conf.d)}</span></div>
         <div class="expanders">
           ${exp('What this zone means', esc(Z.label), `<p>${esc(Z.detail)}</p>${r.coherence ? '' : `<p class="quiet">Close behind it: <strong>${esc(ZONES[r.secondary].name)}</strong>. ${esc(ZONES[r.secondary].summary)}</p>`}`)}
           ${exp('How to read this map', 'Three lenses, and the gaps between them', `<p>Each corner is a lens: a question the organization has to be able to answer. The pools show how much friction your answers placed in each one. The friction point sits on the gap where the two sides pull against each other hardest, because the problem is rarely inside one lens. It's between them.</p><div class="bars">${lensRow('B')}${lensRow('S')}${lensRow('P')}</div><p class="quiet">This is a hypothesis built from your answers, not a measurement of your organization. The strongest way to test it is to take the question at the end to the people closest to the work.</p>`)}
@@ -184,32 +208,11 @@ const SCREENS = {
         ${step('02', 'The constraint', 'Why it\'s happening')}
         <h2 class="display md">${esc(play.constraint)}</h2>
         <p class="lead">${esc(play.diagnosis)}</p>
-        <ol class="chain" aria-label="Causal chain">${play.chain.map(c => `<li>${esc(c)}</li>`).join('')}</ol>
-        <div class="forces">
-          <p class="eyebrow">What's reinforcing it</p>
-          <ul>${r.forces.map(f => `<li class="${f.src === 'pattern' ? '' : 'from-you'}"><span>${esc(f.t)}</span>${f.src !== 'pattern' ? `<small>from your answers</small>` : ''}</li>`).join('')}</ul>
-        </div>
+        ${exp('Trace how it compounds', 'The chain, and what\'s reinforcing it', chainAndForces)}
       </div>
 
       <div class="jstep stagger">
-        ${step('03', 'What it\'s costing', 'The business consequence')}
-        <ul class="cons">${play.consequences.map(c => `<li><b>${esc(c)}</b><span>${esc(CONSEQUENCE_WHY[c] || '')}</span></li>`).join('')}</ul>
-        ${est ? `<div class="estimate">
-            <p class="eyebrow">Illustrative estimate</p>
-            <p class="est-line">${fmt(est.managers)} managers × ${fmt(est.hours)} hours a week × 48 weeks</p>
-            <p class="est-big">${fmt(est.hoursYear)} hours a year</p>
-            ${est.dollars ? `<p class="est-big est-sun">≈ $${fmt(est.dollars)} a year</p><p class="quiet">at $${fmt(est.rate)} per loaded hour</p>` : ''}
-            <p class="quiet">Illustrative estimate based on your inputs, not a financial audit. The point isn't precision. It's that the cost of friction is real and mostly uncounted.</p>
-          </div>` : `<p class="quiet" style="margin-top:.8rem">You skipped the estimate. Even a rough one makes this tangible: managers × hours a week × 48.</p>`}
-        <div class="leverage">
-          <p class="eyebrow">What that capacity could be doing instead</p>
-          <p>You're not only losing time. You're losing what the time could have gone to:</p>
-          <ul>${play.leverage.map(l => `<li><b>${esc(l)}</b><span>${esc(LEVERAGE_WHY[l])}</span></li>`).join('')}</ul>
-        </div>
-      </div>
-
-      <div class="jstep stagger">
-        ${step('04', 'Possible blind spot', 'What everyone may have learned to accept')}
+        ${step('03', 'Possible blind spot', 'What everyone may have learned to accept')}
         <div class="blind">
           <p class="eyebrow">A hypothesis worth testing</p>
           <h2 class="display md">${esc(play.blind)}</h2>
@@ -218,7 +221,7 @@ const SCREENS = {
       </div>
 
       <div class="jstep stagger">
-        ${step('05', 'What not to do', 'The fix that would make it worse')}
+        ${step('04', 'What not to do', 'The fix that would make it worse')}
         <div class="dont">
           <p class="dont-t">${esc(play.notDo.t)}</p>
           <p>${esc(play.notDo.d)}</p>
@@ -226,33 +229,31 @@ const SCREENS = {
       </div>
 
       <div class="jstep stagger">
-        ${step('06', 'One move', 'The smallest meaningful intervention')}
+        ${step('05', 'One move', 'The smallest meaningful intervention')}
         <p class="eyebrow">Guiding principle</p>
         <p class="policy">${esc(play.policy)}</p>
         <div class="card move">
           <p class="t">${esc(play.move.t)}</p>
           <ol class="steps">${play.move.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
+          <div class="watch"><p><strong>You'll know it's working when this moves:</strong></p><p class="watch-metric">${esc(play.metric.t)}</p><p class="quiet" style="margin-top:.3rem">${esc(play.metric.d)}</p></div>
+          ${exp('Further reading', 'You are not the first to run into this', reading, 'further')}
         </div>
       </div>
 
       <div class="jstep stagger">
-        ${step('07', 'From the reading', 'Your constraint, in the authors\' words')}
-        <p class="lead" style="font-size:1rem;color:var(--ink-dim)">You are not the first to run into this. Two ideas that describe it precisely, and what they suggest.</p>
-        <div class="reading">${play.reading.map(b => `<div class="book"><span class="book-t">${esc(b.title)} <span class="book-a">· ${esc(b.author)}</span></span><p>${esc(b.idea)}</p></div>`).join('')}</div>
+        ${step('06', 'What it\'s costing', est ? 'Your estimate' : 'The business consequence')}
+        <div class="cons-chips">${play.consequences.map(c => `<span class="chip">${esc(c)}</span>`).join('')}</div>
+        ${est ? `<p class="est-big est-sun" style="margin-top:1rem">≈ ${est.dollars ? `$${fmt(est.dollars)}` : fmt(est.hoursYear) + ' hours'} a year</p><p class="quiet">${fmt(est.managers)} managers × ${fmt(est.hours)} hours a week × 48 weeks${est.dollars ? `, at $${fmt(est.rate)} per loaded hour` : ''}. Illustrative, based on your inputs, not an audit.</p>` : ''}
+        ${exp('See the full breakdown', 'Why each one, and what the capacity could do instead', costBreakdown)}
       </div>
 
       <div class="jstep stagger">
-        ${step('08', 'One question', 'Take it into the business')}
+        ${step('07', 'One question', 'Take it into the business')}
         <p class="q-inv">${esc(play.question)}</p>
       </div>
 
       <div class="jstep stagger">
-        ${step('09', 'One metric to watch', 'Did the friction decrease?')}
-        <div class="metric"><p class="metric-t">${esc(play.metric.t)}</p><p>${esc(play.metric.d)}</p></div>
-      </div>
-
-      <div class="jstep stagger">
-        ${step('10', 'Learn', 'Close the loop')}
+        ${step('08', 'Learn', 'Close the loop')}
         <div class="card">
           <div class="loop"><b>Signal</b><i>→</i>Understand<i>→</i>Decide<i>→</i>Act<i>→</i><b>Learn</b></div>
           <p class="lede" style="font-size:1rem">Treat the move as an experiment. Run it, watch the metric, and come back. The goal isn't a better score. It's to find out whether the gap has narrowed. This page will remember where you left off.</p>

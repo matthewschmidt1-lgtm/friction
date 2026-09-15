@@ -441,3 +441,23 @@ details.more.on-dark details.further summary{color:#fff}
   .jstep{padding-bottom:2.6rem}
 }
 .jstep>h2.display.md{margin-bottom:.7rem}
+
+/* ---------- v3: focus pass — compact confidence, chips, tucked metric ---------- */
+.friction-head{display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; flex-wrap:wrap-reverse}
+.friction-head .edge-name{margin:0}
+details.conf-pill{align-self:flex-start; border:1px solid var(--sand-line); border-radius:999px; background:var(--foam-raised)}
+details.conf-pill summary{list-style:none; cursor:pointer; display:flex; align-items:center; gap:.4rem; padding:.4rem .85rem; font-family:var(--font-mono); font-size:.76rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-dim); white-space:nowrap}
+details.conf-pill summary::-webkit-details-marker{display:none}
+details.conf-pill .caret{width:6px; height:6px; border-right:1.5px solid var(--ink-faint); border-bottom:1.5px solid var(--ink-faint); transform:rotate(45deg); transition:transform .2s var(--ease-out)}
+details.conf-pill[open] .caret{transform:rotate(-135deg)}
+details.conf-pill.conf-high summary{color:var(--kelp-deep)}
+details.conf-pill.conf-moderate summary{color:var(--sun-deep)}
+details.conf-pill.conf-emerging summary{color:var(--tide-deep)}
+details.conf-pill .conf-body{padding:0 1rem .8rem; font-family:var(--font-body); text-transform:none; letter-spacing:normal; font-size:.92rem; color:var(--ink-dim); max-width:26rem}
+.cons-chips{display:flex; flex-wrap:wrap; gap:.4rem}
+.cons-chips .chip{background:rgba(240,138,62,.1); color:var(--sun-deep); font-size:.9rem; padding:.35rem .85rem}
+.watch-metric{font-family:var(--font-display); font-size:clamp(1.1rem,3.4vw,1.35rem); color:var(--deep); letter-spacing:-.01em; margin-top:.15rem}
+@media (max-width:640px){
+  details.conf-pill summary{font-size:.8rem}
+  .cons-chips .chip{font-size:.94rem}
+}
