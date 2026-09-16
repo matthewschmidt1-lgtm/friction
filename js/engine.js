@@ -9,10 +9,11 @@ export const byId = Object.fromEntries(ALL_QUESTIONS.map(q => [q.id, q]));
 
 /* ---------- session ---------- */
 export function newSession() {
-  return { asked: [], answers: {}, logit: Object.fromEntries(HYP_ORDER.map(h => [h, PRIOR])), history: [] };
+  return { asked: [], answers: {}, logit: Object.fromEntries(HYP_ORDER.map(h => [h, PRIOR])), raw: Object.fromEntries(HYP_ORDER.map(h => [h, 0])), history: [] };
 }
 export function confidences(s) { return Object.fromEntries(HYP_ORDER.map(h => [h, sigmoid(s.logit[h])])); }
-export function ranked(s) { const p = confidences(s); return HYP_ORDER.slice().sort((a, b) => p[b] - p[a]); }
+// rank by confidence; when two are pinned at the cap, the one with more total evidence leads
+export function ranked(s) { const p = confidences(s); const raw = s.raw || {}; return HYP_ORDER.slice().sort((a, b) => (p[b] - p[a]) || ((raw[b] || 0) - (raw[a] || 0))); }
 
 /* ---------- critic: turn an answer into signals and update every hypothesis ---------- */
 export function applyAnswer(s, qid, indices) {
@@ -27,12 +28,13 @@ export function undoLast(s) {
 }
 export function recompute(s) {
   s.logit = Object.fromEntries(HYP_ORDER.map(h => [h, PRIOR]));
+  s.raw = Object.fromEntries(HYP_ORDER.map(h => [h, 0]));
   s.history = [];
   for (const qid of s.asked) {
     const q = byId[qid];
     for (const i of s.answers[qid] || []) {
       const opt = q.options[i]; if (!opt) continue;
-      for (const h in opt.sig) s.logit[h] = clampL(s.logit[h] + opt.sig[h]);
+      for (const h in opt.sig) { s.logit[h] = clampL(s.logit[h] + opt.sig[h]); s.raw[h] += opt.sig[h]; }
     }
     s.history.push(ranked(s)[0]);
   }
@@ -59,6 +61,9 @@ export function questionValue(s, q, p) {
   }
   v *= q.act;
   if (q.lens && !askedLenses.has(q.lens) && s.asked.length >= 2) v *= 1.4; // cover every lens early
+  // once a leader emerges, prefer the question that separates it from the runner-up
+  const r = ranked(s);
+  if (p[r[0]] >= .55) { const d = q.options.map(o => (o.sig[r[0]] || 0) - (o.sig[r[1]] || 0)); v += 1.2 * q.act * (Math.max(...d) - Math.min(...d)) / 3.6; }
   return v;
 }
 export function nextQuestion(s) {
@@ -72,6 +77,11 @@ export function nextQuestion(s) {
   if (n >= ACTOR.maxQuestions || (n >= ACTOR.minQuestions && (clear || quiet))) return INVERSION;
   const candidates = QUESTIONS.filter(q => !s.asked.includes(q.id) && (!q.gate || q.gate(p)));
   if (!candidates.length) return INVERSION;
+  // nothing left that could separate the top two: stop asking
+  if (n >= ACTOR.minQuestions && p[r[0]] >= .8) {
+    const sep = q => { const d = q.options.map(o => (o.sig[r[0]] || 0) - (o.sig[r[1]] || 0)); return Math.max(...d) - Math.min(...d); };
+    if (Math.max(...candidates.map(sep)) < 1.0) return INVERSION;
+  }
   return candidates.map(q => [questionValue(s, q, p), q]).sort((a, b) => b[0] - a[0])[0][1];
 }
 export function progress(s) { return Math.min(1, s.asked.length / (ACTOR.maxQuestions + 2)); }
@@ -83,8 +93,10 @@ export function diagnose(s, cost, ranges = {}) {
   const top = r[0], second = r[1], third = r[2];
   const low = p[top] < .42;
   const lensOf = h => HYPOTHESES[h].lens;
-  const topLenses = new Set([top, second, third].map(lensOf));
-  const coherence = !low && p[top] < .6 && (p[top] - p[third]) < .1 && topLenses.size === 3;
+  // coherence: several explanations moderately supported across all three lenses and no standout
+  const elevated = r.filter(h => p[h] >= .6);
+  const elevatedLenses = new Set(elevated.map(lensOf));
+  const coherence = !low && elevated.length >= 4 && elevatedLenses.size >= 2 && (p[top] - p[elevated[3]]) < .25;
 
   // lens loads and zone
   const load = { B: 0, S: 0, P: 0 };
@@ -134,7 +146,11 @@ export function diagnose(s, cost, ranges = {}) {
   }
   const econ = low ? null : (ECON_READS.find(e => e.when(p, ranges)) || null);
   const profile = PROFILE_ROWS.map(row => ({ k: row.k, expected: row.expected, observed: row.observe(p) }));
-  const label = confidenceLabel(p[top]);
+  // the label answers "how sure should you be about THIS read", so a close runner-up caps it
+  const margin0 = p[top] - p[second];
+  let label = confidenceLabel(p[top]);
+  const capAt = key => { const order = ['early', 'emerging', 'strong', 'high']; if (order.indexOf(label.key) > order.indexOf(key)) label = confidenceLabel({ early: 0, emerging: .45, strong: .65, high: .8 }[key]); };
+  if (coherence) capAt('emerging'); else if (margin0 < .06) capAt('emerging'); else if (margin0 < .18) capAt('strong');
   const experiment = EXPERIMENTS[top];
 
   return { p, ranked: r, top, second, third, low, coherence, zone, dominant, lensNorm, load, supports, contradicts, open, changedMind, forces: forces.slice(0, 4), play, experiment, estimate, econ, profile, label, margin: p[top] - p[second], asked: s.asked.slice() };

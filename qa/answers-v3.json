@@ -1,0 +1,919 @@
+{
+ "P1": {
+  "answers": {
+   "opener": [
+    0
+   ],
+   "direction": [
+    1
+   ],
+   "focus": [
+    1
+   ],
+   "economics": [
+    1
+   ],
+   "business_uncertainty": [
+    2
+   ],
+   "decisions": [
+    4
+   ],
+   "comeback": [
+    4
+   ],
+   "overrule": [
+    2
+   ],
+   "given": [
+    4
+   ],
+   "waiting": [
+    0
+   ],
+   "execution": [
+    1
+   ],
+   "execution_why": [
+    4,
+    2
+   ],
+   "leverage": [
+    1
+   ],
+   "repeat": [
+    3
+   ],
+   "authority": [
+    3
+   ],
+   "talent": [
+    1
+   ],
+   "trust": [
+    1
+   ],
+   "people_limits": [
+    1
+   ],
+   "inversion": [
+    1,
+    2
+   ],
+   "trust_last": [
+    0
+   ],
+   "analysis": [
+    0
+   ]
+  },
+  "rationale": {
+   "opener": "It's decisions coming to the top, plain and simple \u2014 pricing exceptions, hires, escalations, roadmap calls all end up on the same desk.",
+   "direction": "We all say 'land mid-market, expand upmarket' the same way, so mostly similar rather than identical \u2014 the words match more than the read on urgency does.",
+   "focus": "I could probably name a fifth of what to cut, but I'd want to check with two other VPs first.",
+   "economics": "Our reporting ties back to ARR and retention well enough, though a few initiatives lean on 'strategic value' more than a number.",
+   "business_uncertainty": "Upmarket expansion means bigger, slower deals, and we're still feeling out where to put incremental investment.",
+   "decisions": "People don't feel authorized because they've watched the founder reverse a call after it was made \u2014 more honest than 'leaders disagree,' since we mostly agree, we just don't trust the decision will stick.",
+   "comeback": "Honestly, it's habit as much as risk \u2014 the founder simply prefers to decide centrally at this point, even for calls a director could make.",
+   "overrule": "It gets reversed often enough that managers have learned to ask first rather than risk it.",
+   "given": "When something does land on a manager's desk, they usually wait for a steer before committing, because acting without one has burned people before.",
+   "waiting": "Almost every stuck decision is waiting on one person's calendar, not a meeting or a document.",
+   "execution": "Once something clears the founder's desk it does get done, just on founder-time, not team-time.",
+   "execution_why": "The process funnels everything through one person's calendar, and that person is also the scarcest resource in the building \u2014 poor process and lack of capacity are really the same bottleneck.",
+   "leverage": "Managers aren't heroically working around the system, they're just waiting on it, so it's some, not a lot.",
+   "repeat": "Whether something gets repeated cleanly really depends on whether the founder was the one who made the original call.",
+   "authority": "Above a certain dollar amount or title, it goes to the founder, no matter who's accountable for the outcome.",
+   "talent": "Most of the time our capable managers are on the right problems; the friction is speed, not allocation.",
+   "trust": "People raise real issues, they just phrase them carefully when the founder's in the room.",
+   "people_limits": "Straightforwardly lack of authority \u2014 my managers know what to do and aren't allowed to just do it.",
+   "inversion": "Centralizing more decisions in the founder and adding one more approval step are exactly the two levers that would make this worse, and both have crept in over the last year.",
+   "trust_last": "(stand-in, mapped from the trust answer; the agent will re-answer this in the next round)",
+   "analysis": "(stand-in from the persona narrative; the agent will re-answer this)"
+  },
+  "cost": {
+   "managers": 10,
+   "hours": 5,
+   "rate": 140
+  },
+  "ranges": {
+   "revenue": "$10\u201325M",
+   "profit": "Break-even"
+  },
+  "hoped_for": "I hope it says plainly that this is a decision-rights problem, not a trust or strategy problem \u2014 the founder needs to name specific decisions to let go of, in writing, and then actually not overrule them. Generic advice like 'communicate the vision better' would miss it completely, since the vision is already shared; what's missing is permission to act on it. The real fix is a short list of decisions moved down, with the founder's name taken off the approval chain for each."
+ },
+ "P2": {
+  "answers": {
+   "opener": [
+    4
+   ],
+   "direction": [
+    1
+   ],
+   "focus": [
+    2
+   ],
+   "economics": [
+    2
+   ],
+   "business_uncertainty": [
+    3
+   ],
+   "decisions": [
+    6
+   ],
+   "comeback": [
+    5
+   ],
+   "overrule": [
+    0
+   ],
+   "given": [
+    0
+   ],
+   "waiting": [
+    4
+   ],
+   "execution": [
+    2
+   ],
+   "execution_why": [
+    0,
+    2
+   ],
+   "leverage": [
+    1
+   ],
+   "repeat": [
+    1
+   ],
+   "authority": [
+    1
+   ],
+   "talent": [
+    2
+   ],
+   "trust": [
+    1
+   ],
+   "people_limits": [
+    0
+   ],
+   "inversion": [
+    0,
+    3
+   ],
+   "trust_last": [
+    0
+   ],
+   "analysis": [
+    0
+   ]
+  },
+  "rationale": {
+   "opener": "Too many priorities, nothing gets finished \u2014 that's the whole company in one sentence right now.",
+   "direction": "Grow private label, protect margin \u2014 everyone can say that part the same way.",
+   "focus": "With 40-plus live initiatives all carrying a sponsor, I couldn't tell you which eight would come off the list without a fight.",
+   "economics": "We can connect the top handful to margin; most of the other thirty-five were never tested against it that hard.",
+   "business_uncertainty": "The uncertainty isn't what to start, it's what to stop, and nobody wants to be the one whose initiative gets killed.",
+   "decisions": "Decisions themselves move fine here \u2014 nobody's stuck waiting on a call, we're stuck on volume.",
+   "comeback": "They genuinely don't come back up much \u2014 that's not where our friction lives.",
+   "overrule": "Managers' calls stand; authority was never the constraint.",
+   "given": "When someone's given a decision they make it well \u2014 that's not our gap.",
+   "waiting": "Nothing here is waiting on a decision \u2014 it's waiting on capacity that doesn't exist.",
+   "execution": "Things that matter slip sometimes, not because anyone drops the ball, but because there's more committed than there is capacity to deliver.",
+   "execution_why": "Too many competing priorities and plain lack of capacity are the same story \u2014 capacity was assumed when the list grew, never actually counted.",
+   "leverage": "It's not heavy workaround territory, people just have more assigned than they can get to.",
+   "repeat": "Some things repeat cleanly, some get reinvented each time because nobody had the bandwidth to write down what worked.",
+   "authority": "People have the authority to run their initiatives; that was never the constraint.",
+   "talent": "Good people get spread across too many of the 40, so their best hours don't concentrate on the two or three that actually move margin.",
+   "trust": "Nothing about this culture makes it unsafe to speak up \u2014 if anything, everyone's a little too willing to add one more thing.",
+   "people_limits": "With 40 initiatives all labeled priority, nobody actually knows which one to protect first.",
+   "inversion": "Adding more priorities and avoiding the hard conversation about killing anything is basically our current operating model, described honestly.",
+   "trust_last": "(stand-in, mapped from the trust answer; the agent will re-answer this in the next round)",
+   "analysis": "(stand-in from the persona narrative; the agent will re-answer this)"
+  },
+  "cost": {
+   "managers": 15,
+   "hours": 6,
+   "rate": 160
+  },
+  "ranges": {
+   "revenue": "$25M+",
+   "profit": "1\u20135%"
+  },
+  "hoped_for": "I hope the diagnosis says the strategy is fine and the problem is a portfolio one: too much started, nothing retired, capacity never actually counted against the list. Advice that tells us to prioritize better won't land \u2014 we've ranked these forty things a dozen times. What would actually help is permission, from the top, to formally kill a fifth of them this quarter and say out loud what's no longer expected."
+ },
+ "P3": {
+  "answers": {
+   "opener": [
+    2
+   ],
+   "direction": [
+    1
+   ],
+   "focus": [
+    1
+   ],
+   "economics": [
+    1
+   ],
+   "business_uncertainty": [
+    3
+   ],
+   "decisions": [
+    6
+   ],
+   "comeback": [
+    5
+   ],
+   "overrule": [
+    0
+   ],
+   "given": [
+    0
+   ],
+   "waiting": [
+    4
+   ],
+   "execution": [
+    1
+   ],
+   "execution_why": [
+    4,
+    6
+   ],
+   "leverage": [
+    3
+   ],
+   "repeat": [
+    3
+   ],
+   "authority": [
+    1
+   ],
+   "talent": [
+    2
+   ],
+   "trust": [
+    2
+   ],
+   "people_limits": [
+    3
+   ],
+   "inversion": [
+    6,
+    7
+   ],
+   "trust_last": [
+    4
+   ],
+   "analysis": [
+    0
+   ]
+  },
+  "rationale": {
+   "opener": "We keep solving the same problems every single day \u2014 the board, the kits, the schedule, over and over.",
+   "direction": "Throughput and safety are the answer everyone in this department would give \u2014 mostly similar, not word-for-word identical.",
+   "focus": "We'd probably know what to trim on the admin side, though clinically almost nothing feels optional.",
+   "economics": "It ties to volume and safety metrics well enough at our level, even if the finance connection two floors up is fuzzier.",
+   "business_uncertainty": "Nothing has ever been formally stopped here to make room, we've just absorbed more onto the same three people.",
+   "decisions": "Around here, decisions don't really get stuck \u2014 the three coordinators just make the call and fix it, which is exactly the problem in disguise.",
+   "comeback": "They don't come back up to leadership \u2014 that's the whole issue, leadership never sees any of this.",
+   "overrule": "A coordinator's call stands; nobody above questions it because nobody above is watching closely.",
+   "given": "When one of them is handed something to decide, they handle it well \u2014 competence was never the gap.",
+   "waiting": "Nothing waits on a decision here; it waits on someone physically doing the workaround.",
+   "execution": "Things that matter do happen, usually, because three people make absolutely sure of it by hand every single day.",
+   "execution_why": "It's poor process and team dependencies \u2014 the scheduling and supply systems don't talk to each other or to the surgeons, so someone has to bridge that gap manually.",
+   "leverage": "Almost everything depends on it \u2014 take those three coordinators out for a week and I don't know what the board looks like by Wednesday.",
+   "repeat": "Whether something works again really depends on which of the three coordinators is on shift that day.",
+   "authority": "Nobody's blocked on permission; we're blocked on the tools doing what they should.",
+   "talent": "Sometimes they're on the highest-value work, but a lot of their day is hand-counting kits and texting surgeons instead of the judgment calls only they can make.",
+   "trust": "Outcomes look smooth to leadership, so it depends whether anyone up top is even looking before a real problem gets said out loud.",
+   "people_limits": "The coordinators don't have the information in one place, so they gather it by hand because the systems won't tell them.",
+   "inversion": "Keep patching each new gap as its own one-off and let leadership keep not looking closely \u2014 that's precisely how this stays invisible and gets worse.",
+   "trust_last": "(stand-in, mapped from the trust answer; the agent will re-answer this in the next round)",
+   "analysis": "(stand-in from the persona narrative; the agent will re-answer this)"
+  },
+  "cost": {
+   "managers": 5,
+   "hours": 15,
+   "rate": 90
+  },
+  "ranges": {
+   "revenue": "$25M+",
+   "profit": "Break-even"
+  },
+  "hoped_for": "I hope it names the real story: results look fine because three people are quietly absorbing a broken process, not because the process works. Telling us to 'empower staff more' would be beside the point \u2014 they're already fully empowered and exhausted. What would actually help is naming the single biggest manual workaround, building it into the scheduling and supply system, and giving those three coordinators credit for having surfaced it instead of just praise for covering it."
+ },
+ "P4": {
+  "answers": {
+   "opener": [
+    3
+   ],
+   "direction": [
+    3
+   ],
+   "focus": [
+    2
+   ],
+   "economics": [
+    2
+   ],
+   "business_uncertainty": [
+    2
+   ],
+   "decisions": [
+    3
+   ],
+   "comeback": [
+    3
+   ],
+   "overrule": [
+    1
+   ],
+   "given": [
+    4
+   ],
+   "waiting": [
+    3
+   ],
+   "execution": [
+    1
+   ],
+   "execution_why": [
+    5,
+    0
+   ],
+   "leverage": [
+    1
+   ],
+   "repeat": [
+    1
+   ],
+   "authority": [
+    1
+   ],
+   "talent": [
+    1
+   ],
+   "trust": [
+    1
+   ],
+   "people_limits": [
+    0
+   ],
+   "inversion": [
+    3,
+    0
+   ],
+   "trust_last": [
+    0
+   ],
+   "analysis": [
+    1
+   ]
+  },
+  "rationale": {
+   "opener": "Leaders don't agree on what matters \u2014 that's the whole thing, stated plainly.",
+   "direction": "Ask the CEO, CFO, and sales lead for the top three and you'll get growth, margin, and volume respectively \u2014 genuinely different, not just phrased differently.",
+   "focus": "I could name candidates to cut, but three different executives would each protect a different fifth.",
+   "economics": "We have plenty of data; the argument is always about which number the data is supposed to prove.",
+   "business_uncertainty": "Growth, margin, or volume deals \u2014 where we actually put incremental investment depends on whose logic wins this quarter.",
+   "decisions": "Most stalls trace straight back to the same three people wanting different things, not to process or ownership.",
+   "comeback": "Big cross-functional calls get pulled to the top because the stakes are real and nobody below is willing to referee a CEO-CFO disagreement.",
+   "overrule": "Most of the time we talk it through afterward rather than an outright reversal \u2014 the disagreement is civil, just unresolved.",
+   "given": "Teams wait for a steer before really committing, because acting on the wrong version of the strategy is expensive.",
+   "waiting": "Almost everything that stalls is waiting on agreement between leaders that never quite arrives.",
+   "execution": "The machinery underneath is decent, so when we do land on one direction, it usually happens.",
+   "execution_why": "Direction changes from the top before the last version finished, and that collides with whatever else was already committed.",
+   "leverage": "It's not workaround-heavy execution \u2014 the problem is upstream of execution, at what we're even being asked to execute.",
+   "repeat": "Sometimes we repeat a success cleanly, sometimes it gets redone because the underlying priority shifted before anyone documented it.",
+   "authority": "My team is empowered to run their piece; they're just not sure which piece is the real one this quarter.",
+   "talent": "Capable people, mostly on reasonable work, but some of it is duplicated effort chasing the CFO's version and the CEO's version in parallel.",
+   "trust": "It's safe enough to raise concerns; the disagreement is out in the open at the top, if anything, it's too visible.",
+   "people_limits": "Teams don't act decisively because they don't know which version of the strategy is actually the one to bet on.",
+   "inversion": "Avoiding the real argument at the top and letting each function keep adding its own priority list on top \u2014 that's exactly what's already happening.",
+   "trust_last": "(stand-in, mapped from the trust answer; the agent will re-answer this in the next round)",
+   "analysis": "(stand-in from the persona narrative; the agent will re-answer this)"
+  },
+  "cost": {
+   "managers": 12,
+   "hours": 5,
+   "rate": 170
+  },
+  "ranges": {
+   "revenue": "$25M+",
+   "profit": "10\u201320%"
+  },
+  "hoped_for": "I want it to say the execution layer is fine and the fracture is at the top \u2014 three defensible, mutually exclusive versions of what matters, each pushed down as if it were the only one. Coaching my team on execution discipline would be wasted effort; the fix has to happen in a room with the CEO, CFO, and sales lead, forcing one list before anything else changes. Short of that, we'll keep running parallel plans and calling it alignment."
+ },
+ "P5": {
+  "answers": {
+   "opener": [
+    6
+   ],
+   "direction": [
+    1
+   ],
+   "focus": [
+    1
+   ],
+   "economics": [
+    1
+   ],
+   "business_uncertainty": [
+    2
+   ],
+   "decisions": [
+    4
+   ],
+   "comeback": [
+    3
+   ],
+   "overrule": [
+    3
+   ],
+   "given": [
+    3
+   ],
+   "waiting": [
+    0
+   ],
+   "execution": [
+    1
+   ],
+   "execution_why": [
+    7,
+    0
+   ],
+   "leverage": [
+    1
+   ],
+   "repeat": [
+    3
+   ],
+   "authority": [
+    2
+   ],
+   "talent": [
+    1
+   ],
+   "trust": [
+    3
+   ],
+   "people_limits": [
+    4
+   ],
+   "inversion": [
+    3,
+    5
+   ],
+   "trust_last": [
+    2
+   ],
+   "analysis": [
+    0
+   ]
+  },
+  "rationale": {
+   "opener": "People don't say what they think \u2014 that's the honest headline of this firm right now.",
+   "direction": "Strategy is reasonably clear across the partnership, mostly similar rather than identical since each practice area colors it slightly.",
+   "focus": "I could probably point to the low performers, though I'd think twice before saying so out loud.",
+   "economics": "The numbers are there and mostly understood; what's murkier is which engagements are quietly underwater.",
+   "business_uncertainty": "Where to invest is murkier than it should be, since the honest read on which engagements are actually working never fully surfaces.",
+   "decisions": "People technically have authority but use it cautiously, so it reads as not feeling authorized more than any real ambiguity about who decides.",
+   "comeback": "It comes back up when the consequence of getting it wrong feels personal \u2014 that's when people suddenly want cover.",
+   "overrule": "People check first, so it rarely even gets to the point of being overruled; they've learned to avoid the exposure entirely.",
+   "given": "Given a real decision, people often hand it back rather than own something that could go badly for them.",
+   "waiting": "Decisions often wait on a specific person's mood or reaction, more than on a meeting or missing data.",
+   "execution": "Most things get done \u2014 the process itself is ordinary, not broken.",
+   "execution_why": "Follow-through quietly slips when a commitment turns out to be attached to bad news nobody wants to own, and priorities pile up around it.",
+   "leverage": "Some workaround, mostly at the level of people managing the managing partners rather than the work itself.",
+   "repeat": "Whether something repeats cleanly really depends on which partner was involved the first time.",
+   "authority": "On paper it's there; in practice people ask first because being wrong in front of the wrong partner has a cost.",
+   "talent": "Good people are mostly on the right work \u2014 this isn't a talent-allocation problem, it's a candor problem.",
+   "trust": "One person got sidelined for flagging a failing engagement and the whole firm remembers it \u2014 usually difficult, not universally impossible, but close.",
+   "people_limits": "Fear of being the next one sidelined is the whole story here.",
+   "inversion": "Avoiding the hard conversation and continuing to let the sidelining stand unaddressed \u2014 that's the loop keeping this alive.",
+   "trust_last": "(stand-in, mapped from the trust answer; the agent will re-answer this in the next round)",
+   "analysis": "(stand-in from the persona narrative; the agent will re-answer this)"
+  },
+  "cost": {
+   "managers": 6,
+   "hours": 5,
+   "rate": 200
+  },
+  "ranges": {
+   "revenue": "$25M+",
+   "profit": "20%+"
+  },
+  "hoped_for": "I hope it says clearly that this isn't a strategy or a talent problem, it's that bad news doesn't survive contact with the managing partners, so decisions run on filtered information and stay wrong longer than they should. Advice to 'improve communication' or run a survey would change nothing \u2014 the fix has to be one of the partners visibly rewarding the next person who says something hard, in the room, before anything else. Until that happens once, nobody will believe it's safe."
+ },
+ "P6": {
+  "answers": {
+   "opener": [
+    5
+   ],
+   "direction": [
+    1
+   ],
+   "focus": [
+    1
+   ],
+   "economics": [
+    1
+   ],
+   "business_uncertainty": [
+    4
+   ],
+   "decisions": [
+    6
+   ],
+   "comeback": [
+    5
+   ],
+   "overrule": [
+    0
+   ],
+   "given": [
+    0
+   ],
+   "waiting": [
+    4
+   ],
+   "execution": [
+    2
+   ],
+   "execution_why": [
+    2,
+    0
+   ],
+   "leverage": [
+    2
+   ],
+   "repeat": [
+    3
+   ],
+   "authority": [
+    1
+   ],
+   "talent": [
+    3
+   ],
+   "trust": [
+    1
+   ],
+   "people_limits": [
+    5
+   ],
+   "inversion": [
+    6,
+    5
+   ],
+   "trust_last": [
+    0
+   ],
+   "analysis": [
+    0
+   ]
+  },
+  "rationale": {
+   "opener": "Our best people are stuck on fires \u2014 that's the entire regional story in one line.",
+   "direction": "Every district director could name the same top three; the read on how urgent each one is differs a little.",
+   "focus": "I'd probably know what to trim, mostly around lower-impact programs, not the fire response itself.",
+   "economics": "Priorities connect to margin and comps well enough at the regional level.",
+   "business_uncertainty": "We know how to grow in theory; we just never protect the time to actually do it.",
+   "decisions": "Decisions move fine and fast here \u2014 the constraint is people-hours, not decision rights.",
+   "comeback": "They basically don't come back up to me \u2014 my DMs handle their own calls, they're just handling too many of the wrong kind.",
+   "overrule": "A DM's call stands; I'm not overruling people, I'm just watching their calendars fill with the wrong work.",
+   "given": "When a DM is handed a decision, they make it well \u2014 capability was never the issue.",
+   "waiting": "Nothing here waits on a decision; it waits on a person having an open hour.",
+   "execution": "New-format rollouts and training slip sometimes because whoever's free, not whoever's best, ends up owning them.",
+   "execution_why": "It's plain lack of capacity \u2014 my best DMs are already fully spoken for by store fires before growth work even gets a look.",
+   "leverage": "A lot depends on individual DMs personally making a save happen store by store.",
+   "repeat": "Whether a fix sticks really depends on which DM handled it \u2014 the strong ones make it stick, others just get through the day.",
+   "authority": "DMs have the authority they need; that was never the blocker.",
+   "talent": "Rarely \u2014 my strongest DMs are almost always the ones pulled into the next fire, not put on the next format rollout.",
+   "trust": "Nothing unsafe about speaking up here; bad news travels fine, it's just that everyone's too busy fighting it to fix the cause.",
+   "people_limits": "Firefighting is visible and gets noticed; building the next store format quietly isn't \u2014 the incentives point at the fire every time.",
+   "inversion": "Keep treating every fire as a one-off and keep rewarding whoever puts it out fastest \u2014 that's the exact loop keeping our best people stuck on fires.",
+   "trust_last": "(stand-in, mapped from the trust answer; the agent will re-answer this in the next round)",
+   "analysis": "(stand-in from the persona narrative; the agent will re-answer this)"
+  },
+  "cost": {
+   "managers": 20,
+   "hours": 10,
+   "rate": 120
+  },
+  "ranges": {
+   "revenue": "$25M+",
+   "profit": "1\u20135%"
+  },
+  "hoped_for": "I want the diagnosis to say this is a talent-allocation problem, full stop \u2014 not a strategy problem, not a decision-rights problem. My best DMs are the emergency service, and growth work gets the leftovers, which caps how fast we can actually improve anything. Advice about clarifying priorities won't help; what would help is a deliberate rule that protects a slice of my best people's time for format and training work no matter how loud the week's fires are."
+ },
+ "P7": {
+  "answers": {
+   "opener": [
+    7
+   ],
+   "direction": [
+    2
+   ],
+   "focus": [
+    2
+   ],
+   "economics": [
+    3
+   ],
+   "business_uncertainty": [
+    5
+   ],
+   "decisions": [
+    2
+   ],
+   "comeback": [
+    1
+   ],
+   "overrule": [
+    1
+   ],
+   "given": [
+    1
+   ],
+   "waiting": [
+    2
+   ],
+   "execution": [
+    1
+   ],
+   "execution_why": [
+    0,
+    2
+   ],
+   "leverage": [
+    1
+   ],
+   "repeat": [
+    4
+   ],
+   "authority": [
+    1
+   ],
+   "talent": [
+    2
+   ],
+   "trust": [
+    1
+   ],
+   "people_limits": [
+    0
+   ],
+   "inversion": [
+    4,
+    0
+   ],
+   "trust_last": [
+    0
+   ],
+   "analysis": [
+    2
+   ]
+  },
+  "rationale": {
+   "opener": "Effort is high but results aren't clearly tied to anything \u2014 that's exactly our problem, and the endless reporting doesn't fix it.",
+   "direction": "Ask three of our leaders what matters most and you'll get three answers shaped by whichever program each is closest to \u2014 quite different.",
+   "focus": "Without knowing what actually drives funding or outcomes, cutting 20% would be closer to guessing than deciding.",
+   "economics": "Honestly, not clearly \u2014 we cannot cleanly say which programs drive funding, outcomes, or cost, and that's the whole problem.",
+   "business_uncertainty": "We cannot say cleanly where our impact or our funding actually comes from, and everything else follows from that gap.",
+   "decisions": "It's not that we lack information generally, it's that we lack the specific economic information that would settle an argument instead of prolonging it.",
+   "comeback": "It comes back up for lack of information, basically every time \u2014 nobody at the board level has the number that would settle it.",
+   "overrule": "We talk it through afterward; there's real autonomy here, the gap isn't authority.",
+   "given": "People make decisions, just slowly, because they're waiting on information about impact or cost that never quite arrives.",
+   "waiting": "Almost everything waits on data or analysis, which is ironic given how much of it we already produce.",
+   "execution": "Once the board actually picks something, my team executes it well \u2014 that part of the machine works.",
+   "execution_why": "Competing priorities and capacity both bite, mostly because nothing is ever formally deprioritized once a board member champions it.",
+   "leverage": "Some reliance on individuals pushing things through, but it's not the dominant pattern here.",
+   "repeat": "We tend to reinvent it \u2014 without a clear economic case for what worked, each new program starts from scratch instead of building on the last.",
+   "authority": "People have real autonomy to run their programs once chosen.",
+   "talent": "Sometimes our most capable staff end up on whichever program had the loudest advocate rather than the one with the clearest impact.",
+   "trust": "Nothing unsafe about raising concerns; the problem is nobody has the data to make the concern land.",
+   "people_limits": "Staff genuinely don't know which program the organization actually believes matters most economically, so they follow whoever argued loudest last.",
+   "inversion": "We already measure activity and outputs endlessly instead of settling what drives outcomes, and the board keeps adding pet initiatives \u2014 doing more of both would finish the job.",
+   "trust_last": "(stand-in, mapped from the trust answer; the agent will re-answer this in the next round)",
+   "analysis": "(stand-in: reporting gets re-requested and never settles anything)"
+  },
+  "cost": {
+   "managers": 8,
+   "hours": 6,
+   "rate": 95
+  },
+  "ranges": {
+   "revenue": "$10\u201325M",
+   "profit": "Prefer not to say"
+  },
+  "hoped_for": "I hope it names the actual gap: we have plenty of analysis and none of it settles anything, because we've never made the economics \u2014 what really drives funding, outcomes, and cost \u2014 explicit enough to prioritize against. More dashboards or another impact report would just add to the pile. What would help is forcing each top program through a one-line trace to funding or outcome impact, so the board argument moves from 'who advocated hardest' to 'what the number says.'"
+ },
+ "P8": {
+  "answers": {
+   "opener": [
+    2
+   ],
+   "direction": [
+    0
+   ],
+   "focus": [
+    0
+   ],
+   "economics": [
+    0
+   ],
+   "business_uncertainty": [
+    2
+   ],
+   "decisions": [
+    6
+   ],
+   "comeback": [
+    5
+   ],
+   "overrule": [
+    0
+   ],
+   "given": [
+    0
+   ],
+   "waiting": [
+    4
+   ],
+   "execution": [
+    0
+   ],
+   "execution_why": [
+    6
+   ],
+   "leverage": [
+    0
+   ],
+   "repeat": [
+    0
+   ],
+   "authority": [
+    0
+   ],
+   "talent": [
+    0
+   ],
+   "trust": [
+    0
+   ],
+   "people_limits": [
+    3
+   ],
+   "inversion": [
+    0,
+    2
+   ],
+   "trust_last": [
+    0
+   ],
+   "analysis": [
+    0
+   ]
+  },
+  "rationale": {
+   "opener": "If I have to pick one, it's the rare cross-team dependency that takes an extra day \u2014 genuinely the mildest thing I could find to complain about.",
+   "direction": "Every leader on my team would give you the same top three, in close to the same order.",
+   "focus": "I could name the bottom 20% right now, off the top of my head.",
+   "economics": "Every priority ties directly back to margin; we check it, not just assume it.",
+   "business_uncertainty": "The only live uncertainty is exactly where the next dollar of investment goes, which is a good problem to have.",
+   "decisions": "Decisions basically don't get stuck here \u2014 this question barely applies, honestly.",
+   "comeback": "They don't come back up \u2014 once handled, they stay handled.",
+   "overrule": "A manager's call stands; that's just how we operate.",
+   "given": "People make it well; that's not where our friction is, if we have any.",
+   "waiting": "Decisions don't wait here, which is part of why this all runs smoothly.",
+   "execution": "When we agree something matters, it happens, almost without exception.",
+   "execution_why": "This barely applies since things do happen, but if I had to name the rare miss, it's the odd cross-team dependency slipping a week.",
+   "leverage": "Very little depends on heroics, the systems genuinely carry the work.",
+   "repeat": "When something works, we repeat it \u2014 that's deliberate, not luck.",
+   "authority": "People have the authority that matches their accountability, cleanly.",
+   "talent": "Our best people are consistently on our best problems, which is deliberate.",
+   "trust": "Bad news travels fast here and nobody's ever paid for delivering it.",
+   "people_limits": "If there's ever a limiter, it's that some information takes a day or two to reach the right person, minor, not systemic.",
+   "inversion": "Piling on more priorities or adding an approval layer are the two things we actively guard against, precisely because we know what they'd do to this.",
+   "trust_last": "(stand-in, mapped from the trust answer; the agent will re-answer this in the next round)",
+   "analysis": "(stand-in from the persona narrative; the agent will re-answer this)"
+  },
+  "cost": {
+   "managers": 0,
+   "hours": 0,
+   "rate": 0
+  },
+  "ranges": {
+   "revenue": "$25M+",
+   "profit": "20%+"
+  },
+  "hoped_for": "Honestly, I'd hope it confirms what I already believe \u2014 that there's no major constraint here, maybe a very mild note about staying disciplined as we grow so none of this erodes. If it tried to manufacture a dramatic finding, I wouldn't trust it. The useful version of this diagnosis for a healthy org is a light-touch 'here's what to watch for as you scale,' not a forced constraint we don't actually have."
+ },
+ "P9": {
+  "answers": {
+   "opener": [
+    7
+   ],
+   "direction": [
+    1
+   ],
+   "focus": [
+    1
+   ],
+   "economics": [
+    2
+   ],
+   "business_uncertainty": [
+    2
+   ],
+   "decisions": [
+    3
+   ],
+   "comeback": [
+    3
+   ],
+   "overrule": [
+    1
+   ],
+   "given": [
+    1
+   ],
+   "waiting": [
+    3
+   ],
+   "execution": [
+    2
+   ],
+   "execution_why": [
+    0,
+    7
+   ],
+   "leverage": [
+    2
+   ],
+   "repeat": [
+    3
+   ],
+   "authority": [
+    2
+   ],
+   "talent": [
+    2
+   ],
+   "trust": [
+    2
+   ],
+   "people_limits": [
+    0
+   ],
+   "inversion": [
+    7,
+    6
+   ],
+   "trust_last": [
+    4
+   ],
+   "analysis": [
+    1
+   ]
+  },
+  "rationale": {
+   "opener": "Effort is high but results aren't quite where they should be \u2014 nothing dramatic, just a general sense that we work harder than the results show.",
+   "direction": "Leaders are mostly aligned, not identical, everyone's roughly pointed the same way with real edges of disagreement.",
+   "focus": "I could probably name what to cut, but I wouldn't bet the plan on my list matching the CEO's.",
+   "economics": "Priorities somewhat connect to value; the line exists but it's fuzzy in the middle of the org.",
+   "business_uncertainty": "Where to put incremental investment is a 'probably' answer, not a confident one.",
+   "decisions": "When something stalls, it's almost always because two leaders see it differently, not a process failure.",
+   "comeback": "It comes back up when the stakes feel high enough that nobody below wants to own the call alone.",
+   "overrule": "Mostly we talk it through afterward rather than reverse it outright \u2014 not perfect, but not punitive either.",
+   "given": "People make the call, just slowly, weighing it more than the stakes probably require.",
+   "waiting": "More often than not it's waiting on two leaders to actually agree, not on data or a missing owner.",
+   "execution": "Things get done sometimes, reliable enough not to worry about daily, not reliable enough to plan around confidently.",
+   "execution_why": "Competing priorities and inconsistent follow-through are both true a bit of the time, which is very on-brand for us, nothing dramatic, just enough friction everywhere.",
+   "leverage": "A lot still depends on specific people making it happen rather than the process carrying it on its own.",
+   "repeat": "Whether something repeats cleanly really depends on who was driving it the first time.",
+   "authority": "Authority is sometimes enough, depends on the decision and who's asking.",
+   "talent": "Our best people are sometimes on the right problems, sometimes just on whatever's loudest that week.",
+   "trust": "Whether it's safe to raise something depends on the situation, who's in the room, how bad the news is.",
+   "people_limits": "General fuzziness about what matters most limits people more than any single hard blocker.",
+   "inversion": "Doing nothing and letting each recurring issue get patched as its own one-off, that's basically our default state, not a hypothetical.",
+   "trust_last": "(stand-in, mapped from the trust answer; the agent will re-answer this in the next round)",
+   "analysis": "(stand-in from the persona narrative; the agent will re-answer this)"
+  },
+  "cost": {
+   "managers": 25,
+   "hours": 3,
+   "rate": 130
+  },
+  "ranges": {
+   "revenue": "$25M+",
+   "profit": "1\u20135%"
+  },
+  "hoped_for": "I hope it doesn't try to name one dramatic villain, because there isn't one, I'd expect it to say the friction is coherence itself: nothing is badly broken, but the small gaps in alignment, follow-through, and authority compound into real drag. Generic advice to 'pick a top priority' undersells it, since we've sort of done that already, just not tightly. What would help is picking one or two of these mild gaps, probably decision follow-through, and actually closing it instead of leaving everything at a 'mostly fine' shrug."
+ }
+}
