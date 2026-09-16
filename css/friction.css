@@ -392,6 +392,12 @@ details.more.on-dark details.further summary{color:#fff}
 .reading .book-t{font-size:1.15rem}
 .reading .book p{font-size:1rem; color:var(--ink); margin-top:.4rem}
 
+/* ---------- readability pass 2: remaining sentence-length Fraunces usage ---------- */
+.display.md{font-family:var(--font-body); font-weight:600; font-size:clamp(1.25rem,3.9vw,1.6rem); line-height:1.4; letter-spacing:-.01em; color:var(--deep)}
+.dont-t{font-family:var(--font-body); font-style:normal; font-weight:700; font-size:clamp(1.15rem,3.6vw,1.4rem); line-height:1.4; color:var(--sun-deep); margin-bottom:.5rem}
+.journey .move .t{font-family:var(--font-body); font-weight:700; font-size:clamp(1.15rem,3.6vw,1.4rem); line-height:1.4; color:var(--deep); margin-bottom:.4rem}
+.watch-metric{font-family:var(--font-body); font-weight:700; font-size:clamp(1.05rem,3.2vw,1.2rem); line-height:1.45; letter-spacing:normal}
+
 /* ---------- readability: sentence-length text uses the body face, upright ---------- */
 .q-title, .display.md.q-title{font-family:var(--font-body); font-weight:600; font-size:clamp(1.25rem,3.9vw,1.6rem); line-height:1.4; letter-spacing:-.01em; color:var(--deep)}
 .blind .display{font-family:var(--font-body); font-style:normal; font-weight:600; font-size:clamp(1.2rem,3.6vw,1.5rem); line-height:1.4; letter-spacing:-.01em}
