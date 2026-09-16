@@ -585,7 +585,8 @@ export const EXPERIMENTS = {
     steps: ['Pick the three decisions that most often stall.', 'For each, write who recommends, who decides, who is consulted, and when it is reviewed. Publish it.', 'Run the next instance of each under the new rights.'],
     days: 30, watch: ['Decision cycle time', 'Decisions reopened after being made', 'Number of escalations'],
     outcome: r => {
-      if (r['Decision cycle time'] === 'up' && r['Decisions reopened after being made'] !== 'up') return { text: 'Decisions moved faster but are still being reopened. Ownership helped; the reopening points to leadership disagreement underneath.', delta: { decision_rights: .5, direction: .8 } };
+      if (r['Number of escalations'] === 'up' && r['Decisions reopened after being made'] === 'down') return { text: 'Decision ownership improved, but decision quality did not: fewer escalations, more reopening. This points toward an information or capability constraint rather than decision rights alone.', delta: { decision_rights: .3, information: .8, capability: .6 }, weakened: 'the part of the read that said ownership alone would fix it' };
+      if (r['Decision cycle time'] === 'up' && r['Decisions reopened after being made'] !== 'up') return { text: 'Decisions moved faster but are still being reopened. Ownership helped; the reopening points to leadership disagreement underneath.', delta: { decision_rights: .5, direction: .8 }, weakened: 'the part of the read that put the whole delay on ownership' };
       return null;
     } },
   information: { hypothesis: 'Decisions wait on information that exists but doesn\'t reach them.',
@@ -677,3 +678,81 @@ export const LOW_FRICTION = {
 
 
 export const OUTCOME_OPTIONS = [ { key: 'up', t: 'Improved' }, { key: 'same', t: 'No change' }, { key: 'down', t: 'Worse' } ];
+
+// ---------- Critic-facing structure per hypothesis ----------
+// The causal chain, stage by stage: where the friction originates, how it transmits, where it amplifies, what it costs.
+// Labels line up one-to-one with PLAYBOOKS[h].chain.
+export const CHAIN_STAGES = {
+  direction:       ['BUSINESS', 'BUSINESS', 'PEOPLE', 'EXECUTION', 'SYSTEM', 'ECONOMICS'],
+  focus:           ['BUSINESS', 'SYSTEM', 'EXECUTION', 'EXECUTION', 'BUSINESS', 'ECONOMICS'],
+  economics:       ['BUSINESS', 'BUSINESS', 'SYSTEM', 'ECONOMICS', 'MANAGEMENT', 'ECONOMICS'],
+  decision_rights: ['SYSTEM', 'PEOPLE', 'MANAGEMENT', 'EXECUTION', 'MANAGEMENT', 'ECONOMICS'],
+  information:     ['SYSTEM', 'PEOPLE', 'EXECUTION', 'MANAGEMENT', 'SYSTEM', 'SYSTEM'],
+  execution:       ['BUSINESS', 'SYSTEM', 'PEOPLE', 'EXECUTION', 'MANAGEMENT', 'ECONOMICS'],
+  leverage:        ['SYSTEM', 'PEOPLE', 'MANAGEMENT', 'PEOPLE', 'SYSTEM', 'ECONOMICS'],
+  centralized:     ['MANAGEMENT', 'PEOPLE', 'SYSTEM', 'EXECUTION', 'MANAGEMENT', 'PEOPLE'],
+  capability:      ['MANAGEMENT', 'EXECUTION', 'MANAGEMENT', 'PEOPLE', 'PEOPLE', 'BUSINESS'],
+  talent:          ['MANAGEMENT', 'PEOPLE', 'BUSINESS', 'ECONOMICS', 'PEOPLE', 'ECONOMICS'],
+  trust:           ['PEOPLE', 'MANAGEMENT', 'SYSTEM', 'EXECUTION', 'PEOPLE', 'PEOPLE'],
+};
+export const STAGE_ROLE = { 0: 'Origin', 1: 'Transmission', 2: 'Transmission', 3: 'Amplification', 4: 'Amplification', 5: 'Consequence' };
+
+// The blind spot as a secondary hypothesis: a statement, and the cheapest test of it.
+export const BLIND_TESTS = {
+  direction:       'Ask each leader, separately, to write the top three. Count the distinct lists.',
+  focus:           'Ask three managers to name one thing that was formally stopped this year. Count the silences.',
+  economics:       'Ask three people which of the top five priorities makes the most money. Compare the answers.',
+  decision_rights: 'Pick the last three stalled decisions and ask who owned each. Count the shrugs.',
+  information:     'Take the last decision that waited "for data". Ask whether the data existed somewhere at the time.',
+  execution:       'List last quarter\'s commitments. Mark the ones that happened. Ask what happened to the rest.',
+  leverage:        'Ask the three most relied-upon people what they do by hand that the process should do.',
+  centralized:     'Ask three managers which decisions they believe they own without escalation. Compare with what you believe they own.',
+  capability:      'Ask a manager who "isn\'t ready" what they have been shown about how the decision is made. Listen for "nothing".',
+  talent:          'Pull last week\'s calendars for your five best people. Mark the hours on the top three priorities.',
+  trust:           'Ask three people, privately, what they would say in the leadership meeting if there were no cost. Note what they haven\'t said.',
+};
+
+// What not to do, as a counterfactual: if the read is right, the sensible-looking fix should make it worse.
+export const COUNTERFACTUALS = {
+  direction:       { should: 'communicating the strategy more clearly', worse: 'produce three clearer versions of three strategies', because: 'the evidence points to a choice not made, not a message not sent' },
+  focus:           { should: 'a prioritisation framework', worse: 'produce a ranked list of everything you already have', because: 'the evidence points to nothing being stopped, not to a lack of ranking' },
+  economics:       { should: 'more reporting', worse: 'add measurement without adding a decision', because: 'the evidence points to value drivers never made explicit, not to missing numbers' },
+  decision_rights: { should: 'adding another approval layer', worse: 'slow the next decision further', because: 'the evidence points to unclear ownership, not insufficient oversight' },
+  information:     { should: 'a dashboard', worse: 'show everything to everyone and route nothing', because: 'the evidence points to a specific fact not reaching a specific decision' },
+  execution:       { should: 'a tighter tracking cadence', worse: 'show the slippage in higher resolution', because: 'the evidence points to commitments made without capacity, not to weak monitoring' },
+  leverage:        { should: 'hiring more of the people who make it happen', worse: 'scale the workaround', because: 'the evidence points to a process that doesn\'t carry the work, not to a shortage of heroes' },
+  centralized:     { should: 'an empowerment programme', worse: 'tell people they are empowered while the next decision still gets reversed', because: 'the evidence points to authority withheld in practice, not to people unaware of it' },
+  capability:      { should: 'pushing the decisions down again', worse: 'produce the same result and make the conclusion permanent', because: 'the evidence points to decisions never taught, not to people unwilling' },
+  talent:          { should: 'hiring more senior people', worse: 'add talent that will be spent the same way', because: 'the evidence points to how the best people\'s time is allocated, not to how much talent exists' },
+  trust:           { should: 'an anonymous survey', worse: 'confirm to everyone that speaking directly is unsafe', because: 'the evidence points to what happens when someone speaks, not to a lack of channels' },
+};
+
+// The experiment as the Actor sees it: action, target, expected effect. Steps and watch stay in EXPERIMENTS.
+export const EXPERIMENT_SPECS = {
+  direction:       { action: 'Choose one list', target: 'The leadership team', expected: ['↓ distinct top priorities', '↓ reopened decisions', '↓ conflicting requests'] },
+  focus:           { action: 'Stop the bottom fifth', target: 'Every active priority', expected: ['↑ capacity on the top three', '↑ agreed work delivered', 'little gets worse'] },
+  economics:       { action: 'Trace priorities to value', target: 'Your top five priorities', expected: ['↑ priorities with a named driver', '↑ resource shifts on economics', '↓ analysis that changes nothing'] },
+  decision_rights: { action: 'Define decision rights', target: '3 recurring decisions', expected: ['↓ decision latency', '↓ escalation', '↓ reopened decisions'] },
+  information:     { action: 'Design one information path', target: 'The decision that waits most', expected: ['↓ time for facts to arrive', '↓ decision latency', '↓ requests for more analysis'] },
+  execution:       { action: 'Protect three commitments', target: 'This quarter\'s commitments', expected: ['↑ delivered as committed', '↓ mid-quarter re-planning', 'blockers named early'] },
+  leverage:        { action: 'Design out one workaround', target: 'The biggest manual step', expected: ['↓ hours on workarounds', '↓ recurrences', 'results hold when the key person is away'] },
+  centralized:     { action: 'Move decisions down one level', target: '2 of the 5 most-escalated decisions', expected: ['↓ decision cycle time', '↓ escalations', '↑ leadership hours recovered'] },
+  capability:      { action: 'Coach one decision across', target: 'One manager, one recurring decision', expected: ['↑ decisions made below the top', '↓ rework on delegated decisions', '↑ leadership hours recovered'] },
+  talent:          { action: 'Reallocate your best people\'s week', target: 'Your five most capable people', expected: ['↑ top-talent time on top priorities', '↑ fires handled by others', 'progress on the protected problem'] },
+  trust:           { action: 'Change one meeting', target: 'The main leadership meeting', expected: ['↑ problems raised before incidents', '↓ time from noticed to raised', '↑ disagreements voiced'] },
+};
+
+// Which expected-vs-observed rows are primary signals for each read. Others are shown as "not a primary signal".
+export const PROFILE_PRIMARY = {
+  direction:       ['Priority load'],
+  focus:           ['Priority load'],
+  economics:       ['Priority load'],
+  decision_rights: ['Decision latency'],
+  information:     ['Decision latency'],
+  execution:       ['Priority load', 'Decision latency'],
+  leverage:        ['Rework and workarounds', 'Dependence on specific people'],
+  centralized:     ['Decision latency', 'Dependence on specific people'],
+  capability:      ['Decision latency'],
+  talent:          ['Dependence on specific people'],
+  trust:           ['Candour'],
+};

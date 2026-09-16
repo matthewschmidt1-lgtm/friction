@@ -1,5 +1,5 @@
 // Friction v3 — engine. Deterministic actor-critic over hypotheses. Pure functions plus a session object.
-import { HYPOTHESES, HYP_ORDER, OPENER, QUESTIONS, INVERSION, ALL_QUESTIONS, ACTOR, ZONES, PLAYBOOKS, EXPERIMENTS, ECON_READS, PROFILE_ROWS, confidenceLabel } from './content.js';
+import { HYPOTHESES, HYP_ORDER, OPENER, QUESTIONS, INVERSION, ALL_QUESTIONS, ACTOR, ZONES, PLAYBOOKS, EXPERIMENTS, EXPERIMENT_SPECS, ECON_READS, PROFILE_ROWS, PROFILE_PRIMARY, confidenceLabel } from './content.js';
 
 const PRIOR = -1.386; // p = 0.20
 const LOGIT_MIN = -4, LOGIT_MAX = 3.2; // p stays inside [0.02, 0.96]: the read can be strong, never certain
@@ -162,7 +162,7 @@ export function diagnose(s, cost, ranges = {}) {
     estimate = { managers: cost.managers, hours: cost.hours, hoursYear, rate: cost.rate || null, dollars: cost.rate ? hoursYear * cost.rate : null };
   }
   const econ = low ? null : (ECON_READS.find(e => e.when(p, ranges)) || null);
-  const profile = PROFILE_ROWS.map(row => ({ k: row.k, expected: row.expected, good: row.good, observed: row.observe(p) }));
+  const profile = PROFILE_ROWS.map(row => ({ k: row.k, expected: row.expected, good: row.good, observed: row.observe(p), primary: (PROFILE_PRIMARY[top] || []).includes(row.k) }));
   // the label answers "how sure should you be about THIS read", so a close runner-up caps it
   const margin0 = p[top] - p[second];
   let label = confidenceLabel(p[top]);
@@ -170,24 +170,35 @@ export function diagnose(s, cost, ranges = {}) {
   if (coherence) capAt('emerging'); else if (margin0 < .06) capAt('emerging'); else if (margin0 < .18) capAt('strong');
   const experiment = EXPERIMENTS[top];
 
-  return { p, ranked: r, top, second, third, low, coherence, zone, dominant, lensNorm, load, supports, contradicts, open, changedMind, forces: forces.slice(0, 4), play, experiment, estimate, econ, profile, label, margin: p[top] - p[second], asked: s.asked.slice() };
+  // the Critic's state, in one object: what it believes, why, what competes, what would test it
+  const critic = {
+    primary: { hyp: top, name: HYPOTHESES[top].name, confidence: label.label },
+    supporting: supports.slice(0, 5).map(x => x.obs),
+    competing: { hyp: second, name: HYPOTHESES[second].name, confidence: confidenceLabel(p[second]).label, evidence: supportsSecond.slice(0, 3).map(x => x.obs) },
+    disconfirming: contradicts.slice(0, 3).map(x => x.obs),
+    nextTest: open && open.question ? { kind: 'question', t: open.question } : { kind: 'experiment', t: `${experiment.days}-day ${(EXPERIMENT_SPECS[top] || {}).action || 'experiment'}`.toLowerCase() },
+  };
+  return { p, ranked: r, top, second, third, low, coherence, zone, dominant, lensNorm, load, supports, contradicts, open, changedMind, forces: forces.slice(0, 4), play, experiment, spec: EXPERIMENT_SPECS[top], estimate, econ, profile, label, critic, margin: p[top] - p[second], asked: s.asked.slice() };
 }
 
 /* ---------- learn: the experiment result is the reward signal ---------- */
 export function applyOutcome(entry, results) {
   const exp = EXPERIMENTS[entry.hyp];
+  const watch = exp ? exp.watch : Object.keys(results);
+  const predicted = watch.length; // the read predicted every watched measure would improve
+  const ups = watch.filter(w => results[w] === 'up').length, downs = watch.filter(w => results[w] === 'down').length;
   let out = exp && exp.outcome ? exp.outcome(results) : null;
   if (!out) {
-    const vals = Object.values(results);
-    const ups = vals.filter(v => v === 'up').length, downs = vals.filter(v => v === 'down').length;
-    if (ups >= 2) out = { text: 'The friction decreased on most of what you watched. The hypothesis held. Run Friction again to find what is now the constraint.', delta: { [entry.hyp]: 1.0 } };
-    else if (ups === 0 && downs >= 1) out = { text: 'It got worse. Either the move was aimed at a symptom, or something is reinforcing the friction harder than expected. The runner-up explanation rises.', delta: { [entry.hyp]: -.9, [entry.second]: .7 } };
-    else if (ups === 0) out = { text: 'No change. Either the move was too small to register, or the constraint is somewhere else. The runner-up explanation rises.', delta: { [entry.hyp]: -.5, [entry.second]: .5 } };
-    else out = { text: 'A partial result. Something moved and something didn\'t, which usually means the hypothesis is right about the mechanism and wrong about where it starts.', delta: { [entry.hyp]: .2, [entry.second]: .3 } };
+    if (ups === predicted) out = { text: 'Everything you watched improved. The read held. Run Friction again to find what is now the constraint.', delta: { [entry.hyp]: 1.0 }, verdict: 'strengthened' };
+    else if (ups === 0 && downs >= 1) out = { text: 'It got worse. The experiment weakened the read: either the move was aimed at a symptom, or something is reinforcing the friction harder than expected. The runner-up explanation rises.', delta: { [entry.hyp]: -.9, [entry.second]: .7 }, verdict: 'weakened' };
+    else if (ups === 0) out = { text: 'No change. The experiment weakened the read: either the move was too small to register, or the constraint is somewhere else. The runner-up explanation rises.', delta: { [entry.hyp]: -.5, [entry.second]: .5 }, verdict: 'weakened' };
+    else out = { text: `${ups} of ${predicted} improved. The experiment weakened part of the read: the mechanism looks right, but something the read didn't account for is holding the rest. The runner-up explanation rises.`, delta: { [entry.hyp]: .2, [entry.second]: .4 }, verdict: 'partly weakened' };
   }
+  out.verdict = out.verdict || (out.weakened ? 'partly weakened' : (ups === predicted ? 'strengthened' : 'partly weakened'));
+  out.predicted = predicted; out.observed = ups;
   const logit = { ...entry.logit };
   for (const h in out.delta) logit[h] = clampL((logit[h] ?? PRIOR) + out.delta[h]);
   const p = Object.fromEntries(HYP_ORDER.map(h => [h, sigmoid(logit[h])]));
   const newTop = HYP_ORDER.slice().sort((a, b) => p[b] - p[a])[0];
-  return { text: out.text, logit, p, newTop, changed: newTop !== entry.hyp };
+  return { text: out.text, logit, p, newTop, changed: newTop !== entry.hyp, verdict: out.verdict, predicted: out.predicted, observed: out.observed, weakened: out.weakened || null };
 }

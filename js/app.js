@@ -1,5 +1,5 @@
 // Friction v3 — app shell. The user sees a conversation; the engine sees hypotheses.
-import { LENSES, ZONES, ZONE_BY_CONSTRAINT, HYPOTHESES, COST, STAGES, CONSEQUENCE_WHY, LEVERAGE_WHY, LOW_FRICTION, OUTCOME_OPTIONS, INVERSION } from './content.js';
+import { LENSES, ZONES, ZONE_BY_CONSTRAINT, HYPOTHESES, COST, STAGES, CONSEQUENCE_WHY, LEVERAGE_WHY, LOW_FRICTION, OUTCOME_OPTIONS, INVERSION, CHAIN_STAGES, STAGE_ROLE, BLIND_TESTS, COUNTERFACTUALS } from './content.js';
 import { newSession, applyAnswer, undoLast, nextQuestion, progress, diagnose, applyOutcome, confidences, byId } from './engine.js';
 
 const STORAGE = 'friction.v3';
@@ -207,41 +207,47 @@ const SCREENS = {
         ${r.dominant ? `<p class="quiet">The pull comes mostly from <strong>${esc(LENSES[r.dominant].name)}</strong>. The constraint above is the more certain part of this read.</p>` : ''}
         ${frictionMap(r)}
         <div class="expanders">
-          ${exp_('Trace how it compounds', 'The chain, and what\'s reinforcing it', `<ol class="chain" aria-label="Causal chain">${play.chain.map(c => `<li>${esc(c)}</li>`).join('')}</ol><div class="forces"><p class="eyebrow">What's reinforcing it</p><ul>${r.forces.map(f => `<li class="${f.src === 'pattern' ? 'from-pattern' : 'from-you'}"><span>${esc(f.t)}</span><small>${f.src === 'pattern' ? 'typical of this constraint' : 'from your answers'}</small></li>`).join('')}</ul></div>`)}
-          ${exp_('Other explanations we weighed', 'Ranked by how well your answers support them', `<ol class="hyps">${r.ranked.slice(0, 5).map(h => `<li><span class="hyp-bar"><i style="width:${Math.round(r.p[h] * 100)}%"></i></span><span class="hyp-n">${esc(hypName(h))}</span><span class="hyp-l">${esc(confidenceLabelText(r.p[h]))}</span></li>`).join('')}</ol><p class="quiet">Confidence is shown as a label rather than a number on purpose. Nine to twelve answers can rank explanations; they can't measure them.</p>`)}
+          ${exp_('Trace how it compounds', 'Origin, transmission, amplification, consequence', `<ol class="chain staged" aria-label="Causal chain">${play.chain.map((c, i) => `<li><span class="stage"><b>${esc((CHAIN_STAGES[r.top] || [])[i] || '')}</b><i>${esc(STAGE_ROLE[i] || '')}</i></span><span>${esc(c)}</span></li>`).join('')}</ol><div class="forces"><p class="eyebrow">What's reinforcing it</p><ul>${r.forces.map(f => `<li class="${f.src === 'pattern' ? 'from-pattern' : 'from-you'}"><small>${f.src === 'pattern' ? 'Our inference' : 'From your answers'}</small><span>${esc(f.t)}</span></li>`).join('')}</ul></div>`)}
+          ${exp_('Other explanations we weighed', 'How strongly your answers support each', `<ol class="hyps">${r.ranked.slice(0, 5).map(h => `<li><span class="hyp-bar"><i style="width:${Math.round(r.p[h] * 100)}%"></i></span><span class="hyp-n">${esc(hypName(h))}</span><span class="hyp-l">${esc(confidenceLabelText(r.p[h]))}</span></li>`).join('')}</ol><p class="quiet">Confidence is shown as a label rather than a number on purpose. Nine to twelve answers can rank explanations; they can't measure them.</p>`)}
           ${exp_('How to read this map', 'Three lenses, and the gaps between them', `<p>Each corner is a lens. The pools show how much of the current evidence sits in each one. The friction point sits on the gap between the lens of the current read and the lens of the strongest competing explanation.</p><div class="bars">${lensRow('B')}${lensRow('S')}${lensRow('P')}</div>`)}
         </div>
       </div>
 
       <div class="jstep stagger">
-        ${step('03', 'What it\'s costing', est ? 'Your estimate' : 'The business consequence')}
-        <div class="cons-chips">${play.consequences.map(c => `<span class="chip">${esc(c)}</span>`).join('')}</div>
-        ${est ? `<p class="est-big est-sun" style="margin-top:1rem">≈ ${est.dollars ? `$${fmt(est.dollars)}` : fmt(est.hoursYear) + ' hours'} a year</p><p class="quiet">${fmt(est.managers)} managers × ${fmt(est.hours)} hours a week × 48 weeks${est.dollars ? `, at $${fmt(est.rate)} per loaded hour` : ''}. Illustrative, based on your inputs, not an audit.</p>` : ''}
+        ${step('03', 'What it\'s costing', est ? 'Visible cost first, then what it may lead to' : 'What it may lead to')}
+        ${est ? `<div class="visible-cost"><p class="k">Capacity cost</p><p class="est-big est-sun">≈ ${est.dollars ? `$${fmt(est.dollars)}` : fmt(est.hoursYear) + ' hours'} a year</p><p class="quiet">${fmt(est.managers)} managers × ${fmt(est.hours)} hours a week × 48 weeks${est.dollars ? `, at $${fmt(est.rate)} per loaded hour` : ''}. Illustrative estimate based on your inputs. This is leadership capacity consumed, not revenue lost.</p></div>` : ''}
+        <div class="downstream"><p class="k">Potential downstream effects</p><p class="quiet" style="margin-bottom:.5rem">The financial consequence may be larger than the visible capacity cost.</p><ol class="arrows">${play.consequences.map(c => `<li><b>${esc(c)}</b><span>${esc(CONSEQUENCE_WHY[c] || '')}</span></li>`).join('')}<li><b>Opportunity cost</b><span>What the capacity could have gone to, below.</span></li></ol></div>
         ${r.econ ? `<div class="econ"><p class="eyebrow">What your operating profile suggests <span class="econ-conf">· ${esc(r.econ.conf)} confidence</span></p><p class="econ-t">${esc(r.econ.t)}</p><p>${esc(r.econ.d)}</p></div>` : ''}
         <div class="leverage" style="margin-top:1.2rem">
           <p class="eyebrow">What that capacity could be doing instead</p>
           <ul>${play.leverage.map(l => `<li><b>${esc(l)}</b><span>${esc(LEVERAGE_WHY[l])}</span></li>`).join('')}</ul>
         </div>
-        ${exp_('Expected vs observed', 'Your operating profile, on the traits your answers can see', `<div class="tablewrap"><table class="profile"><thead><tr><th>Trait</th><th>Expected</th><th>Observed</th></tr></thead><tbody>${r.profile.map(row => `<tr><td>${esc(row.k)}</td><td>${esc(row.expected)}</td><td class="obs ${row.good && row.good.includes(row.observed) ? 'obs-ok' : 'obs-off'}">${esc(row.observed)}${row.good && row.good.includes(row.observed) ? '' : ' <span class="flag" title="outside the expected range">◆</span>'}</td></tr>`).join('')}</tbody></table></div><p class="quiet">Expected is what a business of your shape usually looks like, not a benchmark. Observed comes from your answers. Numeric benchmarks by industry and size are a later phase, once there is real data to draw them from.</p><ul class="cons" style="margin-top:.8rem">${play.consequences.map(c => `<li><b>${esc(c)}</b><span>${esc(CONSEQUENCE_WHY[c] || '')}</span></li>`).join('')}</ul>`)}
+        ${exp_('Expected vs observed', 'Your operating profile, on the traits your answers can see', `<div class="tablewrap"><table class="profile"><thead><tr><th>Trait</th><th>Expected</th><th>Observed</th></tr></thead><tbody>${r.profile.map(row => `<tr class="${row.primary ? 'primary' : ''}"><td>${esc(row.k)}<small>${row.primary ? 'Primary signal' : 'Not a primary signal'}</small></td><td>${esc(row.expected)}</td><td class="obs ${row.good && row.good.includes(row.observed) ? 'obs-ok' : 'obs-off'}">${esc(row.observed)}${row.good && row.good.includes(row.observed) ? '' : ' <span class="flag" title="outside the expected range">◆</span>'}</td></tr>`).join('')}</tbody></table></div><p class="quiet">Expected is what a business of your shape usually looks like, not a benchmark. Observed comes from your answers. A row marked "not a primary signal" can sit inside the expected range even when the read is strong: the bottleneck isn't always that leaders do everything themselves, it is often that decisions still travel upward. Numeric benchmarks by industry and size are a later phase, once there is real data to draw them from.</p><ul class="cons" style="margin-top:.8rem">${play.consequences.map(c => `<li><b>${esc(c)}</b><span>${esc(CONSEQUENCE_WHY[c] || '')}</span></li>`).join('')}</ul>`)}
       </div>
 
       <div class="jstep stagger">
         ${step('04', 'Possible blind spot', 'What everyone may have learned to accept')}
-        <div class="blind"><p class="eyebrow">A hypothesis worth testing</p><h2 class="display md">${esc(play.blind)}</h2><p>Sometimes the hardest thing to see is what everyone has learned to accept. If this sounds familiar, the friction has probably been normalised long enough that it no longer registers as a problem.</p></div>
+        <div class="blind"><p class="eyebrow">A secondary hypothesis</p><h2 class="display md">${esc(play.blind)}</h2><p>Sometimes the hardest thing to see is what everyone has learned to accept. This is not a finding. It is the hypothesis that would explain why the primary one has persisted.</p>
+          <div class="blind-meta"><div><span class="k">Evidence</span><span>${esc(r.label.key === 'high' ? 'Moderate' : r.label.key === 'strong' ? 'Moderate' : 'Emerging')}</span></div><div><span class="k">Cheapest test</span><span>${esc(BLIND_TESTS[r.top] || '')}</span></div></div></div>
       </div>
 
       <div class="jstep stagger">
         ${step('05', 'What not to do', 'The fix that would make it worse')}
-        <div class="dont"><p class="dont-t">${esc(play.notDo.t)}</p><p>${esc(play.notDo.d)}</p></div>
+        <div class="dont">
+          ${COUNTERFACTUALS[r.top] ? `<p class="cf"><span class="k">Counterfactual</span>If this read is right, ${esc(COUNTERFACTUALS[r.top].should)} should ${esc(COUNTERFACTUALS[r.top].worse)}.</p>` : ''}
+          <p class="dont-t">${esc(play.notDo.t)}</p>
+          <p><span class="k">Because</span> ${COUNTERFACTUALS[r.top] ? esc(COUNTERFACTUALS[r.top].because.charAt(0).toUpperCase() + COUNTERFACTUALS[r.top].because.slice(1)) + '. ' : ''}${esc(play.notDo.d)}</p>
+        </div>
       </div>
 
       <div class="jstep stagger">
         ${step('06', 'Take it into the business', 'One experiment, ' + exp.days + ' days')}
         <div class="card move experiment">
           <p class="k">Hypothesis</p><p class="t">${esc(exp.hypothesis)}</p>
-          <p class="k">Experiment</p><ol class="steps">${exp.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
+          ${r.spec ? `<dl class="spec"><div><dt>Action</dt><dd>${esc(r.spec.action)}</dd></div><div><dt>Target</dt><dd>${esc(r.spec.target)}</dd></div><div><dt>Duration</dt><dd>${exp.days} days</dd></div><div><dt>Expected effect</dt><dd>${r.spec.expected.map(esc).join('<br>')}</dd></div></dl>` : ''}
+          <p class="k">Steps</p><ol class="steps">${exp.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
           <p class="k">Watch</p><ul class="watchlist">${exp.watch.map(w => `<li>${esc(w)}</li>`).join('')}</ul>
-          <p class="watch"><strong>Run it. Come back and tell us what happened.</strong> Each of those three will move the read up, down, or sideways. That's the point.</p>
+          <p class="watch"><strong>Run it. Come back and tell us what happened.</strong> The point is not to prove the read right. It is to find out where it is wrong.</p>
           ${exp_('Further reading', 'You are not the first to run into this', reading, 'further')}
         </div>
       </div>
@@ -278,7 +284,7 @@ const SCREENS = {
       <div class="outcomes">
         ${last.watch.map(w => `<div class="outcome-row"><span class="w">${esc(w)}</span><div class="seg" role="group" aria-label="${esc(w)}">${OUTCOME_OPTIONS.map(o => `<button class="seg-b" data-outcome="${esc(w)}" data-val="${o.key}" aria-pressed="${res[w] === o.key}">${o.t}</button>`).join('')}</div></div>`).join('')}
       </div>
-      ${outcome ? `<div class="response"><p class="k">What we learned</p><p>${esc(outcome.text)}</p>${outcome.changed ? `<p style="margin-top:.6rem"><strong>The read has changed.</strong> The strongest explanation is now <strong>${esc(hypName(outcome.newTop).toLowerCase())}</strong>. Run Friction again and it will start from there.</p>` : `<p style="margin-top:.6rem">The read stands: <strong>${esc(hypName(last.hyp).toLowerCase())}</strong>, now ${esc(confidenceLabelText(outcome.p[last.hyp]).toLowerCase())}.</p>`}</div>
+      ${outcome ? `<div class="response"><p class="k">What we learned</p><p class="verdict-line"><strong>${outcome.verdict === 'strengthened' ? 'The experiment strengthened the read.' : outcome.verdict === 'weakened' ? 'The experiment weakened the read.' : 'The experiment weakened part of the read.'}</strong> Predicted: all ${outcome.predicted} improve. Observed: ${outcome.observed} of ${outcome.predicted}.</p><p>${esc(outcome.text)}</p>${outcome.changed ? `<p style="margin-top:.6rem"><strong>The read has changed.</strong> The strongest explanation is now <strong>${esc(hypName(outcome.newTop).toLowerCase())}</strong>. Run Friction again and it will start from there.</p>` : `<p style="margin-top:.6rem">The read stands: <strong>${esc(hypName(last.hyp).toLowerCase())}</strong>, now ${esc(confidenceLabelText(outcome.p[last.hyp]).toLowerCase())}.</p>`}</div>
       <p class="eyebrow" style="margin-top:1.6rem">What surprised you?</p>
       <label class="sr-only" for="learnNote">What surprised you?</label>
       <textarea id="learnNote" placeholder="One line is enough. It becomes the next signal.">${esc(state.learn.note)}</textarea>` : ''}
@@ -391,6 +397,7 @@ function summaryText() {
   return [
     'FRICTION — CURRENT READ', '',
     `${p.constraint} (${r.label.label})`, p.diagnosis, '',
+    'CRITIC STATE', `Primary: ${r.critic.primary.name} — ${r.critic.primary.confidence}`, ...r.critic.supporting.map(x => `  + ${x}`), `Competing: ${r.critic.competing.name} — ${r.critic.competing.confidence}`, ...r.critic.competing.evidence.map(x => `  ~ ${x}`), ...r.critic.disconfirming.map(x => `  - ${x}`), `Next test: ${r.critic.nextTest.t}`, '',
     'What supports this:', ...r.supports.slice(0, 5).map(x => `  · ${x.obs} (${x.strength})`),
     r.contradicts.length ? 'What cuts against it:\n' + r.contradicts.slice(0, 3).map(x => `  · ${x.obs}`).join('\n') : '',
     r.open ? `Still to understand: is it ${hypName(r.top).toLowerCase()}, or ${hypName(r.second).toLowerCase()}?${r.open.question ? ' Ask: ' + r.open.question : ''}` : '', '',
