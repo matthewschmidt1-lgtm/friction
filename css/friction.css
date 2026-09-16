@@ -400,7 +400,7 @@ details.more.on-dark details.further summary{color:#fff}
 
 /* ---------- readability: sentence-length text uses the body face, upright ---------- */
 .q-title, .display.md.q-title{font-family:var(--font-body); font-weight:600; font-size:clamp(1.25rem,3.9vw,1.6rem); line-height:1.4; letter-spacing:-.01em; color:var(--deep)}
-.blind .display{font-family:var(--font-body); font-style:normal; font-weight:600; font-size:clamp(1.2rem,3.6vw,1.5rem); line-height:1.4; letter-spacing:-.01em}
+.blind .display{font-family:var(--font-body); font-style:normal; font-weight:600; font-size:clamp(1.2rem,3.6vw,1.5rem); line-height:1.4; letter-spacing:-.01em; color:#fff}
 .policy{font-family:var(--font-body); font-style:normal; font-weight:600; font-size:clamp(1.15rem,3.4vw,1.4rem); line-height:1.4}
 .intro .line{font-family:var(--font-body); font-style:normal; font-weight:400; font-size:1.02rem; line-height:1.6}
 .intro .kicker{font-family:var(--font-body); font-weight:600; font-size:clamp(1.1rem,3.2vw,1.3rem); line-height:1.4}
