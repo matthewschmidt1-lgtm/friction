@@ -99,7 +99,7 @@ const SCREENS = {
       <div class="lines">
         <p>Most organizations don't have a shortage of effort.</p>
         <p>They have friction between what the business needs, how the system operates, and what people are able to do.</p>
-        <p>Three lenses. About a dozen questions. One useful diagnosis.</p>
+        <p>Three lenses. Ten to fourteen questions. One useful diagnosis.</p>
       </div>
       <div class="cta-row">
         <button class="btn btn-primary" data-go="begin">Begin <span class="arr">→</span></button>
@@ -112,7 +112,7 @@ const SCREENS = {
     return `<section class="screen stagger">
       <p class="eyebrow">How this works</p>
       <h1 class="display lg how-title">A guided diagnosis, not an assessment.</h1>
-      <p class="lede" style="margin-top:1rem">Nine core questions about observable behaviour, two to four follow-ups where your answers point, and one inversion question. Twelve to fourteen in all, about four minutes. No score, no name, no email. Everything stays in this browser.</p>
+      <p class="lede" style="margin-top:1rem">Nine core questions about observable behaviour, up to four follow-ups where your answers point, and one inversion question. Ten to fourteen in all, about four minutes. No score, no name, no email. Everything stays in this browser.</p>
       <div class="mission">
         <p class="mission-label">The goal</p>
         <p class="mission-t">Friction creates a mechanism for directing attention and problem-solving capacity toward the highest-value problems and opportunities.</p>
