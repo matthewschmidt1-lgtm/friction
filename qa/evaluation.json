@@ -1,0 +1,145 @@
+{
+  "P1": {
+    "zone_verdict": "right",
+    "zone_verdict_note": "Enablement Friction (System ↔ People) is exactly the shape of a founder who won't let go — capable people, a system that won't let them act.",
+    "constraint_verdict": "right",
+    "constraint_verdict_note": "\"Accountable for outcomes without the authority to deliver them\" is precisely what it feels like waiting on the founder for a pricing exception.",
+    "blind_spot": "Yes, I'd pause on that — we genuinely have started treating 'check with the founder first' as diligence rather than naming it as a bottleneck.",
+    "what_not_to_do": "Dead on — an empowerment workshop is exactly the kind of thing HR would propose here, and it would change nothing.",
+    "move": "Yes, I'd actually run this next month — picking one decision per team and taking the founder off the approval chain is concrete and doesn't require a big reorg. It's the right size and the right target, though it will only work if the founder personally signs off on giving up the decision, which the move implies but doesn't say loudly enough.",
+    "forces": "Three of the four land hard: decisions drifting upward when things feel risky, control layers slowing the next decision, and people not believing they're allowed to decide are all just describing our founder. The fourth — 'the process for turning a decision into work doesn't carry it, so people carry it by hand' — is generic workaround language that doesn't really describe us; our people aren't hand-carrying broken process, they're waiting on a person.",
+    "confidence": "Moderate feels right — this is clearly the dominant pattern, but PB is close behind and I could believe a talent-misallocation story too.",
+    "overall": { "score": 4, "note": "Nails the authority bottleneck and gives a move I'd actually run, loses a point because one reinforcing force doesn't match our actual situation." },
+    "issues": [
+      { "type": "generic-advice", "detail": "One reinforcing force ('the process for turning a decision into work doesn't carry it, so people carry it by hand') is boilerplate leverage/workaround language pulled from the execution_why answer, but P1's actual bottleneck is a single person's approval, not people manually compensating for a broken process — it doesn't match the persona's story." },
+      { "type": "other", "detail": "The diagnosis never names the founder specifically, even though the whole persona is 'founder still signs off on X, Y, Z' — a sharper diagnosis would say so directly rather than staying at the generic 'leaders' / 'accountability' level." }
+    ]
+  },
+  "P2": {
+    "zone_verdict": "partly right",
+    "zone_verdict_note": "Alignment Friction (People ↔ Business, 'effort not translating to value') is adjacent but not quite it — our people's effort IS translating to value on individual initiatives, there's just too much committed relative to capacity, which reads more like a Business ↔ System volume problem than a people-alignment one.",
+    "constraint_verdict": "right",
+    "constraint_verdict_note": "\"Too many priorities, and no clear sense of what to stop\" is exactly our 40-initiative list, word for word.",
+    "blind_spot": "Yes — we absolutely have normalized overload as ambition; nobody wants to be the sponsor whose initiative gets called excessive.",
+    "what_not_to_do": "Exactly the trap — we have scored these 40 initiatives with at least three different frameworks and still have 40 initiatives.",
+    "move": "Yes, I would run 'cut 20% this month' as written — it's concrete, time-boxed, and matches what I already believe needs to happen. It's the right size: not a full portfolio overhaul, just a forcing function to prove that cutting a fifth doesn't break anything.",
+    "forces": "All four are true for us — priorities added faster than retired, the hard conversation about killing something avoided, commitments made without subtracting anything, and capacity assumed rather than counted. Nothing important is missing; if anything I'd add that every function protects its own initiatives, which the P8 diagnosis got as a bonus force but ours didn't.",
+    "confidence": "Moderate is fair — focus is clearly the loudest signal, but BS is close enough that I wouldn't be shocked if the deeper issue is variant.",
+    "overall": { "score": 4, "note": "Constraint and move are exactly right and directly actionable; the zone label is the one place the story gets bent to fit a category that doesn't quite describe a volume problem." },
+    "issues": [
+      { "type": "wrong-zone", "detail": "PB ('Alignment Friction: effort isn't translating into value') doesn't match a persona explicitly described as 'decisions themselves aren't stuck... it's volume' — a Business↔System framing (too much started, system never built to carry the load) reads truer than a People↔Business one." }
+    ]
+  },
+  "P3": {
+    "zone_verdict": "right",
+    "zone_verdict_note": "Enablement Friction describes our department exactly — capable, motivated coordinators, and a system that makes them carry everything by hand.",
+    "constraint_verdict": "right",
+    "constraint_verdict_note": "\"Performance depends on people working around the system\" is precisely the three coordinators texting surgeons and hand-counting kits.",
+    "blind_spot": "Mostly lands, though the phrasing 'your team may have learned to work around the system rather than improve it' undersells that we WANT to improve it and simply have no mandate or visibility from leadership to do so — it reads slightly like we chose the workaround over a fix, when really nobody above us knows there's a fix to make.",
+    "what_not_to_do": "Yes — hiring a fourth coordinator is exactly what I'd have proposed to my director next budget cycle.",
+    "move": "Absolutely, I'd do this next month — ask the three coordinators what they do by hand that the system should do, and fix the single biggest one. It's the right size: not 'redesign scheduling,' just the one workaround that eats the most hours, which is achievable without a system-wide project.",
+    "forces": "All four fit: recurrences solved as one-off events, nothing forcing anyone to act because results still look fine, the process not carrying decisions into work, and handoffs stalling between teams (us and the surgeons). Nothing important feels missing — it correctly captures that leadership doesn't see the gap because outcomes look smooth.",
+    "confidence": "Moderate is honest — leverage is clearly the dominant signal, though talent and trust aren't far behind, which tracks since the coordinators are also stretched and a little unseen.",
+    "overall": { "score": 5, "note": "This is the diagnosis I'd want to bring to my director — it names the exact mechanism, the exact trap, and gives a move I could start next week." },
+    "issues": []
+  },
+  "P4": {
+    "zone_verdict": "partly right",
+    "zone_verdict_note": "The constraint (direction) is exactly our story, but the BS zone's own summary line — 'you seem to know what matters, but the organization isn't set up to make it happen' — directly contradicts a diagnosis that says leadership holds different, conflicting versions of what matters; those two statements can't both be true.",
+    "constraint_verdict": "right",
+    "constraint_verdict_note": "Three defensible, conflicting versions of the strategy from the CEO, CFO, and sales lead is exactly what 'leadership isn't aligned on what matters most' describes.",
+    "blind_spot": "Yes, this lands hard — we absolutely nod along in the room and then run our own version afterward; 'artificial harmony' is the right name for it.",
+    "what_not_to_do": "Exactly the trap I'd fall into — my instinct after every one of these conflicts is to write a clearer strategy memo, which would just be a better-written version of the same three disagreements.",
+    "move": "Yes, I'd push for this, though it only works if I can actually get the CEO, CFO, and sales lead in one room and hold the line that nobody leaves until there's one list — that's a bigger ask than the move's casual tone suggests. It's the right target (the top, not my team) and roughly the right size, but it understates how hard it is to force three peers to stay in a room past the point of discomfort.",
+    "forces": "The decisions-based force ('leadership disagreement is settled case by case instead of once') and the execution_why one ('direction changes from the top before the last direction has been delivered') are exactly our pattern. The two inversion-derived forces — 'new priorities added faster than retired' and 'the difficult conversation is avoided' — are true but generic; they'd apply to half the personas in this set and don't add anything specific to a three-leader standoff.",
+    "confidence": "Moderate feels right — direction is clearly dominant, but PB is close, and I could see 'people not on the right problems because of the confusion' being argued too.",
+    "overall": { "score": 4, "note": "Constraint, blind spot, and notDo are all exactly right, but the zone's canned summary text contradicts the very diagnosis it's attached to, which would make me question the tool's coherence if I read both." },
+    "issues": [
+      { "type": "copy", "detail": "The BS zone summary ('you know what matters, but the system isn't built for it') directly contradicts a direction-driven diagnosis that says leadership does NOT agree on what matters — the zone-level copy isn't tailored to which constraint within it actually fired." },
+      { "type": "generic-advice", "detail": "Two of the four reinforcing forces are undifferentiated inversion-question boilerplate ('new priorities added faster than retired,' 'the difficult conversation is avoided') that would show up for almost any persona and don't reflect anything specific to a three-leader misalignment." }
+    ]
+  },
+  "P5": {
+    "zone_verdict": "partly right",
+    "zone_verdict_note": "The trust constraint is exactly right, but the SP zone's framing — 'the system around them is creating unnecessary dependency, escalation or rework' — describes a process problem, not a psychological-safety one; nothing about our situation is a 'system' issue, it's two people who react badly to bad news.",
+    "constraint_verdict": "right",
+    "constraint_verdict_note": "\"It isn't safe to raise problems or disagree\" is exactly what happened to the person who flagged the failing engagement.",
+    "blind_spot": "Yes, this lands precisely — we have absolutely learned that silence reads as loyalty here.",
+    "what_not_to_do": "Exactly the trap — an anonymous survey is almost certainly what HR would propose next, and everyone would know their write-in could be identified anyway.",
+    "move": "I'd want to do something like this, but 'change one meeting' feels a size too small given that someone was visibly sidelined for speaking up — a new ritual won't undo that memory on its own. The right first move probably needs one of the two managing partners to acknowledge that specific incident before a new meeting format will be believed by anyone.",
+    "forces": "Two land well: the difficult conversation being avoided, and incentives rewarding the behavior that produces the friction. Two feel borrowed from other mechanisms and don't describe us well — 'people who could decide don't believe they're allowed to' is really an authority story, not a trust one, and 'commitments quietly lapse without consequence' is about follow-through, which isn't our issue at all; our commitments get made and kept, it's the bad news that goes missing.",
+    "confidence": "Moderate is reasonable, though given how specific and severe the sidelining incident is, I'd have expected a stronger signal than 'a second friction is close behind it.'",
+    "overall": { "score": 4, "note": "The core diagnosis and notDo are exactly right and the blind spot is well-aimed, but the move undersells the severity and two of the four forces are mismatched imports from other mechanisms." },
+    "issues": [
+      { "type": "generic-advice", "detail": "Two reinforcing forces ('people who could decide don't believe they're allowed to, so they escalate' and 'commitments quietly lapse without consequence') are authority- and follow-through-flavored respectively, not trust-flavored, and don't reflect the specific fear-of-retaliation story P5 described." },
+      { "type": "other", "detail": "The move ('change one meeting') doesn't address the concrete, named incident (a person sidelined for flagging a failing engagement) — a diagnosis this specific about the cause should probably surface that the first real step is addressing that incident directly, not just starting a new weekly ritual." }
+    ]
+  },
+  "P6": {
+    "zone_verdict": "right",
+    "zone_verdict_note": "Alignment Friction — people working hard, effort not converting to value — is exactly the picture of best DMs burning their week on store fires instead of growth work.",
+    "constraint_verdict": "right",
+    "constraint_verdict_note": "\"Your best people aren't on the highest-value problems\" is a one-line summary of my entire region.",
+    "blind_spot": "Yes, dead on — using the best DMs as the emergency service is exactly what we've normalized, and it's treated as a compliment, not a problem.",
+    "what_not_to_do": "Reasonable — 'hire more senior people' is a plausible instinct, though honestly my first instinct would more likely be 'hire more support staff for stores,' which the notDo doesn't quite name but the spirit still applies.",
+    "move": "Yes, I'd run this next month — auditing where my five best DMs' time actually went last week is cheap, fast, and would surface the fire-versus-growth split in black and white. It's the right size and squarely the right target: my own calendar review, not a regional reorg.",
+    "forces": "Three fit well — recurrences solved as one-off events, incentives rewarding the firefighting behavior, and capacity committed past what exists with the shortfall landing on unprotected (growth) work. The fourth, 'commitments made without anything being removed,' is generic and slightly off — we're not over-committing on paper, the commitments just keep losing to whatever fire shows up that day.",
+    "confidence": "Moderate feels right given BS is fairly close behind, though for me this reads more clearly as a single dominant pattern than 'moderate' suggests.",
+    "overall": { "score": 5, "note": "This is exactly the diagnosis I'd want — names the talent-allocation trap precisely and gives me a move I can run from my own calendar data next week." },
+    "issues": [
+      { "type": "generic-advice", "detail": "One reinforcing force ('commitments are made without anything being removed, so they compete for the same capacity') is portfolio-overload language that fits P2 better than P6 — our problem isn't too many stated commitments, it's that any commitment loses to whichever fire is loudest that day." }
+    ]
+  },
+  "P7": {
+    "zone_verdict": "partly right",
+    "zone_verdict_note": "Business ↔ System is the right general area, but the specific frame — 'too many priorities, no sense what to stop' — misses that our real problem isn't volume, it's that we can't say which priorities create value in the first place; you can't rank a stop-list you can't price.",
+    "constraint_verdict": "wrong",
+    "constraint_verdict_note": "Focus and economics were tied at maximum severity in my answers, and the tool picked focus — but the story I actually described (nobody can say cleanly which programs drive funding, outcomes, or cost) is the economics constraint, not the focus one, and the two point to very different first moves.",
+    "blind_spot": "This doesn't land — 'normalized overload as a sign of ambition' is a for-profit growth-company blind spot; ours is closer to 'we've normalized analysis as a substitute for a hard economic argument,' which is a different failure mode entirely.",
+    "what_not_to_do": "Partially right but misses the sharper version — 'don't add a prioritization framework' is fine, but the trap I'm actually tempted by is 'commission one more report,' which is explicitly what I told you doesn't settle anything, and the notDo never quite says that.",
+    "move": "I would not run 'cut 20% this month' as the first move — it assumes the problem is volume, but I can't even rank my current programs against each other because I don't know which ones create value, so cutting 20% by gut feel would just replace one advocacy contest with another. The right first move is closer to my own hoped-for one: trace the top five programs to funding or outcome impact, one line each, before cutting anything.",
+    "forces": "Two land reasonably — activity being measured and rewarded instead of outcomes (that's literally our reporting culture) and the decisions-based one about waiting on information that may never be enough. The other two are generic filler pulled from a manufacturing-style overload story ('new priorities added faster than retired,' 'commitments made without removing') and don't reflect that our priorities come from board advocacy, not initiative sprawl.",
+    "confidence": "Emerging is the one thing the tool got very right here — it's honest that the signal is split, and that's exactly how uncertain I feel about which of focus or economics is the real lever.",
+    "overall": { "score": 3, "note": "The humility in the confidence label is appreciated and the zone is in the right neighborhood, but the specific constraint and move solve a volume problem I don't have instead of the economics-blindness problem I described." },
+    "issues": [
+      { "type": "wrong-constraint", "detail": "Focus and economics tied at maximum severity, but the persona's central, explicitly stated problem ('nobody can say cleanly which programs drive funding, outcomes, or cost') is the economics constraint; the tool defaulted to focus, producing a portfolio-cutting diagnosis instead of a value-tracing one." },
+      { "type": "generic-advice", "detail": "The blind spot and two of the four forces are manufacturing/overload-flavored ('normalized overload as ambition,' 'new priorities added faster than retired') and don't fit a nonprofit whose priorities come from board advocacy rather than initiative sprawl." },
+      { "type": "misses-root-cause", "detail": "The notDo warns against prioritization frameworks but misses the more specific trap the persona named directly: producing more reporting/analysis that 'doesn't settle anything.'" }
+    ]
+  },
+  "P8": {
+    "zone_verdict": "wrong",
+    "zone_verdict_note": "There is no meaningful strategy-execution gap here — I said 'Definitely' to knowing what to cut and 'Almost always' to things happening once agreed — a healthy control should not be handed a fully-formed BS diagnosis at all.",
+    "constraint_verdict": "wrong",
+    "constraint_verdict_note": "\"Too many priorities, and no clear sense of what to stop\" flatly contradicts my own answer that I could name the bottom 20% right now, off the top of my head.",
+    "blind_spot": "This feels wrong, not just generic — 'your organization may have normalised overload as a sign of ambition' is asserted about an organization whose every mechanism scored at or near zero; there's no basis for it in my answers.",
+    "what_not_to_do": "Not a trap I'd be remotely tempted by, since the premise (we have too many priorities) isn't true for us — the notDo is only coherent if you accept a diagnosis I don't recognize.",
+    "move": "I would not run 'cut 20% this month' — there's nothing to cut, and being told to go find a fifth of my priorities to kill when I've already said I could name what's non-essential would make me distrust the tool rather than act on it.",
+    "forces": "None of the four describe us. Two even carry no '[from answers]' tag at all — meaning they're pure template text for the focus playbook, presented with the same confidence as the personalized ones, despite nothing in my answers supporting either 'stopping feels like failure' or 'every function protects its own initiatives.' Nothing important is missing because there's no real friction here to name.",
+    "confidence": "\"Emerging\" is the right instinct — appropriately hedged — but the confidence text says 'the follow-up question will tell you more than the diagnosis,' and no follow-up was ever asked (asked_followups is empty), so the explanation refers to a step that didn't happen.",
+    "overall": { "score": 2, "note": "The humility of an 'emerging' confidence label is the one honest note, but the tool still manufactures a full diagnosis, blind spot, and 20%-cut mandate for an organization with near-zero severity across every mechanism, and two of the four forces are unpersonalized template text passed off as evidence." },
+    "issues": [
+      { "type": "overclaims", "detail": "With every mechanism at or near 0 (max severity 0.5 out of 3) the tool still produces a fully asserted diagnosis, causal chain, blind spot and concrete 20%-cut directive — there's no 'no significant friction detected' output state for a genuinely healthy respondent." },
+      { "type": "wrong-constraint", "detail": "The chosen constraint (focus/overload) directly contradicts the persona's own core answers (focus=0 'Definitely' know what to cut, execution=0 'Almost always' happens) rather than reflecting them." },
+      { "type": "copy", "detail": "Two of the four listed forces carry no '[from answers]' provenance tag, meaning they are static playbook boilerplate for the 'focus' constraint rather than anything derived from this respondent — yet they're presented with the same declarative confidence as the personalized ones." },
+      { "type": "follow-up-mismatch", "detail": "The confidence explanation text references a follow-up question ('the follow-up question will tell you more than the diagnosis') even though asked_followups is empty for this persona — the copy doesn't adapt to the fact that no follow-up was actually asked." }
+    ]
+  },
+  "P9": {
+    "zone_verdict": "right",
+    "zone_verdict_note": "Coherence Friction — 'each part looks reasonable on its own, together they're producing conflicting behaviour' — is exactly the framing I hoped for instead of a single manufactured villain.",
+    "constraint_verdict": "partly right",
+    "constraint_verdict_note": "Naming 'direction' as THE constraint, with the same maximum-severity language used for P4's genuinely fractured leadership team, overstates a situation I described as leaders being 'mostly' aligned — the coherence framing's own logic ('no single lens is failing badly') is undercut by then handing me one dominant constraint anyway.",
+    "blind_spot": "Feels borrowed rather than earned — 'leadership team may have learned to treat polite agreement as alignment' is the same line given to P4's much sharper misalignment, and it's a stronger claim than 'mostly aligned, occasional stalls' supports.",
+    "what_not_to_do": "Fine as generic advice, but since I'm not convinced direction is really the dominant issue, warning me against a communication plan doesn't feel like it's addressing my actual temptation, which is closer to 'just keep tolerating mild dysfunction because nothing is on fire.'",
+    "move": "I would hesitate to launch a full leadership offsite over this — it's sized for a P4-level fracture, not a CFO's 'somewhat, sometimes, depends' reality, and would probably get pushback as overkill. My own hoped-for first move — picking one specific mild gap, most likely decision follow-through, and closing just that one — is smaller, cheaper, and more matched to how diffuse this actually is.",
+    "forces": "'Nothing about the current pattern requires anyone to act' is exactly right and is the real engine of a mildly-off organization coasting along. 'Leadership disagreement is settled case by case' and 'commitments made without removing, competing for capacity' both feel too strong for a 'mostly aligned, sometimes stalls' reality. What's missing is any force that names the diffuseness itself — that no single mechanism is bad enough to force a fix, which is the coherence story the zone claims to be telling but the forces don't reflect.",
+    "confidence": "\"Moderate\" undersells the actual uncertainty of a coherence call — with the margin between the top zone and its secondary at zero, I'd expect the confidence framing to say plainly that no single mechanism dominates, rather than reusing the same 'pattern is clear, second friction close behind' language used for cleaner single-zone cases.",
+    "overall": { "score": 3, "note": "The zone concept is exactly the diagnosis I wanted, but the tool still collapses it down to one sharply-worded single-mechanism constraint and a same-size move as a much worse-off persona, undercutting its own coherence framing." },
+    "issues": [
+      { "type": "overclaims", "detail": "The direction mechanism reads 3 (max severity) largely from a side-effect bump off the 'leaders disagree' decisions answer, even though the direct answer to the direction question itself was 'Mostly similar' (mild) — the aggregation lets one secondary answer push a mechanism to maximum severity, producing a stronger single-villain diagnosis than the persona's own direct answers support." },
+      { "type": "copy", "detail": "P9 and P4 receive the identical constraint text, diagnosis paragraph, blind spot, and move verbatim despite P4 describing categorically stronger misalignment ('Very different' top-three lists, a director openly recognizing which side is winning) versus P9's 'mostly aligned, sometimes stalls' — a coherence-friction case reusing a single-villain playbook wholesale feels miscalibrated to its own framing." },
+      { "type": "generic-advice", "detail": "None of the four reinforcing forces name the diffuseness of the friction itself (mild gaps everywhere rather than one severe mechanism), which is the actual insight the BSP zone summary promises but the specific forces don't deliver." }
+    ]
+  }
+}

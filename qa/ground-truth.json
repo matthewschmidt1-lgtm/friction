@@ -1,0 +1,11 @@
+{
+  "P1": {"zone": ["SP"], "constraint": ["decisions", "authority"], "note": "Founder bottleneck: decision rights / authority. Enablement friction."},
+  "P2": {"zone": ["BS"], "constraint": ["focus"], "note": "Too many priorities, nothing stopped. Strategy–execution friction."},
+  "P3": {"zone": ["SP"], "constraint": ["leverage"], "note": "Heroics masking a broken process. Enablement friction."},
+  "P4": {"zone": ["PB", "BS"], "constraint": ["direction"], "note": "Leadership misalignment. Alignment or strategy–execution; constraint must be direction."},
+  "P5": {"zone": ["SP", "PB"], "constraint": ["trust"], "note": "Fear culture. Constraint must be trust."},
+  "P6": {"zone": ["PB"], "constraint": ["talent"], "note": "Best people on fires. Alignment friction; constraint talent."},
+  "P7": {"zone": ["BS", "PB"], "constraint": ["economics"], "note": "Priorities not tied to value. Constraint economics."},
+  "P8": {"zone": ["any"], "constraint": ["any"], "note": "Healthy. Expect low severity, 'emerging' confidence, and the tool should not overclaim."},
+  "P9": {"zone": ["BSP"], "constraint": ["any"], "note": "Everything mildly off. Expect Coherence friction."}
+}

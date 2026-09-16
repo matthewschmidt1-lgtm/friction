@@ -1,0 +1,772 @@
+{
+ "P1": {
+  "asked_followups": [
+   "decisions_where",
+   "decisions_after",
+   "people_limits"
+  ],
+  "execution_why_asked": true,
+  "mechanisms": {
+   "direction": 1,
+   "focus": 1.5,
+   "economics": 1,
+   "decisions": 2.5,
+   "execution": 1,
+   "leverage": 1,
+   "authority": 3,
+   "talent": 1,
+   "trust": 1
+  },
+  "lens": {
+   "B": 1.17,
+   "S": 1.5,
+   "P": 1.67
+  },
+  "edge": {
+   "BS": 1.92,
+   "SP": 3.21,
+   "PB": 2
+  },
+  "zone": "SP",
+  "zone_name": "System \u2194 People",
+  "zone_label": "Enablement Friction",
+  "zone_summary": "Your people appear to have the capability and intent to perform, but the system around them is creating unnecessary dependency, escalation or rework.",
+  "secondary": "PB",
+  "coherence": false,
+  "margin": 1.21,
+  "maxSev": 3,
+  "confidence": "moderate",
+  "confidence_text": "The pattern is clear but a second friction is close behind it. Treat the diagnosis as the first hypothesis to test.",
+  "constraint_key": "authority",
+  "constraint": "People are accountable for outcomes without the authority to deliver them",
+  "diagnosis": "Accountability has been assigned without matching authority. So people check before acting, decisions queue upward, and speed drops. Leaders see the hesitancy and hold tighter, which shrinks the authority further. The loop is stable and it is getting worse.",
+  "chain": [
+   "Accountability is assigned without authority",
+   "People check before acting",
+   "Decisions queue upward",
+   "Speed drops and escalation rises",
+   "Leaders see hesitancy and hold tighter",
+   "Authority shrinks further"
+  ],
+  "forces": [
+   "Decisions drift upward whenever things feel risky.  [from answers: inversion]",
+   "Control is added in response to problems, and each layer slows the next decision.  [from answers: inversion]",
+   "People who could decide don't believe they are allowed to, so they escalate to be safe.  [from answers: decisions]",
+   "The process for turning a decision into work doesn't carry it, so people carry it by hand.  [from answers: execution_why]"
+  ],
+  "consequences": [
+   "Slower decisions",
+   "Management capacity",
+   "Employee frustration"
+  ],
+  "estimate": {
+   "managers": 10,
+   "hours": 5,
+   "hoursYear": 2400,
+   "rate": 140,
+   "dollars": 336000
+  },
+  "blind": "The organization may have normalised escalation as diligence.",
+  "notDo": {
+   "t": "Don't fix this with an empowerment programme.",
+   "d": "People don't need to be told they are empowered. They need one decision they are allowed to make, in writing, and a leader who doesn't overrule it."
+  },
+  "policy": "Match authority to accountability, one decision at a time.",
+  "move": {
+   "t": "Clarify one decision right per team.",
+   "steps": [
+    "Ask each team which decision they most often wait on. Take the first answer.",
+    "Write down that they now own it, the guardrails that apply, and who they inform afterwards.",
+    "Tell the people who used to approve it that they no longer do. This is the step organizations skip."
+   ]
+  },
+  "question": "Where are we holding people accountable for outcomes without giving them enough authority to achieve them?",
+  "metric": {
+   "t": "Share of key decisions made without escalation",
+   "d": "Sample the decisions you moved. If they are coming back up, find out why before adding any control."
+  }
+ },
+ "P2": {
+  "asked_followups": [
+   "execution_change",
+   "business_uncertainty"
+  ],
+  "execution_why_asked": true,
+  "mechanisms": {
+   "direction": 1,
+   "focus": 3,
+   "economics": 2,
+   "decisions": 0,
+   "execution": 2,
+   "leverage": 1,
+   "authority": 1,
+   "talent": 2,
+   "trust": 1.5
+  },
+  "lens": {
+   "B": 2,
+   "S": 1,
+   "P": 1.5
+  },
+  "edge": {
+   "BS": 2.26,
+   "SP": 1.75,
+   "PB": 2.67
+  },
+  "zone": "PB",
+  "zone_name": "People \u2194 Business",
+  "zone_label": "Alignment Friction",
+  "zone_summary": "People are working hard, but their effort isn't translating into business value.",
+  "secondary": "BS",
+  "coherence": false,
+  "margin": 0.41,
+  "maxSev": 3,
+  "confidence": "moderate",
+  "confidence_text": "The pattern is clear but a second friction is close behind it. Treat the diagnosis as the first hypothesis to test.",
+  "constraint_key": "focus",
+  "constraint": "Too many priorities, and no clear sense of what to stop",
+  "diagnosis": "Priorities accumulate and nothing is formally retired. Capacity is spread across more work than exists to do it, so everything moves slowly and the urgent displaces the important. The missing decision is not what to start. It is what to stop.",
+  "chain": [
+   "Priorities are added, none are removed",
+   "Capacity is spread thin",
+   "Everything moves slowly",
+   "Urgent work displaces important work",
+   "More initiatives are added to compensate",
+   "Overload becomes the operating model"
+  ],
+  "forces": [
+   "New priorities are added faster than old ones are retired.  [from answers: inversion]",
+   "The difficult conversation is being avoided, so the cause stays unnamed.  [from answers: inversion]",
+   "Commitments are made without anything being removed, so they compete for the same capacity.  [from answers: execution_why]",
+   "Capacity is committed past what exists, and the shortfall lands on the least protected work.  [from answers: execution_why]"
+  ],
+  "consequences": [
+   "Delayed delivery on what matters",
+   "Employee frustration",
+   "Growth constraints"
+  ],
+  "estimate": {
+   "managers": 15,
+   "hours": 6,
+   "hoursYear": 4320,
+   "rate": 160,
+   "dollars": 691200
+  },
+  "blind": "Your organization may have normalised overload as a sign of ambition.",
+  "notDo": {
+   "t": "Don't add a prioritisation framework.",
+   "d": "Scoring forty initiatives produces a ranked list of forty initiatives. The missing decision is what to stop, and frameworks are how organizations avoid making it."
+  },
+  "policy": "Treat stopping as a decision with the same weight as starting.",
+  "move": {
+   "t": "Cut 20% this month.",
+   "steps": [
+    "List every active priority, everywhere. Expect the list to be longer than anyone thought.",
+    "Rank by contribution to the one thing that matters most this year. Stop the bottom fifth, explicitly, with a note saying what is no longer expected.",
+    "Watch for a month what actually gets worse. Usually less than feared, and that is the lesson."
+   ]
+  },
+  "question": "What are we willing to stop doing to make room for what matters most?",
+  "metric": {
+   "t": "Share of capacity on the top three priorities",
+   "d": "Estimate it monthly from where people's time actually went, not from the plan."
+  }
+ },
+ "P3": {
+  "asked_followups": [
+   "people_limits"
+  ],
+  "execution_why_asked": true,
+  "mechanisms": {
+   "direction": 1,
+   "focus": 1,
+   "economics": 1,
+   "decisions": 1,
+   "execution": 1,
+   "leverage": 3,
+   "authority": 1,
+   "talent": 2,
+   "trust": 2
+  },
+  "lens": {
+   "B": 1,
+   "S": 1.67,
+   "P": 1.67
+  },
+  "edge": {
+   "BS": 1.83,
+   "SP": 2.5,
+   "PB": 2.01
+  },
+  "zone": "SP",
+  "zone_name": "System \u2194 People",
+  "zone_label": "Enablement Friction",
+  "zone_summary": "Your people appear to have the capability and intent to perform, but the system around them is creating unnecessary dependency, escalation or rework.",
+  "secondary": "PB",
+  "coherence": false,
+  "margin": 0.49,
+  "maxSev": 3,
+  "confidence": "moderate",
+  "confidence_text": "The pattern is clear but a second friction is close behind it. Treat the diagnosis as the first hypothesis to test.",
+  "constraint_key": "leverage",
+  "constraint": "Performance depends on people working around the system",
+  "diagnosis": "The system doesn't carry the work, so capable people carry it personally. Results still arrive, which is why the gap is invisible, and the heroics get rewarded, which is why it persists. This works at the current size and breaks at the next one.",
+  "chain": [
+   "The process doesn't carry the work",
+   "Capable people fill the gap by hand",
+   "Results still arrive, so the gap stays hidden",
+   "Heroics become the norm and get rewarded",
+   "The system never gets fixed",
+   "Growth multiplies the workarounds"
+  ],
+  "forces": [
+   "Each recurrence is solved as a new event rather than traced to its cause.  [from answers: inversion]",
+   "Nothing about the current pattern requires anyone to act, so it persists.  [from answers: inversion]",
+   "The process for turning a decision into work doesn't carry it, so people carry it by hand.  [from answers: execution_why]",
+   "Work stalls at handoffs between teams, where no one owns the whole.  [from answers: execution_why]"
+  ],
+  "consequences": [
+   "Growth constraints",
+   "Higher cost",
+   "Employee frustration"
+  ],
+  "estimate": {
+   "managers": 5,
+   "hours": 15,
+   "hoursYear": 3600,
+   "rate": 90,
+   "dollars": 324000
+  },
+  "blind": "Your team may have learned to work around the system rather than improve it.",
+  "notDo": {
+   "t": "Don't fix this by hiring more of the people who make it happen.",
+   "d": "Heroics that work at this size won't at the next. You would be scaling the workaround, and paying for it twice."
+  },
+  "policy": "Build the workaround into the system so it survives the person.",
+  "move": {
+   "t": "Design out the biggest workaround.",
+   "steps": [
+    "Ask your three most relied-upon people what they do by hand that the process should do. Write the list down; it will be longer than expected.",
+    "Pick the one that consumes the most time across the organization.",
+    "Design it into the process, remove the manual step, and give the people who used to do it credit for surfacing it."
+   ]
+  },
+  "question": "Where are exceptional people compensating for a system that should work without heroics?",
+  "metric": {
+   "t": "Hours per week spent on recurring workarounds",
+   "d": "Ask the same three people to estimate it monthly. It should fall as each workaround is designed out."
+  }
+ },
+ "P4": {
+  "asked_followups": [
+   "business_uncertainty",
+   "decisions_where",
+   "decisions_after"
+  ],
+  "execution_why_asked": true,
+  "mechanisms": {
+   "direction": 3,
+   "focus": 3,
+   "economics": 2.75,
+   "decisions": 2,
+   "execution": 1,
+   "leverage": 1,
+   "authority": 1,
+   "talent": 1,
+   "trust": 1.75
+  },
+  "lens": {
+   "B": 2.92,
+   "S": 1.33,
+   "P": 1.25
+  },
+  "edge": {
+   "BS": 3.32,
+   "SP": 1.92,
+   "PB": 2.88
+  },
+  "zone": "BS",
+  "zone_name": "Business \u2194 System",
+  "zone_label": "Strategy\u2013Execution Friction",
+  "zone_summary": "You seem to know what matters, but the organization isn't set up to make it happen.",
+  "secondary": "PB",
+  "coherence": false,
+  "margin": 0.43,
+  "maxSev": 3,
+  "confidence": "moderate",
+  "confidence_text": "The pattern is clear but a second friction is close behind it. Treat the diagnosis as the first hypothesis to test.",
+  "constraint_key": "direction",
+  "constraint": "Leadership isn't aligned on what matters most",
+  "diagnosis": "Your leadership team appears to hold different versions of what the business must accomplish. Each version is defensible, which is why it persists. The organization below is executing several strategies at once and experiencing it as slowness.",
+  "chain": [
+   "Leaders hold different top priorities",
+   "Each function optimises its own version",
+   "Teams receive conflicting signals",
+   "Work is duplicated or cancelled mid-flight",
+   "Decisions get revisited",
+   "Effort rises, progress doesn't"
+  ],
+  "forces": [
+   "The difficult conversation is being avoided, so the cause stays unnamed.  [from answers: inversion]",
+   "New priorities are added faster than old ones are retired.  [from answers: inversion]",
+   "Leadership disagreement is settled case by case instead of once, so it re-runs inside every decision.  [from answers: decisions]",
+   "Direction changes from the top before the last direction has been delivered, which teaches teams to wait.  [from answers: execution_why]"
+  ],
+  "consequences": [
+   "Slower decisions",
+   "Duplicated work",
+   "Lost management capacity"
+  ],
+  "estimate": {
+   "managers": 12,
+   "hours": 5,
+   "hoursYear": 2880,
+   "rate": 170,
+   "dollars": 489600
+  },
+  "blind": "Your leadership team may have learned to treat polite agreement as alignment.",
+  "notDo": {
+   "t": "Don't fix this with a communication plan.",
+   "d": "The problem isn't that the strategy hasn't been communicated. It's that it hasn't been chosen. Communicating three versions more clearly produces three clearer versions."
+  },
+  "policy": "Choose fewer things, out loud, together.",
+  "move": {
+   "t": "Run the three-things exercise.",
+   "steps": [
+    "Ask each leader to write, alone, the three most important things the business must accomplish this year, and why.",
+    "Put the lists on one wall in one room. Expect them to differ. The differences are the diagnosis.",
+    "Don't leave until there is one list. Publish it, and retire anything from the old lists that didn't survive."
+   ]
+  },
+  "question": "If our leadership team's top-three lists differ, whose list is the organization actually executing?",
+  "metric": {
+   "t": "Distinct \"top priorities\" named across the leadership team",
+   "d": "Ask each leader separately, once a quarter. The target is one list."
+  }
+ },
+ "P5": {
+  "asked_followups": [
+   "decisions_where",
+   "decisions_after",
+   "people_limits"
+  ],
+  "execution_why_asked": true,
+  "mechanisms": {
+   "direction": 1,
+   "focus": 2,
+   "economics": 1.25,
+   "decisions": 2,
+   "execution": 1,
+   "leverage": 1,
+   "authority": 2,
+   "talent": 1,
+   "trust": 3
+  },
+  "lens": {
+   "B": 1.42,
+   "S": 1.33,
+   "P": 2
+  },
+  "edge": {
+   "BS": 2.3,
+   "SP": 2.86,
+   "PB": 2.42
+  },
+  "zone": "SP",
+  "zone_name": "System \u2194 People",
+  "zone_label": "Enablement Friction",
+  "zone_summary": "Your people appear to have the capability and intent to perform, but the system around them is creating unnecessary dependency, escalation or rework.",
+  "secondary": "PB",
+  "coherence": false,
+  "margin": 0.44,
+  "maxSev": 3,
+  "confidence": "moderate",
+  "confidence_text": "The pattern is clear but a second friction is close behind it. Treat the diagnosis as the first hypothesis to test.",
+  "constraint_key": "trust",
+  "constraint": "It isn't safe to raise problems or disagree",
+  "diagnosis": "Raising a problem carries risk, so problems surface late and decisions rest on filtered information. Bad decisions persist longer than they should, trust in leadership erodes, and even less gets said. This is the friction that hides all the others.",
+  "chain": [
+   "Raising problems carries risk",
+   "Problems surface late or not at all",
+   "Decisions rest on filtered information",
+   "Bad decisions persist longer",
+   "Trust in leadership drops",
+   "Even less gets said"
+  ],
+  "forces": [
+   "The difficult conversation is being avoided, so the cause stays unnamed.  [from answers: inversion]",
+   "Current incentives reward the behaviour that produces the friction.  [from answers: inversion]",
+   "People who could decide don't believe they are allowed to, so they escalate to be safe.  [from answers: decisions]",
+   "Commitments quietly lapse without consequence, so commitment has stopped meaning much.  [from answers: execution_why]"
+  ],
+  "consequences": [
+   "Slower decisions",
+   "Customer experience",
+   "Innovation capacity"
+  ],
+  "estimate": {
+   "managers": 6,
+   "hours": 5,
+   "hoursYear": 1440,
+   "rate": 200,
+   "dollars": 288000
+  },
+  "blind": "The organization may have learned that silence is loyalty.",
+  "notDo": {
+   "t": "Don't fix this with an anonymous survey or a values poster.",
+   "d": "Safety is created in the moment a leader responds to bad news, and destroyed the same way. Everything else is theatre."
+  },
+  "policy": "Reward the messenger, visibly, every time.",
+  "move": {
+   "t": "Change one meeting.",
+   "steps": [
+    "In your main leadership meeting, open with \"what's not working?\" before any status. The most senior person speaks last.",
+    "Thank the first person who names a real problem, in front of everyone, and act on it within the week.",
+    "Repeat every week. It takes about a quarter before people believe it."
+   ]
+  },
+  "question": "What is the problem everyone knows about that hasn't been said in a leadership meeting?",
+  "metric": {
+   "t": "Time between a problem being noticed and being raised with someone who can act",
+   "d": "Ask about the last three problems. Then ask again next quarter."
+  }
+ },
+ "P6": {
+  "asked_followups": [
+   "execution_change",
+   "people_limits",
+   "business_uncertainty"
+  ],
+  "execution_why_asked": true,
+  "mechanisms": {
+   "direction": 1.75,
+   "focus": 2.5,
+   "economics": 1.75,
+   "decisions": 0,
+   "execution": 2,
+   "leverage": 3,
+   "authority": 1,
+   "talent": 3,
+   "trust": 1.25
+  },
+  "lens": {
+   "B": 2,
+   "S": 1.67,
+   "P": 1.75
+  },
+  "edge": {
+   "BS": 2.93,
+   "SP": 2.54,
+   "PB": 3.36
+  },
+  "zone": "PB",
+  "zone_name": "People \u2194 Business",
+  "zone_label": "Alignment Friction",
+  "zone_summary": "People are working hard, but their effort isn't translating into business value.",
+  "secondary": "BS",
+  "coherence": false,
+  "margin": 0.43,
+  "maxSev": 3,
+  "confidence": "moderate",
+  "confidence_text": "The pattern is clear but a second friction is close behind it. Treat the diagnosis as the first hypothesis to test.",
+  "constraint_key": "talent",
+  "constraint": "Your best people aren't on the highest-value problems",
+  "diagnosis": "Your most capable people have become the default fix for everything. Their time fills with urgent, low-leverage work, and the highest-value problems get whoever is free. Results plateau, the best people are stretched thinner, and eventually they leave or disengage.",
+  "chain": [
+   "The best people become the default fix",
+   "Their time fills with urgent, low-leverage work",
+   "The highest-value problems get whoever is free",
+   "Results plateau",
+   "The best people are stretched thinner",
+   "They disengage or leave"
+  ],
+  "forces": [
+   "Each recurrence is solved as a new event rather than traced to its cause.  [from answers: inversion]",
+   "Current incentives reward the behaviour that produces the friction.  [from answers: inversion]",
+   "Capacity is committed past what exists, and the shortfall lands on the least protected work.  [from answers: execution_why]",
+   "Commitments are made without anything being removed, so they compete for the same capacity.  [from answers: execution_why]"
+  ],
+  "consequences": [
+   "Innovation capacity",
+   "Growth constraints",
+   "Talent risk"
+  ],
+  "estimate": {
+   "managers": 20,
+   "hours": 10,
+   "hoursYear": 9600,
+   "rate": 120,
+   "dollars": 1152000
+  },
+  "blind": "Your organization may have normalised using its best people as the emergency service.",
+  "notDo": {
+   "t": "Don't fix this by hiring more senior people.",
+   "d": "You are not short of talent. You are spending the talent you have on the wrong problems, and new talent would be spent the same way."
+  },
+  "policy": "Allocate your best people's time as deliberately as capital.",
+  "move": {
+   "t": "Audit one week of your five best people.",
+   "steps": [
+    "For your five most capable people, list honestly where their time went last week.",
+    "Find each one's largest block of low-value work. Move it to someone else or stop it.",
+    "Put the freed time on the one problem that matters most, and protect it for a quarter."
+   ]
+  },
+  "question": "If our best people's calendars are the real strategy, what strategy are we executing?",
+  "metric": {
+   "t": "Share of top talent time on the top three priorities",
+   "d": "Estimate it monthly from calendars, not from intentions."
+  }
+ },
+ "P7": {
+  "asked_followups": [
+   "business_uncertainty",
+   "decisions_where",
+   "decisions_after"
+  ],
+  "execution_why_asked": true,
+  "mechanisms": {
+   "direction": 2.5,
+   "focus": 3,
+   "economics": 3,
+   "decisions": 2,
+   "execution": 1,
+   "leverage": 1,
+   "authority": 1,
+   "talent": 2,
+   "trust": 1.25
+  },
+  "lens": {
+   "B": 2.83,
+   "S": 1.33,
+   "P": 1.42
+  },
+  "edge": {
+   "BS": 3.01,
+   "SP": 2.04,
+   "PB": 3.01
+  },
+  "zone": "BS",
+  "zone_name": "Business \u2194 System",
+  "zone_label": "Strategy\u2013Execution Friction",
+  "zone_summary": "You seem to know what matters, but the organization isn't set up to make it happen.",
+  "secondary": "PB",
+  "coherence": false,
+  "margin": 0,
+  "maxSev": 3,
+  "confidence": "emerging",
+  "confidence_text": "The signal is spread across lenses. This is a starting hypothesis, not a conclusion. The follow-up question will tell you more than the diagnosis.",
+  "constraint_key": "focus",
+  "constraint": "Too many priorities, and no clear sense of what to stop",
+  "diagnosis": "Priorities accumulate and nothing is formally retired. Capacity is spread across more work than exists to do it, so everything moves slowly and the urgent displaces the important. The missing decision is not what to start. It is what to stop.",
+  "chain": [
+   "Priorities are added, none are removed",
+   "Capacity is spread thin",
+   "Everything moves slowly",
+   "Urgent work displaces important work",
+   "More initiatives are added to compensate",
+   "Overload becomes the operating model"
+  ],
+  "forces": [
+   "Activity is measured and rewarded, so activity is what grows.  [from answers: inversion]",
+   "New priorities are added faster than old ones are retired.  [from answers: inversion]",
+   "Decisions wait on information that may never be enough, because the real gap is who is allowed to decide under uncertainty.  [from answers: decisions]",
+   "Commitments are made without anything being removed, so they compete for the same capacity.  [from answers: execution_why]"
+  ],
+  "consequences": [
+   "Delayed delivery on what matters",
+   "Employee frustration",
+   "Growth constraints"
+  ],
+  "estimate": {
+   "managers": 8,
+   "hours": 6,
+   "hoursYear": 2304,
+   "rate": 95,
+   "dollars": 218880
+  },
+  "blind": "Your organization may have normalised overload as a sign of ambition.",
+  "notDo": {
+   "t": "Don't add a prioritisation framework.",
+   "d": "Scoring forty initiatives produces a ranked list of forty initiatives. The missing decision is what to stop, and frameworks are how organizations avoid making it."
+  },
+  "policy": "Treat stopping as a decision with the same weight as starting.",
+  "move": {
+   "t": "Cut 20% this month.",
+   "steps": [
+    "List every active priority, everywhere. Expect the list to be longer than anyone thought.",
+    "Rank by contribution to the one thing that matters most this year. Stop the bottom fifth, explicitly, with a note saying what is no longer expected.",
+    "Watch for a month what actually gets worse. Usually less than feared, and that is the lesson."
+   ]
+  },
+  "question": "What are we willing to stop doing to make room for what matters most?",
+  "metric": {
+   "t": "Share of capacity on the top three priorities",
+   "d": "Estimate it monthly from where people's time actually went, not from the plan."
+  }
+ },
+ "P8": {
+  "asked_followups": [],
+  "execution_why_asked": false,
+  "mechanisms": {
+   "direction": 0,
+   "focus": 0.5,
+   "economics": 0,
+   "decisions": 0.5,
+   "execution": 0,
+   "leverage": 0,
+   "authority": 0,
+   "talent": 0,
+   "trust": 0
+  },
+  "lens": {
+   "B": 0.17,
+   "S": 0.17,
+   "P": 0
+  },
+  "edge": {
+   "BS": 0.25,
+   "SP": 0.08,
+   "PB": 0.08
+  },
+  "zone": "BS",
+  "zone_name": "Business \u2194 System",
+  "zone_label": "Strategy\u2013Execution Friction",
+  "zone_summary": "You seem to know what matters, but the organization isn't set up to make it happen.",
+  "secondary": "PB",
+  "coherence": false,
+  "margin": 0.17,
+  "maxSev": 0.5,
+  "confidence": "emerging",
+  "confidence_text": "The signal is spread across lenses. This is a starting hypothesis, not a conclusion. The follow-up question will tell you more than the diagnosis.",
+  "constraint_key": "focus",
+  "constraint": "Too many priorities, and no clear sense of what to stop",
+  "diagnosis": "Priorities accumulate and nothing is formally retired. Capacity is spread across more work than exists to do it, so everything moves slowly and the urgent displaces the important. The missing decision is not what to start. It is what to stop.",
+  "chain": [
+   "Priorities are added, none are removed",
+   "Capacity is spread thin",
+   "Everything moves slowly",
+   "Urgent work displaces important work",
+   "More initiatives are added to compensate",
+   "Overload becomes the operating model"
+  ],
+  "forces": [
+   "New priorities are added faster than old ones are retired.  [from answers: inversion]",
+   "Control is added in response to problems, and each layer slows the next decision.  [from answers: inversion]",
+   "Stopping something feels like failure, so nothing is formally stopped.",
+   "Every function protects its own initiatives, so the total never shrinks."
+  ],
+  "consequences": [
+   "Delayed delivery on what matters",
+   "Employee frustration",
+   "Growth constraints"
+  ],
+  "estimate": null,
+  "blind": "Your organization may have normalised overload as a sign of ambition.",
+  "notDo": {
+   "t": "Don't add a prioritisation framework.",
+   "d": "Scoring forty initiatives produces a ranked list of forty initiatives. The missing decision is what to stop, and frameworks are how organizations avoid making it."
+  },
+  "policy": "Treat stopping as a decision with the same weight as starting.",
+  "move": {
+   "t": "Cut 20% this month.",
+   "steps": [
+    "List every active priority, everywhere. Expect the list to be longer than anyone thought.",
+    "Rank by contribution to the one thing that matters most this year. Stop the bottom fifth, explicitly, with a note saying what is no longer expected.",
+    "Watch for a month what actually gets worse. Usually less than feared, and that is the lesson."
+   ]
+  },
+  "question": "What are we willing to stop doing to make room for what matters most?",
+  "metric": {
+   "t": "Share of capacity on the top three priorities",
+   "d": "Estimate it monthly from where people's time actually went, not from the plan."
+  }
+ },
+ "P9": {
+  "asked_followups": [
+   "business_uncertainty",
+   "decisions_where",
+   "execution_change"
+  ],
+  "execution_why_asked": true,
+  "mechanisms": {
+   "direction": 3,
+   "focus": 2,
+   "economics": 2.75,
+   "decisions": 2,
+   "execution": 2,
+   "leverage": 2.5,
+   "authority": 2,
+   "talent": 2,
+   "trust": 2
+  },
+  "lens": {
+   "B": 2.58,
+   "S": 2.17,
+   "P": 2
+  },
+  "edge": {
+   "BS": 3.72,
+   "SP": 3.26,
+   "PB": 3.64
+  },
+  "zone": "BSP",
+  "zone_name": "Business \u2194 System \u2194 People",
+  "zone_label": "Coherence Friction",
+  "zone_summary": "The three parts each look reasonable on their own, but together they are producing conflicting behaviour.",
+  "secondary": "BS",
+  "coherence": true,
+  "margin": 0,
+  "maxSev": 3,
+  "confidence": "moderate",
+  "confidence_text": "The pattern is clear but a second friction is close behind it. Treat the diagnosis as the first hypothesis to test.",
+  "constraint_key": "direction",
+  "constraint": "Leadership isn't aligned on what matters most",
+  "diagnosis": "Your leadership team appears to hold different versions of what the business must accomplish. Each version is defensible, which is why it persists. The organization below is executing several strategies at once and experiencing it as slowness.",
+  "chain": [
+   "Leaders hold different top priorities",
+   "Each function optimises its own version",
+   "Teams receive conflicting signals",
+   "Work is duplicated or cancelled mid-flight",
+   "Decisions get revisited",
+   "Effort rises, progress doesn't"
+  ],
+  "forces": [
+   "Nothing about the current pattern requires anyone to act, so it persists.  [from answers: inversion]",
+   "Each recurrence is solved as a new event rather than traced to its cause.  [from answers: inversion]",
+   "Leadership disagreement is settled case by case instead of once, so it re-runs inside every decision.  [from answers: decisions]",
+   "Commitments are made without anything being removed, so they compete for the same capacity.  [from answers: execution_why]"
+  ],
+  "consequences": [
+   "Slower decisions",
+   "Duplicated work",
+   "Lost management capacity"
+  ],
+  "estimate": {
+   "managers": 25,
+   "hours": 3,
+   "hoursYear": 3600,
+   "rate": 130,
+   "dollars": 468000
+  },
+  "blind": "Your leadership team may have learned to treat polite agreement as alignment.",
+  "notDo": {
+   "t": "Don't fix this with a communication plan.",
+   "d": "The problem isn't that the strategy hasn't been communicated. It's that it hasn't been chosen. Communicating three versions more clearly produces three clearer versions."
+  },
+  "policy": "Choose fewer things, out loud, together.",
+  "move": {
+   "t": "Run the three-things exercise.",
+   "steps": [
+    "Ask each leader to write, alone, the three most important things the business must accomplish this year, and why.",
+    "Put the lists on one wall in one room. Expect them to differ. The differences are the diagnosis.",
+    "Don't leave until there is one list. Publish it, and retire anything from the old lists that didn't survive."
+   ]
+  },
+  "question": "If our leadership team's top-three lists differ, whose list is the organization actually executing?",
+  "metric": {
+   "t": "Distinct \"top priorities\" named across the leadership team",
+   "d": "Ask each leader separately, once a quarter. The target is one list."
+  }
+ }
+}

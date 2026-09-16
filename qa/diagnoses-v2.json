@@ -1,0 +1,460 @@
+{
+ "P1": {
+  "zone": "SP",
+  "zone_label": "Enablement Friction",
+  "zone_summary": "People are accountable for outcomes without the authority to make the decisions those outcomes require, so they check before acting.",
+  "constraint_key": "authority",
+  "constraint": "People are accountable for outcomes without the authority to deliver them",
+  "confidence": "moderate",
+  "low": false,
+  "dominant": null,
+  "coherence": false,
+  "margin": 1.12,
+  "mechanisms": {
+   "direction": 1,
+   "focus": 1.5,
+   "economics": 1,
+   "decisions": 2.5,
+   "execution": 1,
+   "leverage": 1,
+   "authority": 3,
+   "talent": 1,
+   "trust": 1
+  },
+  "asked": [
+   "decisions_where",
+   "decisions_after",
+   "people_limits"
+  ],
+  "forces": [
+   {
+    "t": "Decisions drift upward whenever things feel risky.",
+    "src": "inversion"
+   },
+   {
+    "t": "Control is added in response to problems, and each layer slows the next decision.",
+    "src": "inversion"
+   },
+   {
+    "t": "People who could decide don't believe they are allowed to, so they escalate to be safe.",
+    "src": "decisions"
+   },
+   {
+    "t": "The process for turning a decision into work doesn't carry it, so people carry it by hand.",
+    "src": "execution_why"
+   }
+  ],
+  "move": "Clarify one decision right per team.",
+  "blind": "The organization may have normalised escalation as diligence.",
+  "notDo": "Don't fix this with an empowerment programme.",
+  "question": "Where are we holding people accountable for outcomes without giving them enough authority to achieve them?",
+  "metric": "Share of key decisions made without escalation"
+ },
+ "P2": {
+  "zone": "BS",
+  "zone_label": "Strategy\u2013Execution Friction",
+  "zone_summary": "The business keeps committing to more than the system has capacity to deliver, and nothing is formally stopped to make room.",
+  "constraint_key": "focus",
+  "constraint": "Too many priorities, and no clear sense of what to stop",
+  "confidence": "moderate",
+  "low": false,
+  "dominant": null,
+  "coherence": false,
+  "margin": 0.38,
+  "mechanisms": {
+   "direction": 1,
+   "focus": 3,
+   "economics": 2,
+   "decisions": 0,
+   "execution": 2,
+   "leverage": 1,
+   "authority": 1,
+   "talent": 2,
+   "trust": 1.5
+  },
+  "asked": [
+   "execution_change",
+   "business_uncertainty"
+  ],
+  "forces": [
+   {
+    "t": "New priorities are added faster than old ones are retired.",
+    "src": "inversion"
+   },
+   {
+    "t": "The difficult conversation is being avoided, so the cause stays unnamed.",
+    "src": "inversion"
+   },
+   {
+    "t": "Commitments are made without anything being removed, so they compete for the same capacity.",
+    "src": "execution_why"
+   },
+   {
+    "t": "Capacity is committed past what exists, and the shortfall lands on the least protected work.",
+    "src": "execution_why"
+   }
+  ],
+  "move": "Cut 20% this month.",
+  "blind": "Your organization may have normalised overload as a sign of ambition.",
+  "notDo": "Don't add a prioritisation framework.",
+  "question": "What are we willing to stop doing to make room for what matters most?",
+  "metric": "Share of capacity on the top three priorities"
+ },
+ "P3": {
+  "zone": "SP",
+  "zone_label": "Enablement Friction",
+  "zone_summary": "Your people appear capable and willing. The system around them doesn't carry the work, so they are compensating for it by hand.",
+  "constraint_key": "leverage",
+  "constraint": "Performance depends on people working around the system",
+  "confidence": "moderate",
+  "low": false,
+  "dominant": null,
+  "coherence": false,
+  "margin": 0.49,
+  "mechanisms": {
+   "direction": 1,
+   "focus": 1,
+   "economics": 1,
+   "decisions": 1,
+   "execution": 1,
+   "leverage": 3,
+   "authority": 1,
+   "talent": 2,
+   "trust": 2
+  },
+  "asked": [
+   "people_limits"
+  ],
+  "forces": [
+   {
+    "t": "Each recurrence is solved as a new event rather than traced to its cause.",
+    "src": "inversion"
+   },
+   {
+    "t": "Nothing about the current pattern requires anyone to act, so it persists.",
+    "src": "inversion"
+   },
+   {
+    "t": "The process for turning a decision into work doesn't carry it, so people carry it by hand.",
+    "src": "execution_why"
+   },
+   {
+    "t": "Work stalls at handoffs between teams, where no one owns the whole.",
+    "src": "execution_why"
+   }
+  ],
+  "move": "Design out the biggest workaround.",
+  "blind": "Your team may have learned to work around the system rather than improve it.",
+  "notDo": "Don't fix this by hiring more of the people who make it happen.",
+  "question": "Where are exceptional people compensating for a system that should work without heroics?",
+  "metric": "Hours per week spent on recurring workarounds"
+ },
+ "P4": {
+  "zone": "BS",
+  "zone_label": "Strategy\u2013Execution Friction",
+  "zone_summary": "Leadership hasn't settled what matters most, so the organization is executing several answers at once and experiencing it as slowness.",
+  "constraint_key": "direction",
+  "constraint": "Leadership isn't aligned on what matters most",
+  "confidence": "high",
+  "low": false,
+  "dominant": "B",
+  "coherence": false,
+  "margin": 0.7,
+  "mechanisms": {
+   "direction": 3,
+   "focus": 3,
+   "economics": 2.75,
+   "decisions": 2,
+   "execution": 1,
+   "leverage": 1,
+   "authority": 1,
+   "talent": 1,
+   "trust": 1.75
+  },
+  "asked": [
+   "business_uncertainty",
+   "decisions_where",
+   "decisions_after"
+  ],
+  "forces": [
+   {
+    "t": "The difficult conversation is being avoided, so the cause stays unnamed.",
+    "src": "inversion"
+   },
+   {
+    "t": "New priorities are added faster than old ones are retired.",
+    "src": "inversion"
+   },
+   {
+    "t": "Leadership disagreement is settled case by case instead of once, so it re-runs inside every decision.",
+    "src": "decisions"
+   },
+   {
+    "t": "Direction changes from the top before the last direction has been delivered, which teaches teams to wait.",
+    "src": "execution_why"
+   }
+  ],
+  "move": "Run the three-things exercise.",
+  "blind": "Your leadership team may have learned to treat polite agreement as alignment.",
+  "notDo": "Don't fix this with a communication plan.",
+  "question": "If our leadership team's top-three lists differ, whose list is the organization actually executing?",
+  "metric": "Distinct \"top priorities\" named across the leadership team"
+ },
+ "P5": {
+  "zone": "SP",
+  "zone_label": "Enablement Friction",
+  "zone_summary": "The system runs on filtered information, because raising a problem or disagreeing carries a cost. Everything else is downstream of that.",
+  "constraint_key": "trust",
+  "constraint": "It isn't safe to raise problems or disagree",
+  "confidence": "moderate",
+  "low": false,
+  "dominant": null,
+  "coherence": false,
+  "margin": 0.44,
+  "mechanisms": {
+   "direction": 1,
+   "focus": 2,
+   "economics": 1.25,
+   "decisions": 2,
+   "execution": 1,
+   "leverage": 1,
+   "authority": 2,
+   "talent": 1,
+   "trust": 3
+  },
+  "asked": [
+   "decisions_where",
+   "decisions_after",
+   "people_limits"
+  ],
+  "forces": [
+   {
+    "t": "The difficult conversation is being avoided, so the cause stays unnamed.",
+    "src": "inversion"
+   },
+   {
+    "t": "Current incentives reward the behaviour that produces the friction.",
+    "src": "inversion"
+   },
+   {
+    "t": "People who could decide don't believe they are allowed to, so they escalate to be safe.",
+    "src": "decisions"
+   },
+   {
+    "t": "Commitments quietly lapse without consequence, so commitment has stopped meaning much.",
+    "src": "execution_why"
+   }
+  ],
+  "move": "Change one meeting.",
+  "blind": "The organization may have learned that silence is loyalty.",
+  "notDo": "Don't fix this with an anonymous survey or a values poster.",
+  "question": "What is the problem everyone knows about that hasn't been said in a leadership meeting?",
+  "metric": "Time between a problem being noticed and being raised with someone who can act"
+ },
+ "P6": {
+  "zone": "PB",
+  "zone_label": "Alignment Friction",
+  "zone_summary": "People are working hard. Your best people are on the wrong problems, so the effort isn't landing where the business needs it.",
+  "constraint_key": "talent",
+  "constraint": "Your best people aren't on the highest-value problems",
+  "confidence": "moderate",
+  "low": false,
+  "dominant": null,
+  "coherence": false,
+  "margin": 0.17,
+  "mechanisms": {
+   "direction": 1.75,
+   "focus": 2.5,
+   "economics": 1.75,
+   "decisions": 0,
+   "execution": 2,
+   "leverage": 3,
+   "authority": 1,
+   "talent": 3,
+   "trust": 1.25
+  },
+  "asked": [
+   "execution_change",
+   "people_limits",
+   "business_uncertainty"
+  ],
+  "forces": [
+   {
+    "t": "Each recurrence is solved as a new event rather than traced to its cause.",
+    "src": "inversion"
+   },
+   {
+    "t": "Current incentives reward the behaviour that produces the friction.",
+    "src": "inversion"
+   },
+   {
+    "t": "Capacity is committed past what exists, and the shortfall lands on the least protected work.",
+    "src": "execution_why"
+   },
+   {
+    "t": "Commitments are made without anything being removed, so they compete for the same capacity.",
+    "src": "execution_why"
+   }
+  ],
+  "move": "Audit one week of your five best people.",
+  "blind": "Your organization may have normalised using its best people as the emergency service.",
+  "notDo": "Don't fix this by hiring more senior people.",
+  "question": "If our best people's calendars are the real strategy, what strategy are we executing?",
+  "metric": "Share of top talent time on the top three priorities"
+ },
+ "P7": {
+  "zone": "BS",
+  "zone_label": "Strategy\u2013Execution Friction",
+  "zone_summary": "Priorities aren't tied to what creates value, so the system executes hard against a scoreboard that doesn't decide anything.",
+  "constraint_key": "economics",
+  "constraint": "Priorities aren't clearly connected to how the business creates value",
+  "confidence": "moderate",
+  "low": false,
+  "dominant": "B",
+  "coherence": false,
+  "margin": 0.44,
+  "mechanisms": {
+   "direction": 2.5,
+   "focus": 3,
+   "economics": 3,
+   "decisions": 2,
+   "execution": 1,
+   "leverage": 1,
+   "authority": 1,
+   "talent": 2,
+   "trust": 1.25
+  },
+  "asked": [
+   "business_uncertainty",
+   "decisions_where",
+   "decisions_after"
+  ],
+  "forces": [
+   {
+    "t": "Activity is measured and rewarded, so activity is what grows.",
+    "src": "inversion"
+   },
+   {
+    "t": "New priorities are added faster than old ones are retired.",
+    "src": "inversion"
+   },
+   {
+    "t": "Decisions wait on information that may never be enough, because the real gap is who is allowed to decide under uncertainty.",
+    "src": "decisions"
+   },
+   {
+    "t": "Commitments are made without anything being removed, so they compete for the same capacity.",
+    "src": "execution_why"
+   }
+  ],
+  "move": "Trace each top priority to a value driver.",
+  "blind": "The organization may be optimising for functional performance while sacrificing overall business value.",
+  "notDo": "Don't fix this with more reporting.",
+  "question": "Which activities consume the most resources without creating proportional value?",
+  "metric": "Share of resources on priorities with a named value driver"
+ },
+ "P8": {
+  "zone": "BS",
+  "zone_label": "Strategy\u2013Execution Friction",
+  "zone_summary": "The business keeps committing to more than the system has capacity to deliver, and nothing is formally stopped to make room.",
+  "constraint_key": "focus",
+  "constraint": "Too many priorities, and no clear sense of what to stop",
+  "confidence": "emerging",
+  "low": true,
+  "dominant": null,
+  "coherence": false,
+  "margin": 0.34,
+  "mechanisms": {
+   "direction": 0,
+   "focus": 0.5,
+   "economics": 0,
+   "decisions": 0.5,
+   "execution": 0,
+   "leverage": 0,
+   "authority": 0,
+   "talent": 0,
+   "trust": 0
+  },
+  "asked": [],
+  "forces": [
+   {
+    "t": "New priorities are added faster than old ones are retired.",
+    "src": "inversion"
+   },
+   {
+    "t": "Control is added in response to problems, and each layer slows the next decision.",
+    "src": "inversion"
+   },
+   {
+    "t": "Stopping something feels like failure, so nothing is formally stopped.",
+    "src": "pattern"
+   }
+  ],
+  "move": "Cut 20% this month.",
+  "blind": "Your organization may have normalised overload as a sign of ambition.",
+  "notDo": "Don't add a prioritisation framework.",
+  "question": "What are we willing to stop doing to make room for what matters most?",
+  "metric": "Share of capacity on the top three priorities"
+ },
+ "P9": {
+  "zone": "BSP",
+  "zone_label": "Coherence Friction",
+  "zone_summary": "The three parts each look reasonable on their own, but together they are producing conflicting behaviour.",
+  "constraint_key": "economics",
+  "constraint": "Priorities aren't clearly connected to how the business creates value",
+  "confidence": "moderate",
+  "low": false,
+  "dominant": null,
+  "coherence": true,
+  "margin": 0,
+  "mechanisms": {
+   "direction": 2.5,
+   "focus": 2,
+   "economics": 2.75,
+   "decisions": 2,
+   "execution": 2,
+   "leverage": 2.5,
+   "authority": 2,
+   "talent": 2,
+   "trust": 2
+  },
+  "asked": [
+   "business_uncertainty",
+   "decisions_where",
+   "execution_change"
+  ],
+  "forces": [
+   {
+    "t": "Nothing about the current pattern requires anyone to act, so it persists.",
+    "src": "inversion"
+   },
+   {
+    "t": "Each recurrence is solved as a new event rather than traced to its cause.",
+    "src": "inversion"
+   },
+   {
+    "t": "Leadership disagreement is settled case by case instead of once, so it re-runs inside every decision.",
+    "src": "decisions"
+   },
+   {
+    "t": "Commitments are made without anything being removed, so they compete for the same capacity.",
+    "src": "execution_why"
+   }
+  ],
+  "move": "Trace each top priority to a value driver.",
+  "blind": "The organization may be optimising for functional performance while sacrificing overall business value.",
+  "notDo": "Don't fix this with more reporting.",
+  "question": "Which activities consume the most resources without creating proportional value?",
+  "metric": "Share of resources on priorities with a named value driver"
+ },
+ "__fuzz": {
+  "errs": 0,
+  "zones": {
+   "PB": 620,
+   "BS": 608,
+   "SP": 766,
+   "BSP": 6
+  },
+  "lowN": 0
+ }
+}

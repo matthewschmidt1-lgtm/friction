@@ -90,9 +90,9 @@ export const CORE = [
     title: 'When it doesn\'t happen, what usually gets in the way?',
     help: 'Pick up to two.',
     options: [
-      o('Too many competing priorities', 0, { side: { focus: 1 }, e: { BS: .75 }, force: 'Commitments are made without anything being removed, so they compete for the same capacity.' }),
+      o('Too many competing priorities', 0, { side: { focus: 1 }, e: { BS: 1 }, force: 'Commitments are made without anything being removed, so they compete for the same capacity.' }),
       o('No clear owner', 0, { side: { decisions: 1 }, force: 'Important work has no single owner, so it belongs to everyone and moves for no one.' }),
-      o('Lack of capacity', 0, { side: { focus: .5 }, force: 'Capacity is committed past what exists, and the shortfall lands on the least protected work.' }),
+      o('Lack of capacity', 0, { side: { focus: .5 }, e: { BS: .5 }, force: 'Capacity is committed past what exists, and the shortfall lands on the least protected work.' }),
       o('Lack of capability', 0, { side: { talent: 1 }, e: { SP: .5 }, force: 'The people asked to deliver don\'t yet have the skills or support to do it.' }),
       o('Poor process', 0, { side: { leverage: 1 }, force: 'The process for turning a decision into work doesn\'t carry it, so people carry it by hand.' }),
       o('Leadership changes direction', 0, { side: { direction: 1 }, e: { BS: .75 }, force: 'Direction changes from the top before the last direction has been delivered, which teaches teams to wait.' }),
@@ -156,7 +156,7 @@ export const FOLLOWUPS = [
       o('Customers', 0, { force: 'Customer demands override the plan. That may be right, but the plan should expect it.' }),
       o('Sales', 0, { side: { economics: .5 }, force: 'Sales commitments reset priorities, so the plan is effectively made twice.' }),
       o('Operations', 0, { side: { leverage: .5 }, force: 'Operational fires displace planned work, and the fires keep coming.' }),
-      o('New opportunities', 0, { side: { focus: 1 }, force: 'New opportunities are added without anything being removed.' }),
+      o('New opportunities', 0, { side: { focus: 1 }, e: { BS: .5 }, force: 'New opportunities are added without anything being removed.' }),
       o('External events', 0, { force: 'External events reset priorities, and there is no rule for what protects the core plan.' }),
       o('We aren\'t sure', 0, { side: { direction: .5 }, force: 'Priorities change for reasons nobody can name, which is itself the signal.' }),
     ],
@@ -183,7 +183,7 @@ export const FOLLOWUPS = [
       o('What to prioritize', 0, { side: { focus: .75 }, force: 'The organization hasn\'t chosen what comes first, so everything does.' }),
       o('Which customers matter most', 0, { side: { economics: .75 }, force: 'Without a view on which customers matter most, effort spreads evenly across customers who don\'t.' }),
       o('Where to invest', 0, { side: { economics: .75 }, force: 'Investment follows the strongest advocate rather than the strongest economics.' }),
-      o('What to stop', 0, { side: { focus: 1 }, force: 'Nothing is formally stopped, so capacity is spent maintaining the past.' }),
+      o('What to stop', 0, { side: { focus: 1 }, e: { BS: .5 }, force: 'Nothing is formally stopped, so capacity is spent maintaining the past.' }),
       o('How to grow', 0, { side: { direction: .75 }, force: 'Growth is the goal but the path isn\'t chosen, so several are pursued at once.' }),
       o('Where profit comes from', 0, { side: { economics: 1 }, force: 'The economics of the business aren\'t explicit, so priorities can\'t be tested against them.' }),
     ],
@@ -197,7 +197,7 @@ export const INVERSION = {
   title: 'If you wanted this problem to get significantly worse, what would you do?',
   help: 'Pick up to two. Be honest about which ones are already happening.',
   options: [
-    o('Add more priorities', 0, { side: { focus: .5 }, force: 'New priorities are added faster than old ones are retired.' }),
+    o('Add more priorities', 0, { side: { focus: .5 }, e: { BS: .5 }, force: 'New priorities are added faster than old ones are retired.' }),
     o('Centralize more decisions', 0, { side: { authority: .5 }, force: 'Decisions drift upward whenever things feel risky.' }),
     o('Add another approval layer', 0, { side: { decisions: .5 }, force: 'Control is added in response to problems, and each layer slows the next decision.' }),
     o('Avoid the difficult conversation', 0, { side: { trust: .5 }, force: 'The difficult conversation is being avoided, so the cause stays unnamed.' }),
@@ -428,10 +428,45 @@ export const LEVERAGE_WHY = {
   'Capability building': 'fixing the system once so it stops needing rescue',
 };
 
+// The zone summary, tailored to which constraint fired inside it. Falls back to ZONES[zone].summary.
+export const ZONE_BY_CONSTRAINT = {
+  BS: {
+    direction: 'Leadership hasn\'t settled what matters most, so the organization is executing several answers at once and experiencing it as slowness.',
+    focus: 'The business keeps committing to more than the system has capacity to deliver, and nothing is formally stopped to make room.',
+    economics: 'Priorities aren\'t tied to what creates value, so the system executes hard against a scoreboard that doesn\'t decide anything.',
+    decisions: 'You know what you want. Decisions about how to get there have no clear owner, so the machine waits.',
+    execution: 'You know what matters. Commitments don\'t reliably turn into work, because they are made without the capacity or ownership to deliver them.',
+    leverage: 'You know what matters. The system doesn\'t carry it, so people carry it by hand, and that works until it doesn\'t.',
+  },
+  SP: {
+    decisions: 'Capable people are waiting on decisions that have no clear owner, and escalation has become the way work gets done.',
+    execution: 'People are willing, but agreed work slips because the system doesn\'t give it an owner, capacity or follow-through.',
+    leverage: 'Your people appear capable and willing. The system around them doesn\'t carry the work, so they are compensating for it by hand.',
+    authority: 'People are accountable for outcomes without the authority to make the decisions those outcomes require, so they check before acting.',
+    talent: 'The system pulls your most capable people into rescue work, so the problems that need them most get whoever is free.',
+    trust: 'The system runs on filtered information, because raising a problem or disagreeing carries a cost. Everything else is downstream of that.',
+  },
+  PB: {
+    authority: 'People are working hard, but the authority to act on what matters hasn\'t reached them, so effort turns into escalation.',
+    talent: 'People are working hard. Your best people are on the wrong problems, so the effort isn\'t landing where the business needs it.',
+    trust: 'People are working hard and saying little. What the business needs to hear isn\'t reaching it, because it isn\'t safe to say.',
+    direction: 'People are working hard toward different versions of what matters, because leadership holds different versions too.',
+    focus: 'People are working hard across more priorities than the business can actually use, and nobody has been told what to stop.',
+    economics: 'People are working hard on priorities chosen by advocacy rather than value, so effort isn\'t translating into results.',
+  },
+};
+
+export const LOW_FRICTION = {
+  name: 'Low friction',
+  summary: 'Nothing in your answers rose to the level of a constraint worth acting on. That is unusual, and worth protecting.',
+  detail: 'The three lenses are each carrying their share. When that is true, the risk is not a current problem but the quiet arrival of one: a priority added without one removed, a decision pulled upward after a scare, an approval layer added after a mistake. The inversion question you answered is the best guard you have.',
+  watch: 'Run Friction again in a quarter. If the same picture holds, the system is doing its job. If one lens has moved, you will see it before it costs anything.',
+};
+
 export const CONFIDENCE = {
   high:     { label: 'High',     d: 'Your answers point in one direction, and the follow-ups agreed with the core pattern.' },
   moderate: { label: 'Moderate', d: 'The pattern is clear but a second friction is close behind it. Treat the diagnosis as the first hypothesis to test.' },
-  emerging: { label: 'Emerging', d: 'The signal is spread across lenses. This is a starting hypothesis, not a conclusion. The follow-up question will tell you more than the diagnosis.' },
+  emerging: { label: 'Emerging', d: 'The signal is spread across lenses. This is a starting hypothesis, not a conclusion. The follow-ups you answered agreed only partly with the core pattern.', d0: 'The signal is spread across lenses, and none of it was strong enough to trigger a follow-up. Treat this as a starting hypothesis, not a conclusion.' },
 };
 
 export const LEARNING_OPTIONS = [

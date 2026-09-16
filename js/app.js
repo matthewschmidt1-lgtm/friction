@@ -1,5 +1,5 @@
 // Friction v2 — app shell: state, screens, storage. No dependencies.
-import { CORE, INVERSION, COST, STAGES, LENSES, ZONES, CONSEQUENCE_WHY, LEVERAGE_WHY, CONFIDENCE, LEARNING_OPTIONS, LEARNING_RESPONSES } from './content.js';
+import { CORE, INVERSION, COST, STAGES, LENSES, ZONES, CONSEQUENCE_WHY, LEVERAGE_WHY, CONFIDENCE, LOW_FRICTION, ZONE_BY_CONSTRAINT, LEARNING_OPTIONS, LEARNING_RESPONSES } from './content.js';
 import { analyze, pickFollowups, isComplete, mechanisms } from './engine.js';
 
 const STORAGE = 'friction.v2';
@@ -166,6 +166,8 @@ const SCREENS = {
   result() {
     const r = state.result; const Z = ZONES[r.zone]; const play = r.play;
     const conf = CONFIDENCE[r.confidence];
+    const confText = r.confidence === 'emerging' && r.followupsAnswered === 0 && conf.d0 ? conf.d0 : conf.d;
+    const zoneSummary = (ZONE_BY_CONSTRAINT[r.zone] || {})[r.constraint] || Z.summary;
     const exp = (title, sub, body, cls = '') => `<details class="more ${cls}"><summary><b>${title}</b>${sub ? `<span class="sum-line">${sub}</span>` : ''}<i class="caret"></i></summary><div class="more-body">${body}</div></details>`;
     const step = (n, name, tag) => `<div class="step-head"><span class="step-n">${n}</span><span class="step-name">${name}</span>${tag ? `<span class="step-tag">${tag}</span>` : ''}</div>`;
     const est = r.estimate;
@@ -174,7 +176,7 @@ const SCREENS = {
     const chainAndForces = `<ol class="chain" aria-label="Causal chain">${play.chain.map(c => `<li>${esc(c)}</li>`).join('')}</ol>
         <div class="forces">
           <p class="eyebrow">What's reinforcing it</p>
-          <ul>${r.forces.map(f => `<li class="${f.src === 'pattern' ? '' : 'from-you'}"><span>${esc(f.t)}</span>${f.src !== 'pattern' ? `<small>from your answers</small>` : ''}</li>`).join('')}</ul>
+          <ul>${r.forces.map(f => `<li class="${f.src === 'pattern' ? 'from-pattern' : 'from-you'}"><span>${esc(f.t)}</span><small>${f.src === 'pattern' ? 'typical of this constraint' : 'from your answers'}</small></li>`).join('')}</ul>
         </div>`;
 
     const costBreakdown = `<ul class="cons">${play.consequences.map(c => `<li><b>${esc(c)}</b><span>${esc(CONSEQUENCE_WHY[c] || '')}</span></li>`).join('')}</ul>
@@ -192,15 +194,46 @@ const SCREENS = {
 
     const reading = `<div class="reading">${play.reading.map(b => `<div class="book"><span class="book-t">${esc(b.title)} <span class="book-a">· ${esc(b.author)}</span></span><p>${esc(b.idea)}</p></div>`).join('')}</div>`;
 
+    if (r.low) {
+      const inv = (state.answers.inversion || []).map(i => INVERSION.options[i]);
+      return `<section class="screen result journey">
+      <div class="jstep stagger">
+        ${step('01', 'Your diagnosis', 'Nothing to fix yet')}
+        <h1 class="display lg edge-name">${esc(LOW_FRICTION.name)}</h1>
+        <p class="lead">${esc(LOW_FRICTION.summary)}</p>
+        ${frictionMap(r)}
+        <p class="quiet">${esc(LOW_FRICTION.detail)}</p>
+      </div>
+      <div class="jstep stagger">
+        ${step('02', 'Your guards', 'What would make it worse')}
+        <p class="lead">You said this is what would make things worse. Those are the moves to keep refusing.</p>
+        <ul class="cons">${inv.map(o => `<li><b>${esc(o.t)}</b><span>${esc(o.force || '')}</span></li>`).join('')}</ul>
+      </div>
+      <div class="jstep stagger">
+        ${step('03', 'Watch', 'The only metric that matters here')}
+        <div class="metric"><p class="metric-t">Whether this picture holds</p><p>${esc(LOW_FRICTION.watch)}</p></div>
+      </div>
+      <div class="jstep stagger">
+        ${step('04', 'Learn', 'Close the loop')}
+        <div class="card">
+          <div class="loop"><b>Signal</b><i>→</i>Understand<i>→</i>Decide<i>→</i>Act<i>→</i><b>Learn</b></div>
+          <div class="result-actions"><button class="btn btn-deep" data-copy>Copy diagnosis</button><button class="btn btn-ghost" data-go="begin">Run it again</button><span class="saved">✓ Saved on this device</span></div>
+        </div>
+      </div>
+    </section>`;
+    }
+
     return `<section class="screen result journey">
 
       <div class="jstep stagger">
         ${step('01', 'Your primary friction', Z.label)}
         <div class="friction-head">
           <h1 class="display lg edge-name">${esc(Z.name)}</h1>
-          <details class="conf-pill conf-${r.confidence}"><summary>Confidence: ${conf.label}<i class="caret"></i></summary><div class="conf-body">${esc(conf.d)}</div></details>
+          <details class="conf-pill conf-${r.confidence}"><summary>Confidence: ${conf.label}<i class="caret"></i></summary><div class="conf-body">${esc(confText)}</div></details>
         </div>
-        <p class="lead">${esc(Z.summary)}</p>
+        <p class="lead">${esc(zoneSummary)}</p>
+        ${r.coherence ? `<p class="quiet">No single lens is failing badly. The strongest signal is <strong>${esc(play.constraint.toLowerCase())}</strong>, but it is mild. The pattern is the finding.</p>` : ''}
+        ${r.dominant ? `<p class="quiet">The pull comes mostly from <strong>${esc(LENSES[r.dominant].name)}</strong>. It shows up on both of that lens's edges, so the constraint below is the more certain part of this diagnosis.</p>` : ''}
         ${frictionMap(r)}
         <div class="expanders">
           ${exp('What this zone means', esc(Z.label), `<p>${esc(Z.detail)}</p>${r.coherence ? '' : `<p class="quiet">Close behind it: <strong>${esc(ZONES[r.secondary].name)}</strong>. ${esc(ZONES[r.secondary].summary)}</p>`}`)}
@@ -305,26 +338,27 @@ const SCREENS = {
 function frictionMap(r) {
   const V = { B: [200, 44], S: [352, 290], P: [48, 290] };
   const lbl = { B: [200, 22], S: [352, 324], P: [48, 324] };
-  const on = r.coherence ? ['BS', 'SP', 'PB'] : [r.zone];
+  const on = r.low ? [] : r.coherence ? ['BS', 'SP', 'PB'] : [r.zone];
   const edges = ['BS', 'SP', 'PB'].map(k => {
     const { a, b } = ZONES[k];
     const primary = on.includes(k);
     return `<line class="edge ${primary ? 'primary' : k === r.secondary ? 'secondary' : ''}" x1="${V[a][0]}" y1="${V[a][1]}" x2="${V[b][0]}" y2="${V[b][1]}" stroke-width="${primary ? (r.coherence ? 5 : 7) : 1.5}"/>`;
   }).join('');
-  const lit = r.coherence ? ['B', 'S', 'P'] : [ZONES[r.zone].a, ZONES[r.zone].b];
+  const lit = r.low ? [] : r.coherence ? ['B', 'S', 'P'] : [ZONES[r.zone].a, ZONES[r.zone].b];
   const pools = ['B', 'S', 'P'].map(k => {
     const o = lit.includes(k); const rad = 8 + 22 * r.lensNorm[k];
     return `<g class="pool-c"><circle cx="${V[k][0]}" cy="${V[k][1]}" r="${rad.toFixed(1)}" fill="var(--lens-${k})" opacity="${o ? .22 : .1}"/><circle cx="${V[k][0]}" cy="${V[k][1]}" r="6" fill="var(--lens-${k})" opacity="${o ? 1 : .45}"/></g>`;
   }).join('');
   let fx, fy;
-  if (r.coherence) { fx = 200; fy = 208; }
+  if (r.low) { fx = 200; fy = 208; }
+  else if (r.coherence) { fx = 200; fy = 208; }
   else { const { a, b } = ZONES[r.zone]; const wa = r.lensNorm[a] + .01, wb = r.lensNorm[b] + .01; let tt = wb / (wa + wb); tt = .3 + .4 * tt; fx = V[a][0] + (V[b][0] - V[a][0]) * tt; fy = V[a][1] + (V[b][1] - V[a][1]) * tt; }
   const labelAbove = fy > 200;
   return `<svg class="map" viewBox="0 0 400 340" role="img" aria-label="Friction map: ${ZONES[r.zone].name}">
     ${edges}${pools}
     ${['B', 'S', 'P'].map(k => `<text class="vertex ${lit.includes(k) ? 'on' : ''}" x="${lbl[k][0]}" y="${lbl[k][1]}" text-anchor="middle">${LENSES[k].name.toUpperCase()}</text>`).join('')}
-    <g class="fp"><circle class="ring" cx="${fx}" cy="${fy}" r="14"/><circle class="ring r2" cx="${fx}" cy="${fy}" r="14"/><circle cx="${fx}" cy="${fy}" r="9" fill="var(--sun)" stroke="#fff" stroke-width="3"/></g>
-    <text class="fp-label" x="${fx}" y="${labelAbove ? fy - 24 : fy + 34}" text-anchor="middle">FRICTION</text>
+    ${r.low ? '' : `<g class="fp"><circle class="ring" cx="${fx}" cy="${fy}" r="14"/><circle class="ring r2" cx="${fx}" cy="${fy}" r="14"/><circle cx="${fx}" cy="${fy}" r="9" fill="var(--sun)" stroke="#fff" stroke-width="3"/></g>
+    <text class="fp-label" x="${fx}" y="${labelAbove ? fy - 24 : fy + 34}" text-anchor="middle">FRICTION</text>`}
   </svg>`;
 }
 
@@ -388,7 +422,7 @@ function reveal(skip) {
   for (const k of Object.keys(state.answers)) if (!ids.has(k)) delete state.answers[k];
   const r = analyze(state.answers, cost);
   state.result = r;
-  state.history.push({ at: Date.now(), zone: r.zone, constraint: r.play.constraint, move: r.play.move.t, question: r.play.question, metric: r.play.metric.t, confidence: r.confidence, lens: r.lensNorm, closed: false });
+  state.history.push({ at: Date.now(), zone: r.zone, low: !!r.low, constraint: r.low ? 'Low friction' : r.play.constraint, move: r.play.move.t, question: r.play.question, metric: r.play.metric.t, confidence: r.confidence, lens: r.lensNorm, closed: false });
   if (state.history.length > 12) state.history = state.history.slice(-12);
   persist();
   go('result');
@@ -400,6 +434,7 @@ function closeLoop() {
 }
 function summaryText() {
   const r = state.result; const Z = ZONES[r.zone]; const p = r.play; const e = r.estimate;
+  if (r.low) return ['FRICTION DIAGNOSIS', '', LOW_FRICTION.name, LOW_FRICTION.summary, '', LOW_FRICTION.detail, '', LOW_FRICTION.watch, '', location.origin + location.pathname].join('\n');
   return [
     'FRICTION DIAGNOSIS', '',
     `PRIMARY FRICTION: ${Z.name} — ${Z.label}`, Z.summary, `Confidence: ${CONFIDENCE[r.confidence].label}`, '',

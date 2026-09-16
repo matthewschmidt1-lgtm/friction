@@ -477,3 +477,6 @@ details.conf-pill .conf-body{padding:0 1rem .8rem; font-family:var(--font-body);
   .mission{padding:1.1rem 1.2rem}
   .mission-label{font-size:.84rem}
 }
+
+.forces li.from-pattern{border-left:3px solid var(--sand)}
+.forces li.from-pattern small{color:var(--sand-deep)}
