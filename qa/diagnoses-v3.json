@@ -10,24 +10,27 @@
    "authority",
    "given",
    "direction",
+   "trust",
+   "leverage",
+   "focus",
    "inversion"
   ],
-  "n": 10,
+  "n": 13,
   "top": "centralized",
   "second": "decision_rights",
   "third": "information",
   "p": {
    "direction": 0.25,
-   "focus": 0.2,
+   "focus": 0.14,
    "economics": 0.2,
    "decision_rights": 0.85,
    "information": 0.29,
    "execution": 0.2,
-   "leverage": 0.2,
+   "leverage": 0.17,
    "centralized": 0.96,
    "capability": 0.27,
    "talent": 0.2,
-   "trust": 0.27
+   "trust": 0.18
   },
   "label": "Strong pattern",
   "zone": "SP",
@@ -55,7 +58,19 @@
     "centralized",
     "decision_rights"
    ],
-   "question": "When it doesn't happen, what usually gets in the way?"
+   "question": null,
+   "secondEvidence": [
+    {
+     "obs": "Decisions escalate to the top",
+     "strength": "Medium",
+     "w": 1
+    },
+    {
+     "obs": "People don't feel authorized to decide",
+     "strength": "Medium",
+     "w": 0.6
+    }
+   ]
   },
   "changedMind": null,
   "forces": [
@@ -92,31 +107,47 @@
    "days": 30
   },
   "question": "Where are we holding people accountable for outcomes without giving them enough authority to achieve them?",
-  "econ": "The scarce resource is leadership capacity, and the cost shows up as delay before it shows up in the P&L. (Moderate)",
+  "econ": "The scarce resource is leadership capacity, and the cost shows up as delay long before it shows up in the results. (Moderate)",
   "profile": [
    {
-    "k": "Leadership dependency",
+    "k": "Dependence on specific people",
     "expected": "Low to moderate",
+    "good": [
+     "Low",
+     "Moderate"
+    ],
     "observed": "High"
    },
    {
     "k": "Decision latency",
     "expected": "Days, not weeks",
+    "good": [
+     "Low"
+    ],
     "observed": "High"
    },
    {
     "k": "Priority load",
     "expected": "A handful, with a stop-doing list",
+    "good": [
+     "Low"
+    ],
     "observed": "Low"
    },
    {
     "k": "Rework and workarounds",
     "expected": "Rare, and traced to cause",
+    "good": [
+     "Low"
+    ],
     "observed": "Low"
    },
    {
     "k": "Candour",
     "expected": "Problems raised early",
+    "good": [
+     "High"
+    ],
     "observed": "High"
    }
   ],
@@ -137,6 +168,9 @@
    "authority=Rarely \u00e2\u2020\u2019 centralized 0.96",
    "given=They wait for a steer \u00e2\u2020\u2019 centralized 0.96",
    "direction=Mostly similar \u00e2\u2020\u2019 centralized 0.96",
+   "trust=Usually safe \u00e2\u2020\u2019 centralized 0.96",
+   "leverage=Some \u00e2\u2020\u2019 centralized 0.96",
+   "focus=Probably \u00e2\u2020\u2019 centralized 0.96",
    "inversion=Centralize more decisions + Add another approval layer \u00e2\u2020\u2019 centralized 0.96"
   ]
  },
@@ -225,31 +259,47 @@
    "days": 30
   },
   "question": "What are we willing to stop doing to make room for what matters most?",
-  "econ": "Your operating profile suggests revenue is being delayed rather than lost. (Emerging)",
+  "econ": "Your operating profile suggests results are being delayed rather than lost. (Emerging)",
   "profile": [
    {
-    "k": "Leadership dependency",
+    "k": "Dependence on specific people",
     "expected": "Low to moderate",
+    "good": [
+     "Low",
+     "Moderate"
+    ],
     "observed": "Low"
    },
    {
     "k": "Decision latency",
     "expected": "Days, not weeks",
+    "good": [
+     "Low"
+    ],
     "observed": "Low"
    },
    {
     "k": "Priority load",
     "expected": "A handful, with a stop-doing list",
+    "good": [
+     "Low"
+    ],
     "observed": "High"
    },
    {
     "k": "Rework and workarounds",
     "expected": "Rare, and traced to cause",
+    "good": [
+     "Low"
+    ],
     "observed": "Low"
    },
    {
     "k": "Candour",
     "expected": "Problems raised early",
+    "good": [
+     "High"
+    ],
     "observed": "High"
    }
   ],
@@ -358,28 +408,44 @@
   "econ": "Your operating profile suggests margin is being absorbed by manual work and rework. (Moderate)",
   "profile": [
    {
-    "k": "Leadership dependency",
+    "k": "Dependence on specific people",
     "expected": "Low to moderate",
+    "good": [
+     "Low",
+     "Moderate"
+    ],
     "observed": "High"
    },
    {
     "k": "Decision latency",
     "expected": "Days, not weeks",
+    "good": [
+     "Low"
+    ],
     "observed": "Low"
    },
    {
     "k": "Priority load",
     "expected": "A handful, with a stop-doing list",
+    "good": [
+     "Low"
+    ],
     "observed": "Low"
    },
    {
     "k": "Rework and workarounds",
     "expected": "Rare, and traced to cause",
+    "good": [
+     "Low"
+    ],
     "observed": "High"
    },
    {
     "k": "Candour",
     "expected": "Problems raised early",
+    "good": [
+     "High"
+    ],
     "observed": "High"
    }
   ],
@@ -414,9 +480,11 @@
    "business_uncertainty",
    "focus",
    "authority",
+   "execution",
+   "trust",
    "inversion"
   ],
-  "n": 10,
+  "n": 12,
   "top": "direction",
   "second": "economics",
   "third": "focus",
@@ -426,15 +494,15 @@
    "economics": 0.91,
    "decision_rights": 0.25,
    "information": 0.11,
-   "execution": 0.25,
+   "execution": 0.18,
    "leverage": 0.2,
    "centralized": 0.14,
    "capability": 0.2,
    "talent": 0.2,
-   "trust": 0.36
+   "trust": 0.25
   },
   "label": "Emerging pattern",
-  "zone": "PB",
+  "zone": "BS",
   "low": false,
   "coherence": false,
   "dominant": "B",
@@ -454,7 +522,19 @@
     "direction",
     "economics"
    ],
-   "question": "What most limits people's ability to act?"
+   "question": null,
+   "secondEvidence": [
+    {
+     "obs": "The link from priorities to value is loose",
+     "strength": "Medium",
+     "w": 1
+    },
+    {
+     "obs": "Investment isn't guided by economics",
+     "strength": "Medium",
+     "w": 0.9
+    }
+   ]
   },
   "changedMind": null,
   "forces": [
@@ -491,31 +571,47 @@
    "days": 30
   },
   "question": "If our leadership team's top-three lists differ, whose list is the organization actually executing?",
-  "econ": "Your operating profile suggests revenue is being delayed rather than lost. (Emerging)",
+  "econ": "Your operating profile suggests results are being delayed rather than lost. (Emerging)",
   "profile": [
    {
-    "k": "Leadership dependency",
+    "k": "Dependence on specific people",
     "expected": "Low to moderate",
+    "good": [
+     "Low",
+     "Moderate"
+    ],
     "observed": "Low"
    },
    {
     "k": "Decision latency",
     "expected": "Days, not weeks",
+    "good": [
+     "Low"
+    ],
     "observed": "Low"
    },
    {
     "k": "Priority load",
     "expected": "A handful, with a stop-doing list",
+    "good": [
+     "Low"
+    ],
     "observed": "Moderate"
    },
    {
     "k": "Rework and workarounds",
     "expected": "Rare, and traced to cause",
+    "good": [
+     "Low"
+    ],
     "observed": "Low"
    },
    {
     "k": "Candour",
     "expected": "Problems raised early",
+    "good": [
+     "High"
+    ],
     "observed": "High"
    }
   ],
@@ -536,6 +632,8 @@
    "business_uncertainty=Where to invest \u00e2\u2020\u2019 direction 0.96",
    "focus=Not really \u00e2\u2020\u2019 direction 0.96",
    "authority=Usually \u00e2\u2020\u2019 direction 0.96",
+   "execution=Usually \u00e2\u2020\u2019 direction 0.96",
+   "trust=Usually safe \u00e2\u2020\u2019 direction 0.96",
    "inversion=Avoid the difficult conversation + Add more priorities \u00e2\u2020\u2019 direction 0.96"
   ]
  },
@@ -545,27 +643,31 @@
    "trust_last",
    "decisions",
    "comeback",
+   "trust",
    "authority",
-   "waiting",
    "people_limits",
    "overrule",
-   "trust",
+   "waiting",
+   "given",
+   "focus",
+   "leverage",
+   "direction",
    "inversion"
   ],
-  "n": 10,
+  "n": 14,
   "top": "trust",
   "second": "centralized",
   "third": "decision_rights",
   "p": {
-   "direction": 0.23,
-   "focus": 0.2,
+   "direction": 0.17,
+   "focus": 0.14,
    "economics": 0.25,
    "decision_rights": 0.67,
    "information": 0.2,
    "execution": 0.2,
-   "leverage": 0.2,
+   "leverage": 0.17,
    "centralized": 0.96,
-   "capability": 0.2,
+   "capability": 0.31,
    "talent": 0.23,
    "trust": 0.96
   },
@@ -580,9 +682,10 @@
   "supports": [
    "High: The last person to raise a problem paid for it",
    "High: Problems aren't raised openly",
-   "High: Mistakes are costly, so people don't act",
    "High: Raising problems is difficult",
+   "High: Mistakes are costly, so people don't act",
    "Medium: The difficult conversation is avoided",
+   "Low: People hand decisions back up",
    "Low: Managers check before deciding"
   ],
   "contradicts": [],
@@ -591,12 +694,21 @@
     "trust",
     "centralized"
    ],
-   "question": null
+   "question": null,
+   "secondEvidence": [
+    {
+     "obs": "People don't feel authorized to decide",
+     "strength": "High",
+     "w": 1.4
+    },
+    {
+     "obs": "Decisions wait on a person",
+     "strength": "High",
+     "w": 1.3
+    }
+   ]
   },
-  "changedMind": {
-   "from": "centralized",
-   "to": "trust"
-  },
+  "changedMind": null,
   "forces": [
    {
     "t": "The difficult conversation is being avoided, so the cause stays unnamed.",
@@ -631,31 +743,47 @@
    "days": 90
   },
   "question": "What is the problem everyone knows about that hasn't been said in a leadership meeting?",
-  "econ": "The scarce resource is leadership capacity, and the cost shows up as delay before it shows up in the P&L. (Moderate)",
+  "econ": "The cost of this friction is problems that reach you late. (Moderate)",
   "profile": [
    {
-    "k": "Leadership dependency",
+    "k": "Dependence on specific people",
     "expected": "Low to moderate",
+    "good": [
+     "Low",
+     "Moderate"
+    ],
     "observed": "High"
    },
    {
     "k": "Decision latency",
     "expected": "Days, not weeks",
+    "good": [
+     "Low"
+    ],
     "observed": "High"
    },
    {
     "k": "Priority load",
     "expected": "A handful, with a stop-doing list",
+    "good": [
+     "Low"
+    ],
     "observed": "Low"
    },
    {
     "k": "Rework and workarounds",
     "expected": "Rare, and traced to cause",
+    "good": [
+     "Low"
+    ],
     "observed": "Low"
    },
    {
     "k": "Candour",
     "expected": "Problems raised early",
+    "good": [
+     "High"
+    ],
     "observed": "Low"
    }
   ],
@@ -671,11 +799,15 @@
    "trust_last=The person paid for it \u00e2\u2020\u2019 trust 0.89",
    "decisions=People don't feel authorized to decide \u00e2\u2020\u2019 trust 0.89",
    "comeback=High consequence of getting it wrong \u00e2\u2020\u2019 trust 0.89",
-   "authority=Sometimes \u00e2\u2020\u2019 centralized 0.90",
-   "waiting=A person \u00e2\u2020\u2019 centralized 0.96",
-   "people_limits=Fear of mistakes \u00e2\u2020\u2019 centralized 0.96",
+   "trust=Usually difficult \u00e2\u2020\u2019 trust 0.96",
+   "authority=Sometimes \u00e2\u2020\u2019 trust 0.96",
+   "people_limits=Fear of mistakes \u00e2\u2020\u2019 trust 0.96",
    "overrule=They check first, so it rarely happens \u00e2\u2020\u2019 centralized 0.96",
-   "trust=Usually difficult \u00e2\u2020\u2019 centralized 0.96",
+   "waiting=A person \u00e2\u2020\u2019 centralized 0.96",
+   "given=They hand it back \u00e2\u2020\u2019 centralized 0.96",
+   "focus=Probably \u00e2\u2020\u2019 centralized 0.96",
+   "leverage=Some \u00e2\u2020\u2019 centralized 0.96",
+   "direction=Mostly similar \u00e2\u2020\u2019 centralized 0.96",
    "inversion=Avoid the difficult conversation + Continue rewarding the current behavior \u00e2\u2020\u2019 centralized 0.96"
   ]
  },
@@ -730,7 +862,19 @@
     "talent",
     "leverage"
    ],
-   "question": "When it doesn't happen, what usually gets in the way?"
+   "question": null,
+   "secondEvidence": [
+    {
+     "obs": "Repeatability depends on the person",
+     "strength": "High",
+     "w": 1.3
+    },
+    {
+     "obs": "Performance depends on workarounds",
+     "strength": "High",
+     "w": 1.2
+    }
+   ]
   },
   "changedMind": null,
   "forces": [
@@ -767,31 +911,47 @@
    "days": 60
   },
   "question": "If our best people's calendars are the real strategy, what strategy are we executing?",
-  "econ": "Your operating profile suggests margin is being absorbed by manual work and rework. (Moderate)",
+  "econ": "Your scarcest resource is your best people's time, and it is going to fires. (Moderate)",
   "profile": [
    {
-    "k": "Leadership dependency",
+    "k": "Dependence on specific people",
     "expected": "Low to moderate",
+    "good": [
+     "Low",
+     "Moderate"
+    ],
     "observed": "High"
    },
    {
     "k": "Decision latency",
     "expected": "Days, not weeks",
+    "good": [
+     "Low"
+    ],
     "observed": "Low"
    },
    {
     "k": "Priority load",
     "expected": "A handful, with a stop-doing list",
+    "good": [
+     "Low"
+    ],
     "observed": "Low"
    },
    {
     "k": "Rework and workarounds",
     "expected": "Rare, and traced to cause",
+    "good": [
+     "Low"
+    ],
     "observed": "High"
    },
    {
     "k": "Candour",
     "expected": "Problems raised early",
+    "good": [
+     "High"
+    ],
     "observed": "High"
    }
   ],
@@ -821,28 +981,32 @@
    "decisions",
    "comeback",
    "economics",
-   "waiting",
    "analysis",
+   "waiting",
    "given",
-   "focus",
    "business_uncertainty",
+   "focus",
+   "execution",
+   "direction",
+   "talent",
+   "people_limits",
    "inversion"
   ],
-  "n": 10,
+  "n": 14,
   "top": "economics",
   "second": "information",
   "third": "focus",
   "p": {
-   "direction": 0.25,
-   "focus": 0.82,
+   "direction": 0.73,
+   "focus": 0.86,
    "economics": 0.96,
    "decision_rights": 0.2,
    "information": 0.96,
-   "execution": 0.29,
-   "leverage": 0.2,
+   "execution": 0.22,
+   "leverage": 0.25,
    "centralized": 0.2,
    "capability": 0.2,
-   "talent": 0.25,
+   "talent": 0.48,
    "trust": 0.2
   },
   "label": "Emerging pattern",
@@ -868,7 +1032,19 @@
     "economics",
     "information"
    ],
-   "question": "What most limits people's ability to act?"
+   "question": null,
+   "secondEvidence": [
+    {
+     "obs": "Decisions escalate for lack of information",
+     "strength": "High",
+     "w": 1.6
+    },
+    {
+     "obs": "Decisions wait on analysis",
+     "strength": "High",
+     "w": 1.6
+    }
+   ]
   },
   "changedMind": {
    "from": "information",
@@ -908,31 +1084,47 @@
    "days": 30
   },
   "question": "Which activities consume the most resources without creating proportional value?",
-  "econ": "The scarce resource is leadership capacity, and the cost shows up as delay before it shows up in the P&L. (Moderate)",
+  "econ": "The scarce resource is leadership capacity, and the cost shows up as delay long before it shows up in the results. (Moderate)",
   "profile": [
    {
-    "k": "Leadership dependency",
+    "k": "Dependence on specific people",
     "expected": "Low to moderate",
+    "good": [
+     "Low",
+     "Moderate"
+    ],
     "observed": "Low"
    },
    {
     "k": "Decision latency",
     "expected": "Days, not weeks",
+    "good": [
+     "Low"
+    ],
     "observed": "High"
    },
    {
     "k": "Priority load",
     "expected": "A handful, with a stop-doing list",
+    "good": [
+     "Low"
+    ],
     "observed": "High"
    },
    {
     "k": "Rework and workarounds",
     "expected": "Rare, and traced to cause",
+    "good": [
+     "Low"
+    ],
     "observed": "Low"
    },
    {
     "k": "Candour",
     "expected": "Problems raised early",
+    "good": [
+     "High"
+    ],
     "observed": "High"
    }
   ],
@@ -948,11 +1140,15 @@
    "decisions=We don't have enough information \u00e2\u2020\u2019 information 0.53",
    "comeback=Not enough information \u00e2\u2020\u2019 information 0.85",
    "economics=Not clearly \u00e2\u2020\u2019 information 0.85",
-   "waiting=Data or analysis \u00e2\u2020\u2019 information 0.96",
-   "analysis=It gets requested again in a different form \u00e2\u2020\u2019 information 0.94",
+   "analysis=It gets requested again in a different form \u00e2\u2020\u2019 economics 0.93",
+   "waiting=Data or analysis \u00e2\u2020\u2019 information 0.95",
    "given=They make it, but slowly \u00e2\u2020\u2019 information 0.96",
-   "focus=Not really \u00e2\u2020\u2019 information 0.96",
    "business_uncertainty=Where profit comes from \u00e2\u2020\u2019 economics 0.96",
+   "focus=Not really \u00e2\u2020\u2019 economics 0.96",
+   "execution=Usually \u00e2\u2020\u2019 economics 0.96",
+   "direction=Quite different \u00e2\u2020\u2019 economics 0.96",
+   "talent=Sometimes \u00e2\u2020\u2019 economics 0.96",
+   "people_limits=Lack of clarity \u00e2\u2020\u2019 economics 0.96",
    "inversion=Keep measuring activity instead of outcomes + Add more priorities \u00e2\u2020\u2019 economics 0.96"
   ]
  },
@@ -986,7 +1182,7 @@
    "talent": 0.05,
    "trust": 0.04
   },
-  "label": "Early signal",
+  "label": "No significant friction",
   "zone": "SP",
   "low": true,
   "coherence": false,
@@ -996,28 +1192,9 @@
   "diagnosis": "",
   "supports": [],
   "contradicts": [],
-  "open": {
-   "between": [
-    "capability",
-    "leverage"
-   ],
-   "question": "When someone is given a decision to make, what happens most often?"
-  },
+  "open": null,
   "changedMind": null,
-  "forces": [
-   {
-    "t": "New priorities are added faster than old ones are retired.",
-    "src": "you"
-   },
-   {
-    "t": "Control is added in response to problems, and each layer slows the next decision.",
-    "src": "you"
-   },
-   {
-    "t": "Nobody has taught the decision; it was assumed that a title conferred the skill.",
-    "src": "pattern"
-   }
-  ],
+  "forces": [],
   "blind": "",
   "notDo": null,
   "experiment": null,
@@ -1025,28 +1202,44 @@
   "econ": null,
   "profile": [
    {
-    "k": "Leadership dependency",
+    "k": "Dependence on specific people",
     "expected": "Low to moderate",
+    "good": [
+     "Low",
+     "Moderate"
+    ],
     "observed": "Low"
    },
    {
     "k": "Decision latency",
     "expected": "Days, not weeks",
+    "good": [
+     "Low"
+    ],
     "observed": "Low"
    },
    {
     "k": "Priority load",
     "expected": "A handful, with a stop-doing list",
+    "good": [
+     "Low"
+    ],
     "observed": "Low"
    },
    {
     "k": "Rework and workarounds",
     "expected": "Rare, and traced to cause",
+    "good": [
+     "Low"
+    ],
     "observed": "Low"
    },
    {
     "k": "Candour",
     "expected": "Problems raised early",
+    "good": [
+     "High"
+    ],
     "observed": "High"
    }
   ],
@@ -1071,41 +1264,46 @@
    "waiting",
    "direction",
    "economics",
-   "analysis",
    "business_uncertainty",
+   "analysis",
    "focus",
    "authority",
+   "execution",
+   "execution_why",
+   "trust",
+   "people_limits",
    "inversion"
   ],
-  "n": 10,
+  "n": 14,
   "top": "direction",
   "second": "economics",
-  "third": "centralized",
+  "third": "execution",
   "p": {
-   "direction": 0.89,
-   "focus": 0.29,
+   "direction": 0.96,
+   "focus": 0.71,
    "economics": 0.89,
    "decision_rights": 0.36,
    "information": 0.11,
-   "execution": 0.29,
+   "execution": 0.77,
    "leverage": 0.31,
    "centralized": 0.4,
    "capability": 0.2,
    "talent": 0.25,
-   "trust": 0.23
+   "trust": 0.48
   },
-  "label": "Emerging pattern",
-  "zone": "PB",
+  "label": "Strong pattern",
+  "zone": "BS",
   "low": false,
   "coherence": false,
   "dominant": null,
-  "margin": 0,
+  "margin": 0.07,
   "constraint": "Leadership isn't aligned on what matters most",
   "diagnosis": "Your leadership team appears to hold different versions of what the business must accomplish. Each version is defensible, which is why it persists. The organization below is executing several strategies at once and experiencing it as slowness.",
   "supports": [
    "High: Decisions wait on leadership agreement",
    "High: Leadership disagreement stalls decisions",
-   "Medium: Analysis starts a debate about what it means"
+   "Medium: Analysis starts a debate about what it means",
+   "Medium: People aren't sure what matters most"
   ],
   "contradicts": [
    "Low: Leadership mostly agrees on the top three"
@@ -1115,7 +1313,19 @@
     "direction",
     "economics"
    ],
-   "question": "What most limits people's ability to act?"
+   "question": null,
+   "secondEvidence": [
+    {
+     "obs": "The link from priorities to value is loose",
+     "strength": "Medium",
+     "w": 1
+    },
+    {
+     "obs": "Effort isn't converting to results",
+     "strength": "Medium",
+     "w": 0.9
+    }
+   ]
   },
   "changedMind": null,
   "forces": [
@@ -1152,32 +1362,48 @@
    "days": 30
   },
   "question": "If our leadership team's top-three lists differ, whose list is the organization actually executing?",
-  "econ": "Your operating profile suggests resources are flowing to activity that doesn't create proportional value. (Emerging)",
+  "econ": "Your operating profile suggests results are being delayed rather than lost. (Emerging)",
   "profile": [
    {
-    "k": "Leadership dependency",
+    "k": "Dependence on specific people",
     "expected": "Low to moderate",
+    "good": [
+     "Low",
+     "Moderate"
+    ],
     "observed": "Low"
    },
    {
     "k": "Decision latency",
     "expected": "Days, not weeks",
+    "good": [
+     "Low"
+    ],
     "observed": "Low"
    },
    {
     "k": "Priority load",
     "expected": "A handful, with a stop-doing list",
-    "observed": "Low"
+    "good": [
+     "Low"
+    ],
+    "observed": "High"
    },
    {
     "k": "Rework and workarounds",
     "expected": "Rare, and traced to cause",
+    "good": [
+     "Low"
+    ],
     "observed": "Low"
    },
    {
     "k": "Candour",
     "expected": "Problems raised early",
-    "observed": "High"
+    "good": [
+     "High"
+    ],
+    "observed": "Mixed"
    }
   ],
   "estimate": {
@@ -1193,11 +1419,15 @@
    "waiting=Agreement between leaders \u00e2\u2020\u2019 direction 0.79",
    "direction=Mostly similar \u00e2\u2020\u2019 direction 0.71",
    "economics=Somewhat \u00e2\u2020\u2019 direction 0.71",
-   "analysis=It starts a debate about what it means \u00e2\u2020\u2019 direction 0.87",
-   "business_uncertainty=Where to invest \u00e2\u2020\u2019 direction 0.89",
+   "business_uncertainty=Where to invest \u00e2\u2020\u2019 economics 0.80",
+   "analysis=It starts a debate about what it means \u00e2\u2020\u2019 direction 0.89",
    "focus=Probably \u00e2\u2020\u2019 direction 0.89",
    "authority=Sometimes \u00e2\u2020\u2019 direction 0.89",
-   "inversion=Do nothing + Keep solving the symptom \u00e2\u2020\u2019 direction 0.89"
+   "execution=Sometimes \u00e2\u2020\u2019 direction 0.89",
+   "execution_why=Too many competing priorities + Follow-through \u00e2\u2020\u2019 direction 0.89",
+   "trust=Depends on the situation \u00e2\u2020\u2019 direction 0.89",
+   "people_limits=Lack of clarity \u00e2\u2020\u2019 direction 0.96",
+   "inversion=Do nothing + Keep solving the symptom \u00e2\u2020\u2019 direction 0.96"
   ]
  }
 }

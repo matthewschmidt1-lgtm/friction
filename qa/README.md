@@ -8,3 +8,11 @@
 - `question-feedback.md` — questions that were ambiguous or missing an option.
 
 To re-run after changing `js/content.js` or `js/engine.js`: serve the folder, load a page that imports the engine, and replay `answers.json` the way the app does (core questions, gate `execution_why`, `pickFollowups`, inversion, cost). The scoring table in the 2026-09-16 report was produced that way.
+
+## Round two (v3, adaptive engine, 2026-09-16)
+
+- `answers-v3.json` — the same nine personas answered against the v3 pool (opener, nineteen questions, inversion). The engine picks about ten.
+- `diagnoses-v3.json` — what the adaptive engine produced: questions asked in order, the trace of the leading explanation after each answer, the current read, evidence for and against, the open question, the experiment, the operating-profile read.
+- `evaluation-v3.json` — the in-character verdicts on the v3 output, with a better/same/worse comparison to round one.
+
+Replay: `scratchpad/run-v3.html` pattern (import engine, `newSession`, loop `nextQuestion` → `applyAnswer` with the persona's answer for that id, then `diagnose`).

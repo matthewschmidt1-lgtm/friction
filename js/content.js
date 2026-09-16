@@ -641,6 +641,10 @@ export const EXPERIMENTS = {
 // ---------- Economic shadow: what the operating profile suggests ----------
 // Rules only. Financial ranges are optional. Never presented as fact.
 export const ECON_READS = [
+  { when: (p, f) => p.trust >= .6 && p.trust >= Math.max(p.centralized, p.leverage, p.focus),
+    t: 'The cost of this friction is problems that reach you late.', d: 'When it isn\'t safe to raise a problem, the organization pays for it at the most expensive moment: after the customer, the auditor or the market has noticed. The visible cost is the incident. The larger cost is every decision made on filtered information in the meantime.', conf: 'Moderate' },
+  { when: (p, f) => p.talent >= .6 && p.talent >= Math.max(p.leverage, p.centralized),
+    t: 'Your scarcest resource is your best people\'s time, and it is going to fires.', d: 'The cost is not the fires. It is the growth work that gets whoever is free. That shows up as a flat line on the things that were supposed to move this year, and it is rarely traced back to where the best people spent their week.', conf: 'Moderate' },
   { when: (p, f) => p.leverage >= .6 && ['Loss-making', 'Break-even', '1–5%'].includes(f.profit),
     t: 'Your operating profile suggests margin is being absorbed by manual work and rework.', d: 'Performance that depends on people working around the system costs labour hours that never appear as a line item. At your stated profitability, that is likely where a meaningful share of the margin is going.', conf: 'Moderate' },
   { when: (p, f) => p.leverage >= .6 && ['10–20%', '20%+'].includes(f.profit),
@@ -648,9 +652,9 @@ export const ECON_READS = [
   { when: (p, f) => p.leverage >= .6,
     t: 'Your operating profile suggests margin may be below the range for a business like yours.', d: 'High reliance on workarounds usually shows up as labour intensity and rework before it shows up in reporting.', conf: 'Emerging' },
   { when: (p, f) => Math.max(p.centralized, p.decision_rights, p.information) >= .6,
-    t: 'The scarce resource is leadership capacity, and the cost shows up as delay before it shows up in the P&L.', d: 'Decisions that wait cost the revenue behind them. The illustrative estimate above is the visible part; the delayed work is the larger, uncounted part.', conf: 'Moderate' },
+    t: 'The scarce resource is leadership capacity, and the cost shows up as delay long before it shows up in the results.', d: 'Decisions that wait cost the work behind them: revenue, delivery, outcomes. The illustrative estimate above is the visible part; the delayed work is the larger, uncounted part.', conf: 'Moderate' },
   { when: (p, f) => Math.max(p.focus, p.execution) >= .6,
-    t: 'Your operating profile suggests revenue is being delayed rather than lost.', d: 'Commitments that slip push customer and market outcomes to later quarters. The economics usually recover when the number of concurrent priorities falls.', conf: 'Emerging' },
+    t: 'Your operating profile suggests results are being delayed rather than lost.', d: 'Commitments that slip push customer, market and mission outcomes to later quarters. The economics usually recover when the number of concurrent priorities falls.', conf: 'Emerging' },
   { when: (p, f) => p.economics >= .6,
     t: 'Your operating profile suggests resources are flowing to activity that doesn\'t create proportional value.', d: 'Without explicit value drivers, spend follows the strongest case. The margin effect is gradual and easy to normalise.', conf: 'Emerging' },
 ];
@@ -658,11 +662,11 @@ export const ECON_READS = [
 // Expected vs observed on the operating traits the answers can actually see. Qualitative on purpose:
 // numeric benchmarks need real data by industry and size, and this file does not invent them.
 export const PROFILE_ROWS = [
-  { k: 'Leadership dependency', expected: 'Low to moderate', observe: p => Math.max(p.centralized, p.leverage) >= .65 ? 'High' : Math.max(p.centralized, p.leverage) >= .45 ? 'Moderate' : 'Low' },
-  { k: 'Decision latency', expected: 'Days, not weeks', observe: p => Math.max(p.decision_rights, p.information) >= .65 ? 'High' : Math.max(p.decision_rights, p.information) >= .45 ? 'Moderate' : 'Low' },
-  { k: 'Priority load', expected: 'A handful, with a stop-doing list', observe: p => p.focus >= .65 ? 'High' : p.focus >= .45 ? 'Moderate' : 'Low' },
-  { k: 'Rework and workarounds', expected: 'Rare, and traced to cause', observe: p => p.leverage >= .65 ? 'High' : p.leverage >= .45 ? 'Moderate' : 'Low' },
-  { k: 'Candour', expected: 'Problems raised early', observe: p => p.trust >= .65 ? 'Low' : p.trust >= .45 ? 'Mixed' : 'High' },
+  { k: 'Dependence on specific people', expected: 'Low to moderate', good: ['Low', 'Moderate'], observe: p => Math.max(p.centralized, p.leverage) >= .65 ? 'High' : Math.max(p.centralized, p.leverage) >= .45 ? 'Moderate' : 'Low' },
+  { k: 'Decision latency', expected: 'Days, not weeks', good: ['Low'], observe: p => Math.max(p.decision_rights, p.information) >= .65 ? 'High' : Math.max(p.decision_rights, p.information) >= .45 ? 'Moderate' : 'Low' },
+  { k: 'Priority load', expected: 'A handful, with a stop-doing list', good: ['Low'], observe: p => p.focus >= .65 ? 'High' : p.focus >= .45 ? 'Moderate' : 'Low' },
+  { k: 'Rework and workarounds', expected: 'Rare, and traced to cause', good: ['Low'], observe: p => p.leverage >= .65 ? 'High' : p.leverage >= .45 ? 'Moderate' : 'Low' },
+  { k: 'Candour', expected: 'Problems raised early', good: ['High'], observe: p => p.trust >= .65 ? 'Low' : p.trust >= .45 ? 'Mixed' : 'High' },
 ];
 export const LOW_FRICTION = {
   name: 'Low friction',

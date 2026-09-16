@@ -66,6 +66,16 @@ export function questionValue(s, q, p) {
   if (p[r[0]] >= .55) { const d = q.options.map(o => (o.sig[r[0]] || 0) - (o.sig[r[1]] || 0)); v += 1.2 * q.act * (Math.max(...d) - Math.min(...d)) / 3.6; }
   return v;
 }
+// The askable question that best separates hypotheses a and b, and how well (0 = nothing left to ask).
+export function bestSeparator(s, p, a, b) {
+  const cands = QUESTIONS.filter(q => !s.asked.includes(q.id) && (!q.gate || q.gate(p)));
+  const sep = q => { const d = q.options.map(o => (o.sig[a] || 0) - (o.sig[b] || 0)); return Math.max(...d) - Math.min(...d); };
+  let best = null, bestSep = 0;
+  for (const q of cands) { const v = sep(q); if (v > bestSep) { bestSep = v; best = q; } }
+  return { question: best, sep: bestSep };
+}
+function lensCounts(s) { const c = { B: 0, S: 0, P: 0 }; for (const id of s.asked) { const l = byId[id].lens; if (l) c[l]++; } return c; }
+
 export function nextQuestion(s) {
   if (!s.asked.includes('opener')) return OPENER;
   if (s.asked.includes('inversion')) return null;
@@ -74,14 +84,19 @@ export function nextQuestion(s) {
   const r = ranked(s);
   const clear = p[r[0]] >= ACTOR.stopConfidence && (p[r[0]] - p[r[1]]) >= ACTOR.stopMargin;
   const quiet = p[r[0]] < .3; // nothing is rising: stop asking, say so
-  if (n >= ACTOR.maxQuestions || (n >= ACTOR.minQuestions && (clear || quiet))) return INVERSION;
+  const covered = Object.values(lensCounts(s)).every(c => c >= 2); // every lens sampled at least twice before we conclude
+  if (n >= ACTOR.maxQuestions) return INVERSION;
+  if (n >= ACTOR.minQuestions && quiet) return INVERSION;
+  if (n >= ACTOR.minQuestions && clear && covered) return INVERSION;
   const candidates = QUESTIONS.filter(q => !s.asked.includes(q.id) && (!q.gate || q.gate(p)));
   if (!candidates.length) return INVERSION;
-  // nothing left that could separate the top two: stop asking
-  if (n >= ACTOR.minQuestions && p[r[0]] >= .8) {
-    const sep = q => { const d = q.options.map(o => (o.sig[r[0]] || 0) - (o.sig[r[1]] || 0)); return Math.max(...d) - Math.min(...d); };
-    if (Math.max(...candidates.map(sep)) < 1.0) return INVERSION;
+  // if the top two are close and a question could still separate them, ask it before anything else
+  if (p[r[0]] >= .55 && (p[r[0]] - p[r[1]]) < ACTOR.stopMargin) {
+    const { question, sep } = bestSeparator(s, p, r[0], r[1]);
+    if (question && sep >= 1.0) return question;
+    if (n >= ACTOR.minQuestions && covered) return INVERSION; // nothing left that could separate them
   }
+  if (n >= ACTOR.minQuestions && p[r[0]] >= .8 && covered && bestSeparator(s, p, r[0], r[1]).sep < 1.0) return INVERSION;
   return candidates.map(q => [questionValue(s, q, p), q]).sort((a, b) => b[0] - a[0])[0][1];
 }
 export function progress(s) { return Math.min(1, s.asked.length / (ACTOR.maxQuestions + 2)); }
@@ -94,9 +109,9 @@ export function diagnose(s, cost, ranges = {}) {
   const low = p[top] < .42;
   const lensOf = h => HYPOTHESES[h].lens;
   // coherence: several explanations moderately supported across all three lenses and no standout
-  const elevated = r.filter(h => p[h] >= .6);
+  const elevated = r.filter(h => p[h] >= .5);
   const elevatedLenses = new Set(elevated.map(lensOf));
-  const coherence = !low && elevated.length >= 4 && elevatedLenses.size >= 2 && (p[top] - p[elevated[3]]) < .25;
+  const coherence = !low && p[top] < .9 && elevated.length >= 4 && elevatedLenses.size === 3 && (p[top] - p[elevated[3]]) < .3;
 
   // lens loads and zone
   const load = { B: 0, S: 0, P: 0 };
@@ -118,15 +133,16 @@ export function diagnose(s, cost, ranges = {}) {
     else if (w <= -.3) contradicts.push({ obs: opt.obs || opt.t, strength: strength(w), w, from: q.title });
   }
   supports.sort((a, b) => b.w - a.w); contradicts.sort((a, b) => a.w - b.w);
+  const supportsSecond = [];
+  for (const { q, opt } of signals(s)) { const w = opt.sig[second] || 0; if (w >= .6) supportsSecond.push({ obs: opt.obs || opt.t, strength: strength(w), w }); }
+  supportsSecond.sort((a, b) => b.w - a.w);
 
   // what we still need to know: the unasked question that best separates the top two
   let open = null;
-  const competing = p[second] >= p[top] - .2 || p[top] < .8;
+  const competing = !low && (p[second] >= p[top] - .2 || p[top] < .8);
   if (competing) {
-    const cands = QUESTIONS.filter(q => !s.asked.includes(q.id));
-    const sep = q => { const d = q.options.map(o => (o.sig[top] || 0) - (o.sig[second] || 0)); return Math.max(...d) - Math.min(...d); };
-    const best = cands.map(q => [sep(q), q]).sort((a, b) => b[0] - a[0])[0];
-    open = { between: [top, second], question: best && best[0] > 1.0 ? best[1].title : null };
+    const { question, sep } = bestSeparator(s, p, top, second);
+    open = { between: [top, second], question: question && sep >= 1.0 ? question.title : null, secondEvidence: supportsSecond.slice(0, 2) };
   }
 
   // did the read change during the conversation?
@@ -136,6 +152,7 @@ export function diagnose(s, cost, ranges = {}) {
   // reinforcing forces: inversion answers first, then the playbook pattern, three at most from the pattern
   const play = PLAYBOOKS[top];
   const seen = new Set(); const forces = [];
+  if (low) return { p, ranked: r, top, second, third, low, coherence: false, zone, dominant: null, lensNorm, load, supports: [], contradicts: [], open: null, changedMind: null, forces: [], play, experiment: EXPERIMENTS[top], estimate: null, econ: null, profile: PROFILE_ROWS.map(row => ({ k: row.k, expected: row.expected, good: row.good, observed: row.observe(p) })), label: { key: 'none', label: 'No significant friction', d: 'Nothing you said rose above a weak signal. The strongest was ' + HYPOTHESES[top].name.toLowerCase() + ', and it is not worth acting on.' }, margin: p[top] - p[second], asked: s.asked.slice() };
   for (const { q, opt } of signals(s)) if (opt.force && !seen.has(opt.force)) { seen.add(opt.force); forces.push({ t: opt.force, src: 'you' }); }
   for (const t of play.forces) if (forces.length < 3 && !seen.has(t)) { seen.add(t); forces.push({ t, src: 'pattern' }); }
 
@@ -145,7 +162,7 @@ export function diagnose(s, cost, ranges = {}) {
     estimate = { managers: cost.managers, hours: cost.hours, hoursYear, rate: cost.rate || null, dollars: cost.rate ? hoursYear * cost.rate : null };
   }
   const econ = low ? null : (ECON_READS.find(e => e.when(p, ranges)) || null);
-  const profile = PROFILE_ROWS.map(row => ({ k: row.k, expected: row.expected, observed: row.observe(p) }));
+  const profile = PROFILE_ROWS.map(row => ({ k: row.k, expected: row.expected, good: row.good, observed: row.observe(p) }));
   // the label answers "how sure should you be about THIS read", so a close runner-up caps it
   const margin0 = p[top] - p[second];
   let label = confidenceLabel(p[top]);

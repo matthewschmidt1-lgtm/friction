@@ -1,0 +1,146 @@
+{
+  "P1": {
+    "read_verdict": "right",
+    "read_verdict_note": "Centralized authority (decision_rights close behind at 0.85) is exactly the founder-bottleneck story, and it's the same read as the fixed-sequence version, just cleaner.",
+    "evidence": "Every cited support — decisions escalating to the top, the founder simply preferring to decide centrally, managers getting reversed, people not feeling authorized — is something I actually said, and nothing is misattributed. Nothing important is missing; if anything this is a tighter, more literal evidence list than the fixed-sequence version gave me.",
+    "open_question": "It's honest that centralized and decision_rights (0.96 vs 0.85) are close, and naming 'what usually gets in the way when it doesn't happen' as the separating question makes sense — but that question (execution_why) was never actually asked, even though the engine had two more questions left in its budget, so the framing is right and the follow-through on it isn't.",
+    "question_choice": "The sequence (opener → comeback → decisions → waiting → overrule → people_limits → authority → given → direction → inversion) is a sensible, tight path straight at the centralization story without wasting a question on focus, economics, or trust, which don't matter here. It stopped at 10 rather than 12, which would have been fine if it had used the extra room to ask the very question it flagged as unresolved, but it didn't.",
+    "experiment": "Yes, I'd run this — move two of the five most-escalated decisions down for 30 days with written guardrails is concrete and exactly matches what I'd want to try first. The three things to watch (decision cycle time, number of escalations, leadership hours recovered) are the right ones and more measurable than the fixed version's single metric.",
+    "econ_profile": "The 'leadership capacity is the scarce resource, cost shows up as delay before the P&L' framing and the expected-vs-observed table (leadership dependency and decision latency both flagged High against a Low-to-moderate expectation) feel grounded in what I actually described, not invented.",
+    "confidence": "Strong pattern is the right level — dominant but with a real second explanation close behind, which matches how sure I actually am.",
+    "overall": { "score": 5, "note": "Same correct constraint as before, tighter evidence, and it dropped the mismatched workaround-flavored force that bothered me in the fixed-sequence version — the only real miss is not asking its own named follow-up." },
+    "issues": [
+      { "type": "stopped-too-early", "detail": "The engine names execution_why ('When it doesn't happen, what usually gets in the way?') as the question that would separate centralized from decision_rights, but never asks it despite using only 10 of a possible 12 questions." },
+      { "type": "copy", "detail": "The expected-vs-observed profile table uses 'High'/'Low' without a consistent polarity cue — for 'Candour' an 'observed: High' is good news, but for 'Leadership dependency' an 'observed: High' is bad news, and nothing in the table itself signals which way is which." }
+    ],
+    "better_or_worse": "better"
+  },
+  "P2": {
+    "read_verdict": "right",
+    "read_verdict_note": "Focus (0.96, far ahead of execution at 0.6) is exactly the 40-initiative overload story, and this time it landed in the Business ↔ System zone instead of the People ↔ Business framing that felt slightly off before.",
+    "evidence": "Supports match my answers cleanly — priorities exceeding capacity, nothing formally stopped, capacity committed past what exists, new priorities added faster than retired — and there's nothing here that isn't something I actually said. Nothing important seems missing; the low-weight 'people aren't sure what matters most' item is a fair, honestly-labeled minor echo rather than an overclaim.",
+    "open_question": "There's no open tension flagged, and that's right — focus is far enough ahead (margin .36) that there genuinely isn't a live competing explanation left to chase.",
+    "question_choice": "The sequence covers direction, focus, business_uncertainty and execution/execution_why efficiently, confirms decisions aren't the bottleneck early, and checks talent and people_limits before closing — a sensible, well-rounded path. It stopped at 10 with a clean high-confidence margin, which is exactly the right time to stop.",
+    "experiment": "Yes, 'cut 20% this month' is still the first move I'd actually run. The third watch item added this time — 'things that got worse after stopping' — is a genuinely useful addition that directly tests the fear driving the paralysis.",
+    "econ_profile": "'Revenue is being delayed rather than lost' is a fair, appropriately hedged (Emerging) read given I never gave hard revenue numbers, and the profile table correctly shows only priority load flagged High while everything else reads Low, which matches a volume problem rather than a people or trust problem.",
+    "confidence": "High confidence is earned here — focus is clearly and consistently ahead across nearly every question asked.",
+    "overall": { "score": 5, "note": "This fixes the one real complaint I had before (the People ↔ Business zone framing) while keeping the same correct constraint and move, plus a sharper experiment." },
+    "issues": [],
+    "better_or_worse": "better"
+  },
+  "P3": {
+    "read_verdict": "right",
+    "read_verdict_note": "Leverage (0.96, talent a real but clearly secondary 0.65) is exactly the three-coordinators-holding-it-together story, unchanged from before and just as accurate.",
+    "evidence": "Everything cited — performance depending almost entirely on heroics, problems recurring, repeatability depending on the person — is something I said, and nothing is misattributed. Nothing important is missing, though I'd note talent (0.65) is close enough that a reader should understand the two are entangled here (the heroics ARE the talent-allocation problem), which the diagnosis text does capture even if the evidence list keeps them separate.",
+    "open_question": "No open tension is flagged, and that feels right — leverage is clearly ahead by a real margin (.31), and 'repeat' was exactly the smart follow-up question that closed the gap.",
+    "question_choice": "Asking leverage early, then execution, then talent, then repeat is a genuinely well-chosen sequence — repeat in particular ('when something works, can you repeat it?') is the sharpest possible confirming question for a heroics story, and it correctly never wasted a question on decision-rights machinery once 'decisions don't really get stuck' closed that branch. Stopping at 10 with a clear high-confidence margin was the right call.",
+    "experiment": "Yes, I'd run 'design out the biggest workaround' next month exactly as written. The new third watch item — 'results when the key person is away' — is a genuinely sharp addition; that's the real stress test for a heroics-dependent department.",
+    "econ_profile": "'Margin is being absorbed by manual work and rework' is a reasonable, grounded read for a department paying for coverage in hours nobody counts, and the profile table's High rework/High leadership-dependency-observed pairing matches what I described, though 'leadership dependency' is an odd label for what's really coordinator-level heroics rather than anything about senior leadership.",
+    "confidence": "High confidence is right — this is the cleanest, most consistent signal of any persona in the set.",
+    "overall": { "score": 5, "note": "Still the diagnosis I'd bring to my director, and the new follow-up questions (repeat, and the 'key person away' watch item) make it sharper than the fixed-sequence version, not just equal to it." },
+    "issues": [
+      { "type": "copy", "detail": "The 'Leadership dependency' axis in the expected-vs-observed table is labeled as if the bottleneck were senior leadership, but P3's mechanism is coordinator-level heroics — the axis name doesn't fit a frontline story even though the 'High' reading is correct." }
+    ],
+    "better_or_worse": "better"
+  },
+  "P4": {
+    "read_verdict": "partly right",
+    "read_verdict_note": "Direction (0.96) and economics (0.91) are essentially tied (margin .05), which is honestly reported rather than hidden, and economics is a completely legitimate near-equal explanation since growth-vs-margin-vs-volume IS a value-driver disagreement, not just a personality clash.",
+    "evidence": "The direction-side evidence (leaders holding very different priorities, decisions waiting on leadership agreement, analysis sparking debate about what it means) all matches what I said and nothing is misattributed — the new 'analysis' question in particular landed exactly on the CFO-vs-CEO-vs-sales dynamic. What's missing is any explicit economics-flavored evidence in the supports list even though economics is statistically tied with direction, which makes the read look more one-sided than the numbers actually are.",
+    "open_question": "The framing (direction vs economics, nearly tied) is exactly the honest uncertainty I'd want surfaced, and 'what most limits people's ability to act' is a reasonable question to separate them — but it was never actually asked despite the engine having budget left.",
+    "question_choice": "The sequence hits direction, economics, business_uncertainty, focus (Business lens) plus decisions, analysis, waiting (evidence for the disagreement) and authority (a sanity check on the People side) — a sensible, well-rounded path for a top-driven misalignment story. Stopping at 10 without resolving the near-tie it identified itself is the one real miss; two more questions were available.",
+    "experiment": "Yes, the three-things exercise is still exactly what I'd push for, and it's rightly aimed at the CEO/CFO/sales lead, not at my own team.",
+    "econ_profile": "'Revenue is being delayed rather than lost' is a fair, appropriately hedged read, and the profile table's new 'Moderate' priority-load reading (instead of a blunt Low/High) is a nice, more honest touch that fits a persona with several live but not fully overloaded initiatives.",
+    "confidence": "Emerging pattern is exactly right — a near-exact tie between direction and economics deserves this level of hedging, not the more confident 'moderate' label the fixed-sequence version gave the same story.",
+    "overall": { "score": 5, "note": "This version is honest about something the fixed-sequence version hid (how close economics was as an explanation) and adds a pointed new question (analysis) that strengthens the case, at the cost of not asking its own named tie-breaker." },
+    "issues": [
+      { "type": "stopped-too-early", "detail": "The named clarifying question (people_limits) between direction and economics was never asked despite the engine having two more questions available in its budget." },
+      { "type": "missing-evidence", "detail": "Economics is tied with direction at 0.91 vs 0.96, but no economics-specific item appears in the supports list, which is entirely direction-flavored." }
+    ],
+    "better_or_worse": "better"
+  },
+  "P5": {
+    "read_verdict": "partly right",
+    "read_verdict_note": "Trust and centralized are in an exact dead tie (both 0.96, margin 0), and while trust is the correct headline given the sidelining incident, centralized is a genuinely equal runner-up given how cautiously people use their formal authority here.",
+    "evidence": "The trust-side evidence — the last person to raise a problem paying for it, problems not raised openly, mistakes being costly — is exactly what I said and correctly weighted High. One item ('managers check before deciding', tagged Low under trust) is really centralized-flavored evidence being borrowed to support trust, which is understandable given the exact tie but blurs which mechanism it's actually evidence for.",
+    "open_question": "The framing is honest about the tie, but with a perfect 0-margin tie between trust and centralized, offering no clarifying question at all ('question': null) is the biggest miss in this whole diagnosis — this is exactly the situation where a follow-up question matters most, and none was proposed.",
+    "question_choice": "Pivoting to trust_last right after the opener was smart and immediately productive, and the mix of authority, waiting, people_limits, overrule, and trust covers the right ground for a fear-and-caution story. But burning all 10 questions down a path that ends in a dead tie without ever trying something like the 'given' question (which tests whether people decide well when handed a decision, a good discriminator between fear and formal authority) is a real gap.",
+    "experiment": "I'd want to try something like 'change one meeting,' but it still feels a size too small given a named, remembered retaliation incident — the watch items (problems raised before they become incidents, time from noticed to raised, disagreements voiced) are the right things to track, they just don't address the specific incident itself.",
+    "econ_profile": "The 'leadership capacity is the scarce resource, cost shows up as delay before the P&L' line is identical to P1's, and it doesn't read as tailored to a fear-culture story where the real cost is late or filtered information rather than leadership bandwidth.",
+    "confidence": "Emerging pattern is exactly right for a perfect tie — more honest than the fixed-sequence version's flat 'moderate' label for the same underlying story.",
+    "overall": { "score": 4, "note": "The core diagnosis is still right and the confidence label is now honestly hedged, but a dead-even tie with no resolving question and a reused, mismatched econ narrative hold this back from a 5." },
+    "issues": [
+      { "type": "missing-evidence", "detail": "At a perfect 0-margin tie between trust and centralized, the engine returns no clarifying question at all, which is exactly the case where one matters most." },
+      { "type": "generic-advice", "detail": "The econ narrative ('scarce resource is leadership capacity... delay before the P&L') is copied verbatim from P1's centralization story and doesn't reflect a trust-specific cost like late or filtered bad news." },
+      { "type": "underclaims", "detail": "The move ('change one meeting') doesn't address the specific, named sidelining incident, which is what actually needs to be repaired before a new ritual would be believed." }
+    ],
+    "better_or_worse": "better"
+  },
+  "P6": {
+    "read_verdict": "right",
+    "read_verdict_note": "Talent (0.96) and leverage (0.94) are nearly tied (margin .02), which is honest given firefighting IS both a talent-misallocation and a heroics/workaround story at once, and talent is still the sharper, more actionable framing.",
+    "evidence": "Everything cited — best people consumed by urgent work, top people on rescue work, repeatability depending on the person — matches what I said, and nothing is misattributed. Nothing important seems missing, though the near-tie with leverage means the evidence list slightly understates how entangled the two explanations really are for us.",
+    "open_question": "The framing (talent vs leverage, essentially tied) is honest and useful, but the named clarifying question (execution_why, 'what usually gets in the way') was never actually asked, despite two more questions being available in the budget.",
+    "question_choice": "Asking talent, leverage, and then repeat back to back was smart and efficient at confirming the pattern from both angles. Stopping at 10 with a margin of only .02 between the top two, without trying the one follow-up it identified as potentially separating, feels premature given how close the race actually is.",
+    "experiment": "Yes, auditing one week of my five best people's time is exactly right and something I'd start next week. The new watch item, 'fires handled by someone other than the best people,' is a genuinely clever addition that directly tracks whether the fix is working.",
+    "econ_profile": "'Margin is being absorbed by manual work and rework' is the same phrase used for P3's completely different hospital story, and while it's directionally plausible here too, it doesn't feel freshly tailored to a firefighting-retail context.",
+    "confidence": "Emerging pattern is right given the .02 margin — appropriately humble rather than overclaiming a clean single answer.",
+    "overall": { "score": 4, "note": "Still nails the constraint and gives an excellent, well-instrumented move, but leaves its own named tie-breaker unasked and reuses econ language and a profile label that don't fit a talent-allocation story." },
+    "issues": [
+      { "type": "stopped-too-early", "detail": "execution_why was named as the question that would separate talent from leverage (margin .02) but was never asked despite budget remaining." },
+      { "type": "generic-advice", "detail": "The econ narrative and the 'Leadership dependency' profile axis are reused verbatim from P3's hospital-heroics story rather than tailored to a regional-retail, best-people-as-firefighters context." }
+    ],
+    "better_or_worse": "same"
+  },
+  "P7": {
+    "read_verdict": "right",
+    "read_verdict_note": "Economics (0.96) is now correctly identified as the (exactly tied) leading explanation, fixing the wrong pick the fixed-sequence version made when it defaulted to focus on the same tie.",
+    "evidence": "Every item — priorities not connected to value, the economics of the business not being explicit, analysis being re-requested rather than acted on — matches exactly what I described, including my honest 'analysis' answer, which was clearly the pivotal new piece of evidence that tipped this correctly toward economics. Nothing important seems misattributed, though one of the three forces ('new priorities added faster than retired') is portfolio-overload language that doesn't reflect our board-advocacy-driven mechanism.",
+    "open_question": "The framing (economics vs information, an exact tie) is honest and matches how uncertain I actually feel about which lever to pull first, but the named clarifying question (people_limits) was never asked despite budget remaining.",
+    "question_choice": "The sequence smartly used the new analysis question right when it mattered, and covered both the business-economics angle and the information angle before converging — a genuinely well-targeted path. Stopping at 10 without resolving the exact tie it flagged is the one real gap, especially given how close economics and information ended up.",
+    "experiment": "Yes — tracing each top priority to a value driver is precisely the move I hoped for, a real improvement over the fixed-sequence version's mismatched 'cut 20%' directive. The watch item 'analysis requested that didn't change a decision' is a sharp, specific measure of exactly what's broken here.",
+    "econ_profile": "The 'scarce resource is leadership capacity... shows up as delay before the P&L' framing doesn't fit a nonprofit that doesn't run on a P&L in the profit sense, which makes this feel like reused for-profit boilerplate rather than something built for us.",
+    "confidence": "Emerging pattern is exactly right given the dead-even tie between economics and information — appropriately humble where the fixed-sequence version was overconfident about the wrong constraint.",
+    "overall": { "score": 5, "note": "This corrects the single biggest miss from the fixed-sequence evaluation — wrong constraint, mismatched move — and replaces it with exactly the value-tracing diagnosis I hoped for, docked only for the unresolved tie and the P&L language." },
+    "issues": [
+      { "type": "stopped-too-early", "detail": "people_limits was named as the question that would separate economics from information (exact tie) but was never asked despite budget remaining." },
+      { "type": "tone", "detail": "The econ narrative references 'the P&L,' which doesn't fit a nonprofit's accounting reality — the language should adapt to funding/outcomes framing for a not-for-profit." },
+      { "type": "generic-advice", "detail": "One of the three forces ('new priorities added faster than retired') is overload-flavored language that doesn't reflect a board-advocacy-driven prioritization mechanism." }
+    ],
+    "better_or_worse": "better"
+  },
+  "P8": {
+    "read_verdict": "right",
+    "read_verdict_note": "'Low friction' with an empty diagnosis, no experiment, and no cost estimate is exactly the honest, appropriate output for a genuinely healthy organization, and it's a dramatic improvement over the fixed-sequence version's manufactured overload story.",
+    "evidence": "There's nothing to evaluate here since supports is correctly empty, which itself is the right answer given every mechanism scored near zero across every question I answered.",
+    "open_question": "It names a tension between capability (0.2) and leverage (0.16), which is really just noise at floor-level values with a .04 gap between them — treating that as a meaningful 'still trying to understand' tension implies more structure than actually exists, and the tool would be more honest saying plainly that nothing is open because nothing is signaling.",
+    "question_choice": "The engine asked its normal 10 questions across all three lenses and correctly found nothing, which is the right outcome; it could arguably have recognized 'nothing here' sooner given how uniformly low the first several answers were, but running the full set to be sure isn't unreasonable for a diagnostic tool.",
+    "experiment": "There is no experiment, which is exactly right — nothing here to design an intervention around, and I wouldn't want one invented.",
+    "econ_profile": "The profile table's uniform Low readings plus a High on candour feel grounded and honest, and the fact that econ is null rather than invented is exactly the right call.",
+    "confidence": "'Early signal' still frames this as 'the strongest of several weak signals, treat as a hypothesis to test,' which doesn't quite land for a genuinely healthy read — it should say more plainly that nothing significant was found rather than implying there's a weak signal worth chasing.",
+    "overall": { "score": 4, "note": "The core fix — refusing to manufacture a diagnosis for a healthy org — is exactly what I asked for, but a few leftover artifacts (a populated forces list, a noise-level 'open' tension, and a confidence label that still implies something's brewing) keep this from a clean 5." },
+    "issues": [
+      { "type": "overclaims", "detail": "Even with 'low': true and diagnosis/experiment/econ correctly blanked, the 'forces' array still lists three specific-sounding items (including a capability-flavored 'pattern' force) and 'open' still names a tension between capability and leverage, despite both being near-floor noise (0.2 and 0.16) with no real difference between them." },
+      { "type": "copy", "detail": "The 'Early signal' confidence label ('the strongest of several weak signals, treat as a hypothesis to test') doesn't read as a clear 'no significant friction detected' message, even though the underlying diagnosis correctly suppresses one." },
+      { "type": "other", "detail": "The trace's leading-hypothesis label bounces between execution, economics, and capability across near-identical low values (0.2–0.29), which reads like the tool changed its mind three times when nothing meaningful was actually happening." }
+    ],
+    "better_or_worse": "better"
+  },
+  "P9": {
+    "read_verdict": "partly right",
+    "read_verdict_note": "Direction and economics are exactly tied (both 0.89, margin 0), and while both are legitimate given my mild 'mostly/somewhat' answers, naming direction as the headline with the identical wording used for P4's much sharper misalignment overstates a genuinely diffuse pattern — the fixed-sequence version's coherence-friction framing was actually a better fit for what I described.",
+    "evidence": "The direction-flavored evidence (decisions waiting on leadership agreement, disagreement stalling decisions, analysis sparking debate) matches what I said, and to its credit the tool now explicitly lists a contradiction ('leadership mostly agrees on the top three') that the fixed-sequence version quietly buried — that's real progress in honesty. But the supports list is entirely direction-flavored even though economics is tied at the exact same probability, so it doesn't show why economics deserves equal billing.",
+    "open_question": "Flagging direction vs economics as the open tension is honest given the exact tie, and 'what most limits people's ability to act' is a reasonable candidate question — but it was never asked despite budget remaining, so the tension is named and then left unresolved.",
+    "question_choice": "The sequence stayed almost entirely in the Business lens once direction and economics looked promising (opener, decisions, waiting, direction, economics, analysis, business_uncertainty, focus, authority) and never touched trust, talent, leverage, or execution, which under-samples the genuinely cross-lens, 'everything a little off' story I actually described. Stopping at 10 without testing whether the mild friction shows up elsewhere too risks premature narrowing for a persona explicitly defined by diffuseness.",
+    "experiment": "I wouldn't rush to run a full three-things leadership offsite over this — it's sized for a much sharper fracture than 'mostly aligned, sometimes stalls,' and a smaller move on one specific gap (like decision follow-through) would fit our actual situation better.",
+    "econ_profile": "'Resources are flowing to activity that doesn't create proportional value' is at least distinct wording from P4's econ line and feels reasonably grounded, though the profile table reading almost entirely Low across every axis except candour sits a little oddly next to a headline that names one dominant constraint.",
+    "confidence": "Emerging pattern is the right label for an exact tie, and it's more honest than the fixed-sequence version's flatter 'moderate' — though the label doesn't fully resolve the tension between 'nothing really open' framing and still handing down one sharply-worded playbook.",
+    "overall": { "score": 3, "note": "The explicit contradiction-listing is real progress in transparency, but this run loses the coherence-friction framing that best matched my own hoped-for read, narrows to a single constraint too quickly, and leaves its own named tie-breaker unasked." },
+    "issues": [
+      { "type": "wrong-question-chosen", "detail": "The question sequence stayed almost entirely within the Business lens once direction/economics looked promising, never sampling trust, talent, or leverage, which under-tests the cross-lens, diffuse pattern this persona actually represents." },
+      { "type": "missing-evidence", "detail": "Economics is tied with direction at 0.89 each, but the supports list contains no economics-specific evidence, making the read look more one-sided toward direction than the numbers justify." },
+      { "type": "stopped-too-early", "detail": "people_limits was named as the tie-breaking question between direction and economics but was never asked despite budget remaining." }
+    ],
+    "better_or_worse": "worse"
+  }
+}

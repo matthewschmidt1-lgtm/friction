@@ -177,6 +177,7 @@ const SCREENS = {
     const openBlock = r.open ? `<div class="open">
         <p class="eyebrow">What we're still trying to understand</p>
         <p class="open-t">Is the constraint <strong>${esc(hypName(r.top).toLowerCase())}</strong>, or <strong>${esc(hypName(r.second).toLowerCase())}</strong>?</p>
+        ${r.open.secondEvidence && r.open.secondEvidence.length ? `<p class="open-ev"><span class="k">What points to ${esc(hypName(r.second).toLowerCase())}</span>${r.open.secondEvidence.map(x => esc(x.obs)).join(' · ')}</p>` : ''}
         ${r.open.question ? `<p class="open-q"><span class="k">The question that would tell us</span>${esc(r.open.question)}</p>` : `<p class="quiet">The questions that would separate these have been asked. The experiment below is the next test.</p>`}
       </div>` : `<div class="open settled"><p class="eyebrow">What we're still trying to understand</p><p class="quiet">Nothing that would change the read. The competing explanations fell away as you answered.</p></div>`;
 
@@ -221,7 +222,7 @@ const SCREENS = {
           <p class="eyebrow">What that capacity could be doing instead</p>
           <ul>${play.leverage.map(l => `<li><b>${esc(l)}</b><span>${esc(LEVERAGE_WHY[l])}</span></li>`).join('')}</ul>
         </div>
-        ${exp_('Expected vs observed', 'Your operating profile, on the traits your answers can see', `<div class="tablewrap"><table class="profile"><thead><tr><th>Trait</th><th>Expected</th><th>Observed</th></tr></thead><tbody>${r.profile.map(row => `<tr><td>${esc(row.k)}</td><td>${esc(row.expected)}</td><td class="obs obs-${row.observed.toLowerCase()}">${esc(row.observed)}</td></tr>`).join('')}</tbody></table></div><p class="quiet">Expected is what a business of your shape usually looks like, not a benchmark. Observed comes from your answers. Numeric benchmarks by industry and size are a later phase, once there is real data to draw them from.</p><ul class="cons" style="margin-top:.8rem">${play.consequences.map(c => `<li><b>${esc(c)}</b><span>${esc(CONSEQUENCE_WHY[c] || '')}</span></li>`).join('')}</ul>`)}
+        ${exp_('Expected vs observed', 'Your operating profile, on the traits your answers can see', `<div class="tablewrap"><table class="profile"><thead><tr><th>Trait</th><th>Expected</th><th>Observed</th></tr></thead><tbody>${r.profile.map(row => `<tr><td>${esc(row.k)}</td><td>${esc(row.expected)}</td><td class="obs ${row.good && row.good.includes(row.observed) ? 'obs-ok' : 'obs-off'}">${esc(row.observed)}${row.good && row.good.includes(row.observed) ? '' : ' <span class="flag" title="outside the expected range">◆</span>'}</td></tr>`).join('')}</tbody></table></div><p class="quiet">Expected is what a business of your shape usually looks like, not a benchmark. Observed comes from your answers. Numeric benchmarks by industry and size are a later phase, once there is real data to draw them from.</p><ul class="cons" style="margin-top:.8rem">${play.consequences.map(c => `<li><b>${esc(c)}</b><span>${esc(CONSEQUENCE_WHY[c] || '')}</span></li>`).join('')}</ul>`)}
       </div>
 
       <div class="jstep stagger">
