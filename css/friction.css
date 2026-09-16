@@ -7,7 +7,7 @@
   --kelp:#3E8A6A; --kelp-deep:#2F6E53; --kelp-soft:#D6E9DC;
   --ink:#10303F; --ink-dim:rgba(16,48,63,.72); --ink-faint:rgba(16,48,63,.5);
   --lens-B:var(--sun); --lens-S:var(--tide); --lens-P:var(--kelp);
-  --font-display:'Fraunces', ui-serif, Georgia, serif;
+  --font-display: var(--font-body); /* Fraunces retired site-wide; kept as an alias so nothing regresses if referenced */
   --font-body:'Manrope', ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono:'IBM Plex Mono', ui-monospace, Menlo, monospace;
   --col:44rem; --pad:clamp(1.1rem, 4vw, 2rem);
@@ -43,7 +43,7 @@ button{font:inherit; color:inherit}
 /* ---------- top bar ---------- */
 .topbar{position:sticky; top:0; z-index:20; background:rgba(247,243,234,.82); backdrop-filter:saturate(1.4) blur(14px); -webkit-backdrop-filter:saturate(1.4) blur(14px)}
 .topbar-row{max-width:var(--col); margin:0 auto; padding:.9rem var(--pad) .7rem; display:flex; align-items:center; justify-content:space-between}
-.wordmark{display:inline-flex; align-items:center; gap:.55rem; text-decoration:none; color:var(--deep); font-family:var(--font-display); font-weight:500; font-size:1.25rem; letter-spacing:-.01em}
+.wordmark{display:inline-flex; align-items:center; gap:.55rem; text-decoration:none; color:var(--deep); font-family:var(--font-body); font-weight:800; font-size:1.2rem; letter-spacing:-.01em}
 .mark{display:inline-grid; gap:4px; width:22px}
 .mark i{display:block; height:4px; border-radius:2px; background:var(--tide); width:22px}
 .mark i+i{background:var(--sun); width:16px; justify-self:end; transition:transform .5s var(--ease-out)}
@@ -69,7 +69,7 @@ button{font:inherit; color:inherit}
 /* ---------- type ---------- */
 .eyebrow{font-family:var(--font-mono); font-size:.88rem; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--sand-deep); margin-bottom:.9rem}
 .eyebrow.lens-B{color:var(--sun-deep)}.eyebrow.lens-S{color:var(--tide-deep)}.eyebrow.lens-P{color:var(--kelp-deep)}
-.display{font-family:var(--font-display); font-weight:400; font-variation-settings:'opsz' 120; letter-spacing:-.02em; line-height:1.06; color:var(--deep)}
+.display{font-family:var(--font-body); font-weight:800; letter-spacing:-.015em; line-height:1.15; color:var(--deep)}
 .display.xl{font-size:clamp(2.6rem, 9vw, 4.6rem)}
 .display.lg{font-size:clamp(1.9rem, 5.6vw, 2.7rem); line-height:1.12}
 .display.md{font-size:clamp(1.45rem, 4vw, 1.9rem); line-height:1.2}
@@ -280,7 +280,7 @@ details.more.on-dark .book p{color:rgba(255,255,255,.85)}
 details.lens-B .lens-dot{background:var(--lens-B)}details.lens-S .lens-dot{background:var(--lens-S)}details.lens-P .lens-dot{background:var(--lens-P)}
 .book{padding:.85rem 1rem; border-radius:12px; background:rgba(44,140,158,.08); display:grid; gap:.25rem}
 .book-k{font-family:var(--font-mono); font-size:.66rem; letter-spacing:.16em; text-transform:uppercase; color:var(--tide-deep)}
-.book-t{font-family:var(--font-display); font-style:italic; color:var(--deep); font-size:1.05rem}
+.book-t{font-family:var(--font-body); font-style:normal; font-weight:700; color:var(--deep); font-size:1.05rem}
 .book-a{font-family:var(--font-body); font-style:normal; font-size:.82rem; color:var(--ink-faint)}
 .book p{color:var(--ink-dim); font-size:.95rem; margin:0}
 .steps{margin:0; padding-left:1.2rem; display:grid; gap:.5rem; color:var(--ink)}
@@ -295,7 +295,7 @@ details.lens-B .lens-dot{background:var(--lens-B)}details.lens-S .lens-dot{backg
 .jstep+.jstep{padding-top:2.2rem; border-top:1px solid var(--sand-line)}
 .step-head{display:flex; align-items:baseline; gap:.7rem; margin-bottom:1.1rem; flex-wrap:wrap}
 .step-n{font-family:var(--font-mono); font-size:.9rem; letter-spacing:.14em; color:var(--sun-deep); font-weight:500}
-.step-name{font-family:var(--font-display); font-size:1.35rem; color:var(--deep); letter-spacing:-.01em}
+.step-name{font-family:var(--font-body); font-weight:700; font-size:1.3rem; color:var(--deep); letter-spacing:-.01em}
 .step-tag{font-size:1.02rem; color:var(--ink); font-weight:500}
 .own-words{margin:0; padding:1.3rem 1.4rem; border-radius:20px; background:var(--foam-raised); border:1px solid var(--sand-line); border-left:5px solid var(--sun); box-shadow:var(--shadow)}
 .own-words p{font-family:var(--font-display); font-size:clamp(1.5rem,4.6vw,2.1rem); line-height:1.2; color:var(--deep); letter-spacing:-.015em; margin:0}
@@ -338,7 +338,7 @@ details.more.on-dark details.further summary{color:#fff}
 /* ---------- v2: diagnosis ---------- */
 .display.md.q-title{font-size:clamp(1.4rem,4.2vw,1.8rem); line-height:1.25}
 .lens-row{display:flex; align-items:baseline; gap:.6rem; padding:.7rem 0; border-bottom:1px solid var(--sand-line); flex-wrap:wrap}
-.lens-row b{font-family:var(--font-display); font-weight:500; color:var(--deep); font-size:1.1rem}
+.lens-row b{font-family:var(--font-body); font-weight:700; color:var(--deep); font-size:1.1rem}
 .lens-row span:last-child{color:var(--ink-dim)}
 .lens-row .lens-dot{align-self:center}
 .lens-row.lens-B .lens-dot{background:var(--lens-B)}.lens-row.lens-S .lens-dot{background:var(--lens-S)}.lens-row.lens-P .lens-dot{background:var(--lens-P)}
@@ -370,7 +370,7 @@ details.more.on-dark details.further summary{color:#fff}
 .cons span{color:var(--ink-dim); font-size:.95rem}
 .estimate{margin-top:1.4rem; padding:1.2rem 1.3rem; border-radius:18px; background:var(--foam-raised); border:1px solid var(--sand-line); box-shadow:var(--shadow); display:grid; gap:.3rem}
 .est-line{color:var(--ink-dim); font-size:.95rem}
-.est-big{font-family:var(--font-display); font-size:clamp(1.6rem,5vw,2.2rem); color:var(--deep); letter-spacing:-.02em; line-height:1.1}
+.est-big{font-family:var(--font-body); font-weight:800; font-size:clamp(1.5rem,4.6vw,2.05rem); color:var(--deep); letter-spacing:-.015em; line-height:1.15}
 .est-big.est-sun{color:var(--sun-deep)}
 .leverage{margin-top:1.6rem}
 .leverage>p{color:var(--ink)}

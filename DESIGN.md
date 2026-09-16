@@ -55,10 +55,10 @@ that wants your attention.
 
 ### Typography
 
-- **Fraunces** (display, optical size 9–144, italic for the human line). Shared
-  with the Matthew Schmidt site so the tool feels like a member of the family.
-- **Manrope** (interface and body). Rounder and warmer than Archivo; this is a
-  conversation, not a résumé.
+- **Manrope** (display, interface and body, weights 400–800). Rounder and
+  warmer than Archivo; this is a conversation, not a résumé. Fraunces was
+  retired site-wide in favour of one legible sans face — headlines get there
+  on weight (700–800) rather than a second, harder-to-read typeface.
 - **IBM Plex Mono** (stage codes: `01 — SIGNAL`). The quiet instrument-panel
   voice that says "this is a method, not a mood."
 
