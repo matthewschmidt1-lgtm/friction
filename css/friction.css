@@ -461,3 +461,13 @@ details.conf-pill .conf-body{padding:0 1rem .8rem; font-family:var(--font-body);
   details.conf-pill summary{font-size:.8rem}
   .cons-chips .chip{font-size:.94rem}
 }
+
+/* ---------- how-it-works: readable title, mission highlight ---------- */
+.how-title{font-family:var(--font-body); font-weight:700; font-size:clamp(1.5rem,4.4vw,1.95rem); line-height:1.3; letter-spacing:-.01em; color:var(--deep)}
+.mission{margin:1.4rem 0; padding:1.3rem 1.4rem; border-radius:20px; background:var(--foam-raised); border:1px solid var(--sand-line); border-left:5px solid var(--sun); box-shadow:var(--shadow)}
+.mission-label{font-family:var(--font-mono); font-size:.8rem; letter-spacing:.14em; text-transform:uppercase; color:var(--sun-deep); margin-bottom:.5rem}
+.mission-t{font-family:var(--font-body); font-weight:600; font-size:clamp(1.1rem,3.4vw,1.3rem); line-height:1.5; color:var(--deep); letter-spacing:-.005em}
+@media (max-width:640px){
+  .mission{padding:1.1rem 1.2rem}
+  .mission-label{font-size:.84rem}
+}

@@ -111,8 +111,12 @@ const SCREENS = {
   how() {
     return `<section class="screen stagger">
       <p class="eyebrow">How this works</p>
-      <h1 class="display lg">A guided diagnosis, not an assessment.</h1>
+      <h1 class="display lg how-title">A guided diagnosis, not an assessment.</h1>
       <p class="lede" style="margin-top:1rem">Nine core questions about observable behaviour, two to four follow-ups where your answers point, and one inversion question. Twelve to fourteen in all, about four minutes. No score, no name, no email. Everything stays in this browser.</p>
+      <div class="mission">
+        <p class="mission-label">The goal</p>
+        <p class="mission-t">Friction creates a mechanism for directing attention and problem-solving capacity toward the highest-value problems and opportunities.</p>
+      </div>
       <div class="lens-reads" style="margin:1.4rem 0">
         ${['B', 'S', 'P'].map(k => `<div class="lens-row lens-${k}"><span class="lens-dot"></span><b>${LENSES[k].name}</b><span>${esc(LENSES[k].line)}</span></div>`).join('')}
       </div>
