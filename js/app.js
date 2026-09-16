@@ -1,8 +1,8 @@
-// Friction v2 — app shell: state, screens, storage. No dependencies.
-import { CORE, INVERSION, COST, STAGES, LENSES, ZONES, CONSEQUENCE_WHY, LEVERAGE_WHY, CONFIDENCE, LOW_FRICTION, ZONE_BY_CONSTRAINT, LEARNING_OPTIONS, LEARNING_RESPONSES } from './content.js';
-import { analyze, pickFollowups, isComplete, mechanisms } from './engine.js';
+// Friction v3 — app shell. The user sees a conversation; the engine sees hypotheses.
+import { LENSES, ZONES, ZONE_BY_CONSTRAINT, HYPOTHESES, COST, STAGES, CONSEQUENCE_WHY, LEVERAGE_WHY, LOW_FRICTION, OUTCOME_OPTIONS, INVERSION } from './content.js';
+import { newSession, applyAnswer, undoLast, nextQuestion, progress, diagnose, applyOutcome, confidences, byId } from './engine.js';
 
-const STORAGE = 'friction.v2';
+const STORAGE = 'friction.v3';
 const $ = s => document.querySelector(s);
 const app = $('#app');
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -10,42 +10,27 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const fmt = n => Math.round(n).toLocaleString();
 
 const state = {
-  screen: 'arrival', q: 0, answers: {}, cost: { managers: '', hours: '', rate: '' }, result: null,
-  learn: { outcome: null, note: '' }, history: load(),
+  screen: 'arrival', session: newSession(), current: null, sel: [],
+  cost: { managers: '', hours: '', rate: '', revenue: 'Prefer not to say', profit: 'Prefer not to say' },
+  result: null, learn: { results: {}, note: '', outcome: null }, history: load(),
 };
 function load() { try { return JSON.parse(localStorage.getItem(STORAGE) || '[]'); } catch { return []; } }
 function persist() { try { localStorage.setItem(STORAGE, JSON.stringify(state.history)); } catch {} }
 
-/* ---------- the question queue (adaptive) ---------- */
-function coreAnswersForGate() {
-  const a = {};
-  for (const q of CORE) if (q.type === 'single' && q.mech && (state.answers[q.id] || []).length) a[q.mech] = q.options[state.answers[q.id][0]].s;
-  return a;
-}
-function queue() {
-  const gate = coreAnswersForGate();
-  const core = CORE.filter(q => !q.when || q.when(gate));
-  const coreDone = core.every(q => isComplete(q, state.answers));
-  const follow = coreDone ? pickFollowups(state.answers) : [];
-  return [...core, ...follow, INVERSION];
-}
-const TOTAL = () => queue().length + 2; // + cost + result
-
-function progressFor() {
-  if (state.screen === 'question') return state.q / TOTAL();
-  if (state.screen === 'cost') return (TOTAL() - 1) / TOTAL();
-  if (state.screen === 'result') return 1;
-  return 0;
-}
+/* ---------- chrome ---------- */
 function stageFor() {
-  if (state.screen === 'question') return STAGES[queue()[state.q].stage];
+  if (state.screen === 'question') { const q = state.current; if (!q) return null; if (q.opener) return STAGES[0]; if (q.terminal) return STAGES[4]; return { B: STAGES[1], S: STAGES[2], P: STAGES[3] }[q.lens] || STAGES[0]; }
   if (state.screen === 'cost') return STAGES[5];
   if (state.screen === 'result') return { code: '●', name: 'Diagnosis' };
   if (state.screen === 'learning') return { code: '07', name: 'Learning' };
   return null;
 }
-
-/* ---------- rendering ---------- */
+function progressFor() {
+  if (state.screen === 'question') return progress(state.session);
+  if (state.screen === 'cost') return .93;
+  if (state.screen === 'result') return 1;
+  return 0;
+}
 let rendering = false, pending = false;
 function go(screen, extra = {}) { if (rendering) return; Object.assign(state, extra, { screen }); render(); }
 async function render() {
@@ -56,8 +41,8 @@ async function render() {
     if (cur && !reduced) { cur.classList.add('leaving'); await wait(190); }
     app.innerHTML = SCREENS[state.screen]();
     app.querySelector('.stagger') || app.firstElementChild?.classList.add('stagger');
+    document.body.dataset.q = state.screen === 'question' ? state.current.id : state.screen;
     bind(); updateChrome();
-    document.body.dataset.q = state.screen === 'question' ? queue()[state.q].id : state.screen;
     window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
     const h = app.querySelector('h1'); if (h) $('#announce').textContent = h.textContent;
   } finally { rendering = false; if (pending) { pending = false; render(); } }
@@ -76,6 +61,7 @@ function updateChrome() {
   }
 }
 const wait = ms => new Promise(r => setTimeout(r, ms));
+const hypName = h => HYPOTHESES[h].name;
 
 /* ---------- screens ---------- */
 const SCREENS = {
@@ -84,10 +70,10 @@ const SCREENS = {
     const returnCard = last && !last.closed ? `
       <section class="card" style="margin-bottom:2rem">
         <p class="eyebrow">Welcome back</p>
-        <h2 class="display md">Last time, your primary friction was <em>${esc(ZONES[last.zone].name)}</em>.</h2>
-        <p class="lede" style="margin-top:.7rem;font-size:1rem">The constraint: <strong>${esc(last.constraint)}</strong>. Your move was: <strong>${esc(last.move)}</strong></p>
+        <h2 class="display md">Last time, the read was: <em>${esc(last.constraint)}</em>.</h2>
+        <p class="lede" style="margin-top:.7rem;font-size:1rem">You were going to test: <strong>${esc(last.experimentTitle)}</strong>, watching ${last.watch.length} things over ${last.days} days.</p>
         <div class="cta-row" style="margin-top:1.2rem">
-          <button class="btn btn-deep" data-go="learning">Did the friction decrease? <span class="arr">→</span></button>
+          <button class="btn btn-deep" data-go="learning">What happened? <span class="arr">→</span></button>
           <button class="btn-link" data-go="begin">Run a new diagnosis</button>
         </div>
       </section>` : '';
@@ -99,7 +85,7 @@ const SCREENS = {
       <div class="lines">
         <p>Most organizations don't have a shortage of effort.</p>
         <p>They have friction between what the business needs, how the system operates, and what people are able to do.</p>
-        <p>Three lenses. Ten to fourteen questions. One useful diagnosis.</p>
+        <p>Three lenses. About ten questions, chosen as you answer. One hypothesis worth testing.</p>
       </div>
       <div class="cta-row">
         <button class="btn btn-primary" data-go="begin">Begin <span class="arr">→</span></button>
@@ -111,8 +97,8 @@ const SCREENS = {
   how() {
     return `<section class="screen stagger">
       <p class="eyebrow">How this works</p>
-      <h1 class="display lg how-title">A guided diagnosis, not an assessment.</h1>
-      <p class="lede" style="margin-top:1rem">Nine core questions about observable behaviour, up to four follow-ups where your answers point, and one inversion question. Ten to fourteen in all, about four minutes. No score, no name, no email. Everything stays in this browser.</p>
+      <h1 class="display lg how-title">A diagnosis that forms hypotheses, not a questionnaire that produces a score.</h1>
+      <p class="lede" style="margin-top:1rem">Friction starts from what you're seeing, forms several possible explanations, and asks the question most likely to tell them apart. It stops when one explanation is clearly ahead, usually after nine to twelve questions and about four minutes. No score, no name, no email. Everything stays in this browser.</p>
       <div class="mission">
         <p class="mission-label">The goal</p>
         <p class="mission-t">Friction creates a mechanism for directing attention and problem-solving capacity toward the highest-value problems and opportunities.</p>
@@ -120,29 +106,28 @@ const SCREENS = {
       <div class="lens-reads" style="margin:1.4rem 0">
         ${['B', 'S', 'P'].map(k => `<div class="lens-row lens-${k}"><span class="lens-dot"></span><b>${LENSES[k].name}</b><span>${esc(LENSES[k].line)}</span></div>`).join('')}
       </div>
-      <p class="lede" style="font-size:1rem">The problem usually isn't entirely inside one lens. It's the gap between them. That gap is where the diagnosis focuses: where the friction is, why it's happening, and what to do next.</p>
+      <p class="lede" style="font-size:1rem">The result is a current read: what appears to be getting in the way, why we believe it, what we're still uncertain about, and one thing to test. Then you come back and tell us what happened, and the read updates. Friction is willing to change its mind.</p>
       <div class="nav"><button class="btn btn-ghost" data-go="arrival">← Back</button><button class="btn btn-primary" data-go="begin">Begin <span class="arr">→</span></button></div>
     </section>`;
   },
 
   question() {
-    const list = queue(); const q = list[state.q];
-    const sel = state.answers[q.id] || [];
-    const multi = q.type === 'multi';
+    const q = state.current; const sel = state.sel;
+    const multi = !!q.multi;
     const intro = q.intro ? `<div class="intro"><p class="kicker">${esc(q.intro.kicker)}</p><p class="line">${esc(q.intro.line)}</p></div>` : '';
+    const n = state.session.asked.length + 1;
     return `<section class="screen stagger">
       ${intro}
       <p class="eyebrow ${q.lens ? 'lens-' + q.lens : ''}">${esc(q.eyebrow)}</p>
       <h1 class="display md q-title">${esc(q.title)}</h1>
       ${q.help ? `<p class="help">${esc(q.help)}</p>` : ''}
       <div class="choices" role="group" aria-label="${esc(q.title)}">
-        ${q.options.map((o, i) => `<button class="choice ${multi ? 'multi' : ''} ${q.lens ? 'lens-' + q.lens : ''}" data-opt="${i}" aria-pressed="${sel.includes(i)}">
-          <span class="ind"></span><span class="txt"><span class="t">${esc(o.t)}</span>${o.sub ? `<span class="sub">${esc(o.sub)}</span>` : ''}</span></button>`).join('')}
+        ${q.options.map((o, i) => `<button class="choice ${multi ? 'multi' : ''} ${q.lens ? 'lens-' + q.lens : ''}" data-opt="${i}" aria-pressed="${sel.includes(i)}"><span class="ind"></span><span class="txt"><span class="t">${esc(o.t)}</span></span></button>`).join('')}
       </div>
       <div class="nav">
         <button class="btn btn-ghost" data-back>← Back</button>
-        <span class="count">${state.q + 1} / ${list.length}${q.max ? ` · <span class="cap">${capText(q, sel)}</span>` : ''}</span>
-        <button class="btn btn-primary" data-next ${isComplete(q, state.answers) ? '' : 'disabled'}>Continue <span class="arr">→</span></button>
+        <span class="count">Question ${n}${q.max ? ` · <span class="cap">${capText(q, sel)}</span>` : ''}</span>
+        <button class="btn btn-primary" data-next ${sel.length ? '' : 'disabled'}>Continue <span class="arr">→</span></button>
       </div>
     </section>`;
   },
@@ -154,152 +139,124 @@ const SCREENS = {
       <p class="help">${esc(COST.help)}</p>
       <div class="fields">
         ${COST.fields.map(f => `<label class="field"><span>${esc(f.label)}</span><input type="number" inputmode="decimal" min="${f.min}" max="${f.max}" step="any" data-cost="${f.key}" placeholder="${esc(f.placeholder)}" value="${esc(state.cost[f.key])}"></label>`).join('')}
+        ${COST.ranges.map(r => `<label class="field"><span>${esc(r.label)}</span><select data-cost="${r.key}">${r.options.map(o => `<option ${state.cost[r.key] === o ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select></label>`).join('')}
       </div>
+      <p class="quiet">Ranges only. The diagnosis works without them; with them, the economic read gets sharper.</p>
       <div class="nav">
         <button class="btn btn-ghost" data-back>← Back</button>
         <button class="btn btn-ghost" data-reveal data-skip>Skip</button>
-        <button class="btn btn-primary" data-reveal>See your diagnosis <span class="arr">→</span></button>
+        <button class="btn btn-primary" data-reveal>See the read <span class="arr">→</span></button>
       </div>
     </section>`;
   },
 
   result() {
-    const r = state.result; const Z = ZONES[r.zone]; const play = r.play;
-    const conf = CONFIDENCE[r.confidence];
-    const confText = r.confidence === 'emerging' && r.followupsAnswered === 0 && conf.d0 ? conf.d0 : conf.d;
-    const zoneSummary = (ZONE_BY_CONSTRAINT[r.zone] || {})[r.constraint] || Z.summary;
-    const exp = (title, sub, body, cls = '') => `<details class="more ${cls}"><summary><b>${title}</b>${sub ? `<span class="sum-line">${sub}</span>` : ''}<i class="caret"></i></summary><div class="more-body">${body}</div></details>`;
+    const r = state.result; const play = r.play; const Z = ZONES[r.zone]; const exp = r.experiment;
+    const exp_ = (title, sub, body, cls = '') => `<details class="more ${cls}"><summary><b>${title}</b>${sub ? `<span class="sum-line">${sub}</span>` : ''}<i class="caret"></i></summary><div class="more-body">${body}</div></details>`;
     const step = (n, name, tag) => `<div class="step-head"><span class="step-n">${n}</span><span class="step-name">${name}</span>${tag ? `<span class="step-tag">${tag}</span>` : ''}</div>`;
     const est = r.estimate;
     const lensRow = k => `<div class="bar"><b>${LENSES[k].name}<small>${esc(LENSES[k].line)}</small></b><div class="track"><div class="fill" style="--c:var(--lens-${k})" data-w="${Math.round(15 + 85 * r.lensNorm[k])}"></div></div></div>`;
-
-    const chainAndForces = `<ol class="chain" aria-label="Causal chain">${play.chain.map(c => `<li>${esc(c)}</li>`).join('')}</ol>
-        <div class="forces">
-          <p class="eyebrow">What's reinforcing it</p>
-          <ul>${r.forces.map(f => `<li class="${f.src === 'pattern' ? 'from-pattern' : 'from-you'}"><span>${esc(f.t)}</span><small>${f.src === 'pattern' ? 'typical of this constraint' : 'from your answers'}</small></li>`).join('')}</ul>
-        </div>`;
-
-    const costBreakdown = `<ul class="cons">${play.consequences.map(c => `<li><b>${esc(c)}</b><span>${esc(CONSEQUENCE_WHY[c] || '')}</span></li>`).join('')}</ul>
-        ${est ? `<div class="estimate">
-            <p class="eyebrow">Illustrative estimate</p>
-            <p class="est-line">${fmt(est.managers)} managers × ${fmt(est.hours)} hours a week × 48 weeks</p>
-            <p class="est-big">${fmt(est.hoursYear)} hours a year</p>
-            ${est.dollars ? `<p class="est-big est-sun">≈ $${fmt(est.dollars)} a year</p><p class="quiet">at $${fmt(est.rate)} per loaded hour</p>` : ''}
-            <p class="quiet">Illustrative estimate based on your inputs, not a financial audit. The point isn't precision. It's that the cost of friction is real and mostly uncounted.</p>
-          </div>` : ''}
-        <div class="leverage">
-          <p class="eyebrow">What that capacity could be doing instead</p>
-          <ul>${play.leverage.map(l => `<li><b>${esc(l)}</b><span>${esc(LEVERAGE_WHY[l])}</span></li>`).join('')}</ul>
-        </div>`;
-
     const reading = `<div class="reading">${play.reading.map(b => `<div class="book"><span class="book-t">${esc(b.title)} <span class="book-a">· ${esc(b.author)}</span></span><p>${esc(b.idea)}</p></div>`).join('')}</div>`;
 
     if (r.low) {
-      const inv = (state.answers.inversion || []).map(i => INVERSION.options[i]);
+      const inv = (state.session.answers.inversion || []).map(i => INVERSION.options[i]);
       return `<section class="screen result journey">
-      <div class="jstep stagger">
-        ${step('01', 'Your diagnosis', 'Nothing to fix yet')}
-        <h1 class="display lg edge-name">${esc(LOW_FRICTION.name)}</h1>
-        <p class="lead">${esc(LOW_FRICTION.summary)}</p>
-        ${frictionMap(r)}
-        <p class="quiet">${esc(LOW_FRICTION.detail)}</p>
-      </div>
-      <div class="jstep stagger">
-        ${step('02', 'Your guards', 'What would make it worse')}
-        <p class="lead">You said this is what would make things worse. Those are the moves to keep refusing.</p>
-        <ul class="cons">${inv.map(o => `<li><b>${esc(o.t)}</b><span>${esc(o.force || '')}</span></li>`).join('')}</ul>
-      </div>
-      <div class="jstep stagger">
-        ${step('03', 'Watch', 'The only metric that matters here')}
-        <div class="metric"><p class="metric-t">Whether this picture holds</p><p>${esc(LOW_FRICTION.watch)}</p></div>
-      </div>
-      <div class="jstep stagger">
-        ${step('04', 'Learn', 'Close the loop')}
-        <div class="card">
-          <div class="loop"><b>Signal</b><i>→</i>Understand<i>→</i>Decide<i>→</i>Act<i>→</i><b>Learn</b></div>
-          <div class="result-actions"><button class="btn btn-deep" data-copy>Copy diagnosis</button><button class="btn btn-ghost" data-go="begin">Run it again</button><span class="saved">✓ Saved on this device</span></div>
-        </div>
-      </div>
+      <div class="jstep stagger">${step('01', 'Our current read', 'Nothing to fix yet')}
+        <h1 class="display lg edge-name">${esc(LOW_FRICTION.name)}</h1><p class="lead">${esc(LOW_FRICTION.summary)}</p>${frictionMap(r)}<p class="quiet">${esc(LOW_FRICTION.detail)}</p></div>
+      <div class="jstep stagger">${step('02', 'Your guards', 'What would make it worse')}
+        <ul class="cons">${inv.map(o => `<li><b>${esc(o.t)}</b><span>${esc(o.force || '')}</span></li>`).join('')}</ul></div>
+      <div class="jstep stagger">${step('03', 'Watch', 'The only metric that matters here')}
+        <div class="metric"><p class="metric-t">Whether this picture holds</p><p>${esc(LOW_FRICTION.watch)}</p></div></div>
+      <div class="jstep stagger">${step('04', 'Learn', 'Close the loop')}
+        <div class="card"><div class="loop"><b>Signal</b><i>→</i>Hypothesis<i>→</i>Question<i>→</i>Evidence<i>→</i>Act<i>→</i><b>Learn</b></div>
+        <div class="result-actions"><button class="btn btn-deep" data-copy>Copy the read</button><button class="btn btn-ghost" data-go="begin">Run it again</button><span class="saved">✓ Saved on this device</span></div></div></div>
     </section>`;
     }
+
+    const zoneSummary = (ZONE_BY_CONSTRAINT[r.zone] || {})[r.top] || Z.summary;
+    const openBlock = r.open ? `<div class="open">
+        <p class="eyebrow">What we're still trying to understand</p>
+        <p class="open-t">Is the constraint <strong>${esc(hypName(r.top).toLowerCase())}</strong>, or <strong>${esc(hypName(r.second).toLowerCase())}</strong>?</p>
+        ${r.open.question ? `<p class="open-q"><span class="k">The question that would tell us</span>${esc(r.open.question)}</p>` : `<p class="quiet">The questions that would separate these have been asked. The experiment below is the next test.</p>`}
+      </div>` : `<div class="open settled"><p class="eyebrow">What we're still trying to understand</p><p class="quiet">Nothing that would change the read. The competing explanations fell away as you answered.</p></div>`;
 
     return `<section class="screen result journey">
 
       <div class="jstep stagger">
-        ${step('01', 'Your primary friction', Z.label)}
+        ${step('01', 'Our current read', 'What appears to be getting in the way')}
         <div class="friction-head">
-          <h1 class="display lg edge-name">${esc(Z.name)}</h1>
-          <details class="conf-pill conf-${r.confidence}"><summary>Confidence: ${conf.label}<i class="caret"></i></summary><div class="conf-body">${esc(confText)}</div></details>
+          <h1 class="display lg edge-name">${esc(play.constraint)}</h1>
+          <details class="conf-pill conf-${r.label.key}"><summary>${esc(r.label.label)}<i class="caret"></i></summary><div class="conf-body">${esc(r.label.d)}</div></details>
         </div>
+        <p class="lead">${esc(play.diagnosis)}</p>
+        ${r.changedMind ? `<p class="changed"><span class="k">We changed our mind</span>Earlier in the conversation the pattern pointed to <strong>${esc(hypName(r.changedMind.from).toLowerCase())}</strong>. Your later answers moved it. Friction is meant to do that.</p>` : ''}
+        <div class="evidence">
+          <p class="eyebrow">What supports this</p>
+          <ul class="sig">${r.supports.slice(0, 5).map(x => `<li><span class="sig-s sig-${x.strength.toLowerCase()}">${x.strength}</span><span>${esc(x.obs)}</span></li>`).join('') || '<li><span>Only the opening signal so far.</span></li>'}</ul>
+          ${r.contradicts.length ? `<p class="eyebrow" style="margin-top:1rem">What cuts against it</p><ul class="sig against">${r.contradicts.slice(0, 3).map(x => `<li><span class="sig-s sig-${x.strength.toLowerCase()}">${x.strength}</span><span>${esc(x.obs)}</span></li>`).join('')}</ul>` : ''}
+        </div>
+        ${openBlock}
+      </div>
+
+      <div class="jstep stagger">
+        ${step('02', 'Where it sits', Z.label)}
+        <h2 class="display md">${esc(Z.name)}</h2>
         <p class="lead">${esc(zoneSummary)}</p>
-        ${r.coherence ? `<p class="quiet">No single lens is failing badly. The strongest signal is <strong>${esc(play.constraint.toLowerCase())}</strong>, but it is mild. The pattern is the finding.</p>` : ''}
-        ${r.dominant ? `<p class="quiet">The pull comes mostly from <strong>${esc(LENSES[r.dominant].name)}</strong>. It shows up on both of that lens's edges, so the constraint below is the more certain part of this diagnosis.</p>` : ''}
+        ${r.coherence ? `<p class="quiet">No single explanation is clearly ahead. The strongest is <strong>${esc(hypName(r.top).toLowerCase())}</strong>, but it is mild. The pattern is the finding.</p>` : ''}
+        ${r.dominant ? `<p class="quiet">The pull comes mostly from <strong>${esc(LENSES[r.dominant].name)}</strong>. The constraint above is the more certain part of this read.</p>` : ''}
         ${frictionMap(r)}
         <div class="expanders">
-          ${exp('What this zone means', esc(Z.label), `<p>${esc(Z.detail)}</p>${r.coherence ? '' : `<p class="quiet">Close behind it: <strong>${esc(ZONES[r.secondary].name)}</strong>. ${esc(ZONES[r.secondary].summary)}</p>`}`)}
-          ${exp('How to read this map', 'Three lenses, and the gaps between them', `<p>Each corner is a lens: a question the organization has to be able to answer. The pools show how much friction your answers placed in each one. The friction point sits on the gap where the two sides pull against each other hardest, because the problem is rarely inside one lens. It's between them.</p><div class="bars">${lensRow('B')}${lensRow('S')}${lensRow('P')}</div><p class="quiet">This is a hypothesis built from your answers, not a measurement of your organization. The strongest way to test it is to take the question at the end to the people closest to the work.</p>`)}
+          ${exp_('Trace how it compounds', 'The chain, and what\'s reinforcing it', `<ol class="chain" aria-label="Causal chain">${play.chain.map(c => `<li>${esc(c)}</li>`).join('')}</ol><div class="forces"><p class="eyebrow">What's reinforcing it</p><ul>${r.forces.map(f => `<li class="${f.src === 'pattern' ? 'from-pattern' : 'from-you'}"><span>${esc(f.t)}</span><small>${f.src === 'pattern' ? 'typical of this constraint' : 'from your answers'}</small></li>`).join('')}</ul></div>`)}
+          ${exp_('Other explanations we weighed', 'Ranked by how well your answers support them', `<ol class="hyps">${r.ranked.slice(0, 5).map(h => `<li><span class="hyp-bar"><i style="width:${Math.round(r.p[h] * 100)}%"></i></span><span class="hyp-n">${esc(hypName(h))}</span><span class="hyp-l">${esc(confidenceLabelText(r.p[h]))}</span></li>`).join('')}</ol><p class="quiet">Confidence is shown as a label rather than a number on purpose. Nine to twelve answers can rank explanations; they can't measure them.</p>`)}
+          ${exp_('How to read this map', 'Three lenses, and the gaps between them', `<p>Each corner is a lens. The pools show how much of the current evidence sits in each one. The friction point sits on the gap between the lens of the current read and the lens of the strongest competing explanation.</p><div class="bars">${lensRow('B')}${lensRow('S')}${lensRow('P')}</div>`)}
         </div>
       </div>
 
       <div class="jstep stagger">
-        ${step('02', 'The constraint', 'Why it\'s happening')}
-        <h2 class="display md">${esc(play.constraint)}</h2>
-        <p class="lead">${esc(play.diagnosis)}</p>
-        ${exp('Trace how it compounds', 'The chain, and what\'s reinforcing it', chainAndForces)}
-      </div>
-
-      <div class="jstep stagger">
-        ${step('03', 'Possible blind spot', 'What everyone may have learned to accept')}
-        <div class="blind">
-          <p class="eyebrow">A hypothesis worth testing</p>
-          <h2 class="display md">${esc(play.blind)}</h2>
-          <p>Sometimes the hardest thing to see is what everyone has learned to accept. If this sounds familiar, the friction has probably been normalised long enough that it no longer registers as a problem.</p>
-        </div>
-      </div>
-
-      <div class="jstep stagger">
-        ${step('04', 'What not to do', 'The fix that would make it worse')}
-        <div class="dont">
-          <p class="dont-t">${esc(play.notDo.t)}</p>
-          <p>${esc(play.notDo.d)}</p>
-        </div>
-      </div>
-
-      <div class="jstep stagger">
-        ${step('05', 'One move', 'The smallest meaningful intervention')}
-        <p class="eyebrow">Guiding principle</p>
-        <p class="policy">${esc(play.policy)}</p>
-        <div class="card move">
-          <p class="t">${esc(play.move.t)}</p>
-          <ol class="steps">${play.move.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
-          <div class="watch"><p><strong>You'll know it's working when this moves:</strong></p><p class="watch-metric">${esc(play.metric.t)}</p><p class="quiet" style="margin-top:.3rem">${esc(play.metric.d)}</p></div>
-          ${exp('Further reading', 'You are not the first to run into this', reading, 'further')}
-        </div>
-      </div>
-
-      <div class="jstep stagger">
-        ${step('06', 'What it\'s costing', est ? 'Your estimate' : 'The business consequence')}
+        ${step('03', 'What it\'s costing', est ? 'Your estimate' : 'The business consequence')}
         <div class="cons-chips">${play.consequences.map(c => `<span class="chip">${esc(c)}</span>`).join('')}</div>
         ${est ? `<p class="est-big est-sun" style="margin-top:1rem">≈ ${est.dollars ? `$${fmt(est.dollars)}` : fmt(est.hoursYear) + ' hours'} a year</p><p class="quiet">${fmt(est.managers)} managers × ${fmt(est.hours)} hours a week × 48 weeks${est.dollars ? `, at $${fmt(est.rate)} per loaded hour` : ''}. Illustrative, based on your inputs, not an audit.</p>` : ''}
-        ${exp('See the full breakdown', 'Why each one, and what the capacity could do instead', costBreakdown)}
+        ${r.econ ? `<div class="econ"><p class="eyebrow">What your operating profile suggests <span class="econ-conf">· ${esc(r.econ.conf)} confidence</span></p><p class="econ-t">${esc(r.econ.t)}</p><p>${esc(r.econ.d)}</p></div>` : ''}
+        <div class="leverage" style="margin-top:1.2rem">
+          <p class="eyebrow">What that capacity could be doing instead</p>
+          <ul>${play.leverage.map(l => `<li><b>${esc(l)}</b><span>${esc(LEVERAGE_WHY[l])}</span></li>`).join('')}</ul>
+        </div>
+        ${exp_('Expected vs observed', 'Your operating profile, on the traits your answers can see', `<div class="tablewrap"><table class="profile"><thead><tr><th>Trait</th><th>Expected</th><th>Observed</th></tr></thead><tbody>${r.profile.map(row => `<tr><td>${esc(row.k)}</td><td>${esc(row.expected)}</td><td class="obs obs-${row.observed.toLowerCase()}">${esc(row.observed)}</td></tr>`).join('')}</tbody></table></div><p class="quiet">Expected is what a business of your shape usually looks like, not a benchmark. Observed comes from your answers. Numeric benchmarks by industry and size are a later phase, once there is real data to draw them from.</p><ul class="cons" style="margin-top:.8rem">${play.consequences.map(c => `<li><b>${esc(c)}</b><span>${esc(CONSEQUENCE_WHY[c] || '')}</span></li>`).join('')}</ul>`)}
       </div>
 
       <div class="jstep stagger">
-        ${step('07', 'One question', 'Take it into the business')}
+        ${step('04', 'Possible blind spot', 'What everyone may have learned to accept')}
+        <div class="blind"><p class="eyebrow">A hypothesis worth testing</p><h2 class="display md">${esc(play.blind)}</h2><p>Sometimes the hardest thing to see is what everyone has learned to accept. If this sounds familiar, the friction has probably been normalised long enough that it no longer registers as a problem.</p></div>
+      </div>
+
+      <div class="jstep stagger">
+        ${step('05', 'What not to do', 'The fix that would make it worse')}
+        <div class="dont"><p class="dont-t">${esc(play.notDo.t)}</p><p>${esc(play.notDo.d)}</p></div>
+      </div>
+
+      <div class="jstep stagger">
+        ${step('06', 'Take it into the business', 'One experiment, ' + exp.days + ' days')}
+        <div class="card move experiment">
+          <p class="k">Hypothesis</p><p class="t">${esc(exp.hypothesis)}</p>
+          <p class="k">Experiment</p><ol class="steps">${exp.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
+          <p class="k">Watch</p><ul class="watchlist">${exp.watch.map(w => `<li>${esc(w)}</li>`).join('')}</ul>
+          <p class="watch"><strong>Run it. Come back and tell us what happened.</strong> Each of those three will move the read up, down, or sideways. That's the point.</p>
+          ${exp_('Further reading', 'You are not the first to run into this', reading, 'further')}
+        </div>
+      </div>
+
+      <div class="jstep stagger">
+        ${step('07', 'One question', 'For your next leadership meeting')}
         <p class="q-inv">${esc(play.question)}</p>
       </div>
 
       <div class="jstep stagger">
         ${step('08', 'Learn', 'Close the loop')}
         <div class="card">
-          <div class="loop"><b>Signal</b><i>→</i>Understand<i>→</i>Decide<i>→</i>Act<i>→</i><b>Learn</b></div>
-          <p class="lede" style="font-size:1rem">Treat the move as an experiment. Run it, watch the metric, and come back. The goal isn't a better score. It's to find out whether the gap has narrowed. This page will remember where you left off.</p>
+          <div class="loop"><b>Signal</b><i>→</i>Hypothesis<i>→</i>Question<i>→</i>Evidence<i>→</i>Act<i>→</i><b>Learn</b></div>
+          <p class="lede" style="font-size:1rem">The goal isn't a better score. It's to find out whether the gap has narrowed. This page will remember the read and the experiment, and update both when you come back.</p>
           <div class="rule"></div>
-          <div class="result-actions">
-            <button class="btn btn-deep" data-copy>Copy diagnosis</button>
-            <button class="btn btn-ghost" data-go="begin">Run it again</button>
-            <span class="saved">✓ Saved on this device</span>
-          </div>
+          <div class="result-actions"><button class="btn btn-deep" data-copy>Copy the read</button><button class="btn btn-ghost" data-go="begin">Run it again</button><span class="saved">✓ Saved on this device</span></div>
           <p class="quiet" style="margin-top:1.2rem">Don't work harder on the symptom. Find the constraint. The thinking behind this: <a href="https://matthew-schmidt-production.up.railway.app/#lenses" rel="noopener">The Three Lenses, the Blind Spot and the Learning Loop</a>.</p>
         </div>
       </div>
@@ -307,32 +264,31 @@ const SCREENS = {
   },
 
   learning() {
-    const last = state.history.at(-1); const o = state.learn.outcome;
+    const last = state.history.at(-1); const res = state.learn.results; const done = last.watch.every(w => res[w]);
+    const outcome = state.learn.outcome;
     return `<section class="screen stagger">
       <p class="eyebrow">07 — Learning</p>
-      <h1 class="display lg">Did the friction decrease?</h1>
+      <h1 class="display lg">What happened?</h1>
       <div class="card recap" style="margin-top:1.4rem">
-        <div class="row"><span class="k">Last time · ${esc(fmtDate(last.at))}</span><span class="v">${esc(ZONES[last.zone].name)} · ${esc(ZONES[last.zone].label)}</span></div>
-        <div class="row"><span class="k">The constraint</span><span class="v">${esc(last.constraint)}</span></div>
-        <div class="row"><span class="k">Your move</span><span class="v">${esc(last.move)}</span></div>
-        <div class="row"><span class="k">The metric</span><span class="v">${esc(last.metric)}</span></div>
+        <div class="row"><span class="k">The read · ${esc(fmtDate(last.at))}</span><span class="v">${esc(last.constraint)}</span></div>
+        <div class="row"><span class="k">The experiment</span><span class="v">${esc(last.experimentTitle)}</span></div>
       </div>
-      <p class="eyebrow" style="margin-top:2rem">What happened?</p>
-      <div class="choices" role="group" aria-label="What happened?">
-        ${LEARNING_OPTIONS.map(x => `<button class="choice" data-outcome="${x.key}" aria-pressed="${o === x.key}"><span class="ind"></span><span class="txt"><span class="t">${esc(x.t)}</span></span></button>`).join('')}
+      <p class="eyebrow" style="margin-top:2rem">For each thing you watched</p>
+      <div class="outcomes">
+        ${last.watch.map(w => `<div class="outcome-row"><span class="w">${esc(w)}</span><div class="seg" role="group" aria-label="${esc(w)}">${OUTCOME_OPTIONS.map(o => `<button class="seg-b" data-outcome="${esc(w)}" data-val="${o.key}" aria-pressed="${res[w] === o.key}">${o.t}</button>`).join('')}</div></div>`).join('')}
       </div>
-      ${o ? `<div class="response">${esc(LEARNING_RESPONSES[o])}</div>
-      <p class="eyebrow" style="margin-top:1.8rem">What did you learn?</p>
-      <label class="sr-only" for="learnNote">What did you learn?</label>
-      <textarea id="learnNote" placeholder="What changed? What surprised you?">${esc(state.learn.note)}</textarea>
-      <p class="help">That's your next signal.</p>` : ''}
+      ${outcome ? `<div class="response"><p class="k">What we learned</p><p>${esc(outcome.text)}</p>${outcome.changed ? `<p style="margin-top:.6rem"><strong>The read has changed.</strong> The strongest explanation is now <strong>${esc(hypName(outcome.newTop).toLowerCase())}</strong>. Run Friction again and it will start from there.</p>` : `<p style="margin-top:.6rem">The read stands: <strong>${esc(hypName(last.hyp).toLowerCase())}</strong>, now ${esc(confidenceLabelText(outcome.p[last.hyp]).toLowerCase())}.</p>`}</div>
+      <p class="eyebrow" style="margin-top:1.6rem">What surprised you?</p>
+      <label class="sr-only" for="learnNote">What surprised you?</label>
+      <textarea id="learnNote" placeholder="One line is enough. It becomes the next signal.">${esc(state.learn.note)}</textarea>` : ''}
       <div class="nav">
         <button class="btn btn-ghost" data-go="arrival">← Back</button>
-        <button class="btn btn-primary" data-close-loop ${o ? '' : 'disabled'}>Run Friction again <span class="arr">→</span></button>
+        ${outcome ? `<button class="btn btn-primary" data-close-loop>Run Friction again <span class="arr">→</span></button>` : `<button class="btn btn-primary" data-interpret ${done ? '' : 'disabled'}>Update the read <span class="arr">→</span></button>`}
       </div>
     </section>`;
   },
 };
+function confidenceLabelText(p) { return p >= .8 ? 'High confidence' : p >= .65 ? 'Strong pattern' : p >= .45 ? 'Emerging pattern' : 'Early signal'; }
 
 /* ---------- the map ---------- */
 function frictionMap(r) {
@@ -340,25 +296,19 @@ function frictionMap(r) {
   const lbl = { B: [200, 22], S: [352, 324], P: [48, 324] };
   const on = r.low ? [] : r.coherence ? ['BS', 'SP', 'PB'] : [r.zone];
   const edges = ['BS', 'SP', 'PB'].map(k => {
-    const { a, b } = ZONES[k];
-    const primary = on.includes(k);
-    return `<line class="edge ${primary ? 'primary' : k === r.secondary ? 'secondary' : ''}" x1="${V[a][0]}" y1="${V[a][1]}" x2="${V[b][0]}" y2="${V[b][1]}" stroke-width="${primary ? (r.coherence ? 5 : 7) : 1.5}"/>`;
+    const { a, b } = ZONES[k]; const primary = on.includes(k);
+    return `<line class="edge ${primary ? 'primary' : ''}" x1="${V[a][0]}" y1="${V[a][1]}" x2="${V[b][0]}" y2="${V[b][1]}" stroke-width="${primary ? (r.coherence ? 5 : 7) : 1.5}"/>`;
   }).join('');
   const lit = r.low ? [] : r.coherence ? ['B', 'S', 'P'] : [ZONES[r.zone].a, ZONES[r.zone].b];
-  const pools = ['B', 'S', 'P'].map(k => {
-    const o = lit.includes(k); const rad = 8 + 22 * r.lensNorm[k];
-    return `<g class="pool-c"><circle cx="${V[k][0]}" cy="${V[k][1]}" r="${rad.toFixed(1)}" fill="var(--lens-${k})" opacity="${o ? .22 : .1}"/><circle cx="${V[k][0]}" cy="${V[k][1]}" r="6" fill="var(--lens-${k})" opacity="${o ? 1 : .45}"/></g>`;
-  }).join('');
-  let fx, fy;
-  if (r.low) { fx = 200; fy = 208; }
-  else if (r.coherence) { fx = 200; fy = 208; }
-  else { const { a, b } = ZONES[r.zone]; const wa = r.lensNorm[a] + .01, wb = r.lensNorm[b] + .01; let tt = wb / (wa + wb); tt = .3 + .4 * tt; fx = V[a][0] + (V[b][0] - V[a][0]) * tt; fy = V[a][1] + (V[b][1] - V[a][1]) * tt; }
+  const pools = ['B', 'S', 'P'].map(k => { const o = lit.includes(k); const rad = 8 + 22 * r.lensNorm[k];
+    return `<g class="pool-c"><circle cx="${V[k][0]}" cy="${V[k][1]}" r="${rad.toFixed(1)}" fill="var(--lens-${k})" opacity="${o ? .22 : .1}"/><circle cx="${V[k][0]}" cy="${V[k][1]}" r="6" fill="var(--lens-${k})" opacity="${o ? 1 : .45}"/></g>`; }).join('');
+  let fx = 200, fy = 208;
+  if (!r.low && !r.coherence) { const { a, b } = ZONES[r.zone]; const wa = r.lensNorm[a] + .01, wb = r.lensNorm[b] + .01; let tt = wb / (wa + wb); tt = .3 + .4 * tt; fx = V[a][0] + (V[b][0] - V[a][0]) * tt; fy = V[a][1] + (V[b][1] - V[a][1]) * tt; }
   const labelAbove = fy > 200;
-  return `<svg class="map" viewBox="0 0 400 340" role="img" aria-label="Friction map: ${ZONES[r.zone].name}">
+  return `<svg class="map" viewBox="0 0 400 340" role="img" aria-label="Friction map">
     ${edges}${pools}
     ${['B', 'S', 'P'].map(k => `<text class="vertex ${lit.includes(k) ? 'on' : ''}" x="${lbl[k][0]}" y="${lbl[k][1]}" text-anchor="middle">${LENSES[k].name.toUpperCase()}</text>`).join('')}
-    ${r.low ? '' : `<g class="fp"><circle class="ring" cx="${fx}" cy="${fy}" r="14"/><circle class="ring r2" cx="${fx}" cy="${fy}" r="14"/><circle cx="${fx}" cy="${fy}" r="9" fill="var(--sun)" stroke="#fff" stroke-width="3"/></g>
-    <text class="fp-label" x="${fx}" y="${labelAbove ? fy - 24 : fy + 34}" text-anchor="middle">FRICTION</text>`}
+    ${r.low ? '' : `<g class="fp"><circle class="ring" cx="${fx}" cy="${fy}" r="14"/><circle class="ring r2" cx="${fx}" cy="${fy}" r="14"/><circle cx="${fx}" cy="${fy}" r="9" fill="var(--sun)" stroke="#fff" stroke-width="3"/></g><text class="fp-label" x="${fx}" y="${labelAbove ? fy - 24 : fy + 34}" text-anchor="middle">FRICTION</text>`}
   </svg>`;
 }
 
@@ -369,92 +319,91 @@ function bind() {
   app.querySelector('[data-back]')?.addEventListener('click', back);
   app.querySelector('[data-next]')?.addEventListener('click', next);
   app.querySelectorAll('[data-cost]').forEach(i => i.addEventListener('input', e => { state.cost[e.target.dataset.cost] = e.target.value; }));
+  app.querySelectorAll('select[data-cost]').forEach(i => i.addEventListener('change', e => { state.cost[e.target.dataset.cost] = e.target.value; }));
   app.querySelectorAll('[data-reveal]').forEach(b => b.addEventListener('click', () => reveal(b.hasAttribute('data-skip'))));
   app.querySelector('[data-copy]')?.addEventListener('click', copySummary);
-  app.querySelectorAll('[data-outcome]').forEach(b => b.addEventListener('click', () => { state.learn.outcome = b.dataset.outcome; render(); }));
+  app.querySelectorAll('[data-outcome]').forEach(b => b.addEventListener('click', () => { state.learn.results[b.dataset.outcome] = b.dataset.val; render(); }));
+  app.querySelector('[data-interpret]')?.addEventListener('click', interpret);
   app.querySelector('#learnNote')?.addEventListener('input', e => { state.learn.note = e.target.value; });
   app.querySelector('[data-close-loop]')?.addEventListener('click', closeLoop);
   requestAnimationFrame(() => app.querySelectorAll('.bar .fill').forEach(f => { f.style.width = f.dataset.w + '%'; }));
 }
 function enable(sel, on) { const b = app.querySelector(sel); if (b) b.disabled = !on; const bar = $('#actionbar .btn'); if (bar) bar.disabled = !on; }
 function capText(q, sel) { return q.max ? `${sel.length} of ${q.max} chosen` : ''; }
-function nudge(i) {
-  const b = app.querySelector(`[data-opt="${i}"]`); if (!b) return;
-  b.classList.remove('nudge'); void b.offsetWidth; b.classList.add('nudge');
-  const cap = app.querySelector('.cap'); if (cap) cap.textContent = 'Deselect one to choose another';
-}
+function nudge(i) { const b = app.querySelector(`[data-opt="${i}"]`); if (!b) return; b.classList.remove('nudge'); void b.offsetWidth; b.classList.add('nudge'); const cap = app.querySelector('.cap'); if (cap) cap.textContent = 'Deselect one to choose another'; }
 
 function begin() {
-  state.answers = {}; state.cost = { managers: '', hours: '', rate: '' }; state.result = null;
-  go('question', { q: 0 });
+  state.session = newSession(); state.result = null; state.sel = [];
+  state.cost = { managers: '', hours: '', rate: '', revenue: 'Prefer not to say', profit: 'Prefer not to say' };
+  state.current = nextQuestion(state.session);
+  go('question');
 }
 function choose(i) {
-  const q = queue()[state.q]; const cur = state.answers[q.id] || [];
+  const q = state.current; const cur = state.sel;
   let nextSel;
-  if (q.type === 'multi') {
-    if (cur.includes(i)) nextSel = cur.filter(x => x !== i);
-    else if (q.max && cur.length >= q.max) { nudge(i); return; }
-    else nextSel = [...cur, i];
-  } else nextSel = [i];
-  state.answers[q.id] = nextSel;
+  if (q.multi) { if (cur.includes(i)) nextSel = cur.filter(x => x !== i); else if (q.max && cur.length >= q.max) { nudge(i); return; } else nextSel = [...cur, i]; }
+  else nextSel = [i];
+  state.sel = nextSel;
   app.querySelectorAll('[data-opt]').forEach(b => b.setAttribute('aria-pressed', nextSel.includes(+b.dataset.opt)));
   enable('[data-next]', nextSel.length > 0);
   const cap = app.querySelector('.cap'); if (cap) cap.textContent = capText(q, nextSel);
-  if (q.type === 'single' && !reduced) setTimeout(next, 260);
+  if (!q.multi && !reduced) setTimeout(next, 260);
 }
 function next() {
-  const list = queue(); const q = list[state.q];
-  if (!isComplete(q, state.answers)) return;
-  // clear answers to questions that are no longer in the path (e.g. execution_why after changing execution)
-  const after = queue();
-  if (state.q < after.length - 1) go('question', { q: state.q + 1 });
-  else go('cost');
+  if (!state.sel.length || rendering) return;
+  applyAnswer(state.session, state.current.id, state.sel);
+  const q = nextQuestion(state.session);
+  if (!q) return go('cost', { current: null, sel: [] });
+  go('question', { current: q, sel: [] });
 }
 function back() {
-  if (state.screen === 'cost') return go('question', { q: queue().length - 1 });
-  if (state.q === 0) return go('arrival');
-  go('question', { q: state.q - 1 });
+  if (state.screen === 'cost') { const last = state.session.asked.at(-1); const sel = state.session.answers[last] || []; undoLast(state.session); return go('question', { current: byId[last], sel: sel.slice() }); }
+  if (!state.session.asked.length) return go('arrival');
+  const last = state.session.asked.at(-1); const sel = state.session.answers[last] || [];
+  undoLast(state.session); go('question', { current: byId[last], sel: sel.slice() });
 }
 function reveal(skip) {
   const cost = skip ? null : { managers: +state.cost.managers || 0, hours: +state.cost.hours || 0, rate: +state.cost.rate || 0 };
-  // drop answers to questions not on the final path
-  const ids = new Set(queue().map(q => q.id));
-  for (const k of Object.keys(state.answers)) if (!ids.has(k)) delete state.answers[k];
-  const r = analyze(state.answers, cost);
+  const ranges = skip ? {} : { revenue: state.cost.revenue, profit: state.cost.profit };
+  const r = diagnose(state.session, cost, ranges);
   state.result = r;
-  state.history.push({ at: Date.now(), zone: r.zone, low: !!r.low, constraint: r.low ? 'Low friction' : r.play.constraint, move: r.play.move.t, question: r.play.question, metric: r.play.metric.t, confidence: r.confidence, lens: r.lensNorm, closed: false });
+  state.history.push({ at: Date.now(), hyp: r.top, second: r.second, logit: { ...state.session.logit }, zone: r.zone, low: !!r.low,
+    constraint: r.low ? 'Low friction' : r.play.constraint, experimentTitle: r.low ? 'Hold the picture' : r.play.move.t, watch: r.low ? ['Whether this picture holds'] : r.experiment.watch, days: r.low ? 90 : r.experiment.days, closed: false });
   if (state.history.length > 12) state.history = state.history.slice(-12);
-  persist();
-  go('result');
+  persist(); go('result');
+}
+function interpret() {
+  const last = state.history.at(-1);
+  state.learn.outcome = applyOutcome(last, state.learn.results);
+  render();
 }
 function closeLoop() {
   const last = state.history.at(-1);
-  last.closed = true; last.outcome = state.learn.outcome; last.learned = state.learn.note.trim(); last.closedAt = Date.now();
-  persist(); state.learn = { outcome: null, note: '' }; begin();
+  last.closed = true; last.results = state.learn.results; last.learned = state.learn.note.trim(); last.closedAt = Date.now();
+  if (state.learn.outcome) { last.newTop = state.learn.outcome.newTop; last.logitAfter = state.learn.outcome.logit; }
+  persist(); state.learn = { results: {}, note: '', outcome: null }; begin();
 }
 function summaryText() {
-  const r = state.result; const Z = ZONES[r.zone]; const p = r.play; const e = r.estimate;
-  if (r.low) return ['FRICTION DIAGNOSIS', '', LOW_FRICTION.name, LOW_FRICTION.summary, '', LOW_FRICTION.detail, '', LOW_FRICTION.watch, '', location.origin + location.pathname].join('\n');
+  const r = state.result;
+  if (r.low) return ['FRICTION — CURRENT READ', '', LOW_FRICTION.name, LOW_FRICTION.summary, '', LOW_FRICTION.detail, '', location.origin + location.pathname].join('\n');
+  const p = r.play, e = r.experiment, est = r.estimate;
   return [
-    'FRICTION DIAGNOSIS', '',
-    `PRIMARY FRICTION: ${Z.name} — ${Z.label}`, Z.summary, `Confidence: ${CONFIDENCE[r.confidence].label}`, '',
-    `THE CONSTRAINT: ${p.constraint}`, p.diagnosis, '', 'Causal chain: ' + p.chain.join(' → '), '',
-    'What\'s reinforcing it:', ...r.forces.map(f => `  · ${f.t}`), '',
-    'What it\'s costing: ' + p.consequences.join(', '),
-    e ? `Illustrative estimate: ${fmt(e.hoursYear)} hours a year${e.dollars ? ` (≈ $${fmt(e.dollars)})` : ''} — based on your inputs, not an audit.` : '', '',
-    `POSSIBLE BLIND SPOT: ${p.blind}`, '',
-    `WHAT NOT TO DO: ${p.notDo.t} ${p.notDo.d}`, '',
-    `GUIDING PRINCIPLE: ${p.policy}`, `ONE MOVE: ${p.move.t}`, ...p.move.steps.map((s, i) => `  ${i + 1}. ${s}`), '',
-    'FROM THE READING:', ...p.reading.map(b => `  ${b.title} (${b.author}): ${b.idea}`), '',
-    `ONE QUESTION: ${p.question}`, '', `ONE METRIC: ${p.metric.t}. ${p.metric.d}`, '',
-    'Signal → Understand → Decide → Act → Learn', location.origin + location.pathname,
+    'FRICTION — CURRENT READ', '',
+    `${p.constraint} (${r.label.label})`, p.diagnosis, '',
+    'What supports this:', ...r.supports.slice(0, 5).map(x => `  · ${x.obs} (${x.strength})`),
+    r.contradicts.length ? 'What cuts against it:\n' + r.contradicts.slice(0, 3).map(x => `  · ${x.obs}`).join('\n') : '',
+    r.open ? `Still to understand: is it ${hypName(r.top).toLowerCase()}, or ${hypName(r.second).toLowerCase()}?${r.open.question ? ' Ask: ' + r.open.question : ''}` : '', '',
+    `WHERE IT SITS: ${ZONES[r.zone].name} — ${ZONES[r.zone].label}`, '',
+    'WHAT IT\'S COSTING: ' + p.consequences.join(', '), est ? `Illustrative estimate: ${fmt(est.hoursYear)} hours a year${est.dollars ? ` (≈ $${fmt(est.dollars)})` : ''}.` : '', r.econ ? `${r.econ.t} (${r.econ.conf} confidence)` : '', '',
+    `POSSIBLE BLIND SPOT: ${p.blind}`, '', `WHAT NOT TO DO: ${p.notDo.t} ${p.notDo.d}`, '',
+    `EXPERIMENT (${e.days} days): ${e.hypothesis}`, ...e.steps.map((s, i) => `  ${i + 1}. ${s}`), 'Watch: ' + e.watch.join('; '), '',
+    `ONE QUESTION: ${p.question}`, '', 'Signal → Hypothesis → Question → Evidence → Act → Learn', location.origin + location.pathname,
   ].filter(x => x !== null).join('\n');
 }
 async function copySummary() {
   const b = app.querySelector('[data-copy]');
-  try { await navigator.clipboard.writeText(summaryText()); b.textContent = 'Copied'; }
-  catch { b.textContent = 'Select and copy'; window.prompt('Your diagnosis', summaryText()); }
-  setTimeout(() => { b.textContent = 'Copy diagnosis'; }, 1800);
+  try { await navigator.clipboard.writeText(summaryText()); b.textContent = 'Copied'; } catch { b.textContent = 'Select and copy'; window.prompt('Your read', summaryText()); }
+  setTimeout(() => { b.textContent = 'Copy the read'; }, 1800);
 }
 function fmtDate(ts) { try { return new Date(ts).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); } catch { return ''; } }
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && state.screen === 'how') go('arrival'); });

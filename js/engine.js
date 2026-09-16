@@ -1,120 +1,160 @@
-// Friction v2 — engine. Pure functions, no DOM.
-import { CORE, FOLLOWUPS, INVERSION, LENSES, MECH_LENS, ZONES, PLAYBOOKS } from './content.js';
+// Friction v3 — engine. Deterministic actor-critic over hypotheses. Pure functions plus a session object.
+import { HYPOTHESES, HYP_ORDER, OPENER, QUESTIONS, INVERSION, ALL_QUESTIONS, ACTOR, ZONES, PLAYBOOKS, EXPERIMENTS, ECON_READS, PROFILE_ROWS, confidenceLabel } from './content.js';
 
-const MECHS = Object.keys(MECH_LENS);
-const ALL = [...CORE, ...FOLLOWUPS, INVERSION];
-export const byId = Object.fromEntries(ALL.map(q => [q.id, q]));
-const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
+const PRIOR = -1.386; // p = 0.20
+const LOGIT_MIN = -4, LOGIT_MAX = 3.2; // p stays inside [0.02, 0.96]: the read can be strong, never certain
+const sigmoid = x => 1 / (1 + Math.exp(-x));
+const clampL = x => Math.max(LOGIT_MIN, Math.min(LOGIT_MAX, x));
+export const byId = Object.fromEntries(ALL_QUESTIONS.map(q => [q.id, q]));
 
-// answers: { [questionId]: [optionIndex, ...] }
-export function selected(answers) {
+/* ---------- session ---------- */
+export function newSession() {
+  return { asked: [], answers: {}, logit: Object.fromEntries(HYP_ORDER.map(h => [h, PRIOR])), history: [] };
+}
+export function confidences(s) { return Object.fromEntries(HYP_ORDER.map(h => [h, sigmoid(s.logit[h])])); }
+export function ranked(s) { const p = confidences(s); return HYP_ORDER.slice().sort((a, b) => p[b] - p[a]); }
+
+/* ---------- critic: turn an answer into signals and update every hypothesis ---------- */
+export function applyAnswer(s, qid, indices) {
+  const q = byId[qid]; if (!q) return;
+  if (!s.asked.includes(qid)) s.asked.push(qid);
+  s.answers[qid] = indices.slice();
+  recompute(s);
+}
+export function undoLast(s) {
+  const qid = s.asked.pop(); if (!qid) return;
+  delete s.answers[qid]; s.history.pop(); recompute(s);
+}
+export function recompute(s) {
+  s.logit = Object.fromEntries(HYP_ORDER.map(h => [h, PRIOR]));
+  s.history = [];
+  for (const qid of s.asked) {
+    const q = byId[qid];
+    for (const i of s.answers[qid] || []) {
+      const opt = q.options[i]; if (!opt) continue;
+      for (const h in opt.sig) s.logit[h] = clampL(s.logit[h] + opt.sig[h]);
+    }
+    s.history.push(ranked(s)[0]);
+  }
+}
+export function signals(s) {
   const out = [];
-  for (const q of ALL) for (const i of answers[q.id] || []) if (q.options[i]) out.push({ q, opt: q.options[i] });
+  for (const qid of s.asked) { const q = byId[qid]; for (const i of s.answers[qid] || []) { const opt = q.options[i]; if (opt) out.push({ qid, q, opt }); } }
   return out;
 }
 
-// Core severities only (used to decide follow-ups). Same shape as full mechanisms.
-export function mechanisms(answers, { includeSide = true } = {}) {
-  const m = Object.fromEntries(MECHS.map(k => [k, 0]));
-  for (const { q, opt } of selected(answers)) {
-    if (q.mech && MECHS.includes(q.mech) && q.type === 'single') m[q.mech] = Math.max(m[q.mech], opt.s || 0);
-    if (includeSide && opt.side) for (const k in opt.side) m[k] += opt.side[k];
-  }
-  // implied evidence can lift a mechanism, but never more than 1.5 levels above what the person said directly
-  const direct = {};
-  for (const { q, opt } of selected(answers)) if (q.mech && MECHS.includes(q.mech) && q.type === 'single') direct[q.mech] = Math.max(direct[q.mech] ?? 0, opt.s || 0);
-  for (const k of MECHS) { if (includeSide && direct[k] !== undefined) m[k] = Math.min(m[k], direct[k] + 1.5); m[k] = clamp(m[k], 0, 3); }
-  return m;
+/* ---------- actor: what should we ask next? ---------- */
+function discrimination(q, h) {
+  const w = q.options.map(o => o.sig[h] || 0);
+  return (Math.max(...w) - Math.min(...w)) / 3.6;
 }
-
-// Severity from the core question alone, before side bumps. Used to break ties honestly:
-// what the person said directly outranks what other answers implied.
-export function coreSeverity(answers) {
-  const c = Object.fromEntries(MECHS.map(k => [k, 0]));
-  for (const { q, opt } of selected(answers)) {
-    if (q.mech && MECHS.includes(q.mech) && q.type === 'single') c[q.mech] = Math.max(c[q.mech], opt.s || 0);
+export function questionValue(s, q, p) {
+  const askedLenses = new Set(s.asked.map(id => byId[id].lens).filter(Boolean));
+  let v = 0;
+  for (const h of HYP_ORDER) {
+    const d = discrimination(q, h); if (!d) continue;
+    const u = 4 * p[h] * (1 - p[h]);
+    const imp = HYPOTHESES[h].importance * (0.5 + p[h]);
+    v += u * imp * d;
   }
-  return c;
+  v *= q.act;
+  if (q.lens && !askedLenses.has(q.lens) && s.asked.length >= 2) v *= 1.4; // cover every lens early
+  return v;
 }
-
-// Which follow-ups to ask, given the core answers. At most three, strongest signal first.
-export function pickFollowups(answers) {
-  const m = mechanisms(answers);
-  return FOLLOWUPS.filter(f => f.when(m)).sort((x, y) => y.priority(m) - x.priority(m)).slice(0, 3);
+export function nextQuestion(s) {
+  if (!s.asked.includes('opener')) return OPENER;
+  if (s.asked.includes('inversion')) return null;
+  const p = confidences(s);
+  const n = s.asked.length - 1; // core questions asked so far
+  const r = ranked(s);
+  const clear = p[r[0]] >= ACTOR.stopConfidence && (p[r[0]] - p[r[1]]) >= ACTOR.stopMargin;
+  const quiet = p[r[0]] < .3; // nothing is rising: stop asking, say so
+  if (n >= ACTOR.maxQuestions || (n >= ACTOR.minQuestions && (clear || quiet))) return INVERSION;
+  const candidates = QUESTIONS.filter(q => !s.asked.includes(q.id) && (!q.gate || q.gate(p)));
+  if (!candidates.length) return INVERSION;
+  return candidates.map(q => [questionValue(s, q, p), q]).sort((a, b) => b[0] - a[0])[0][1];
 }
+export function progress(s) { return Math.min(1, s.asked.length / (ACTOR.maxQuestions + 2)); }
 
-export function analyze(answers, cost) {
-  const m = mechanisms(answers);
-  const lens = {};
-  for (const k in LENSES) lens[k] = LENSES[k].mechs.reduce((s, x) => s + m[x], 0) / 3;
+/* ---------- diagnosis ---------- */
+export function diagnose(s, cost, ranges = {}) {
+  const p = confidences(s);
+  const r = ranked(s);
+  const top = r[0], second = r[1], third = r[2];
+  const low = p[top] < .42;
+  const lensOf = h => HYPOTHESES[h].lens;
+  const topLenses = new Set([top, second, third].map(lensOf));
+  const coherence = !low && p[top] < .6 && (p[top] - p[third]) < .1 && topLenses.size === 3;
 
-  const direct = { BS: 0, SP: 0, PB: 0 };
-  for (const { opt } of selected(answers)) if (opt.e) for (const k in opt.e) direct[k] += opt.e[k];
-  const edge = {};
-  for (const k of ['BS', 'SP', 'PB']) {
-    const { a, b } = ZONES[k];
-    edge[k] = 0.5 * (lens[a] + lens[b]) + 0.5 * Math.min(lens[a], lens[b]) + 0.35 * direct[k];
+  // lens loads and zone
+  const load = { B: 0, S: 0, P: 0 };
+  for (const h of HYP_ORDER) load[lensOf(h)] += p[h] * HYPOTHESES[h].importance;
+  const maxLoad = Math.max(...Object.values(load)) || 1;
+  const lensNorm = Object.fromEntries(Object.keys(load).map(k => [k, load[k] / maxLoad]));
+  const otherLensHyp = r.find(h => lensOf(h) !== lensOf(top));
+  const pair = new Set([lensOf(top), lensOf(otherLensHyp)]);
+  const zone = coherence ? 'BSP' : Object.keys(ZONES).find(k => k !== 'BSP' && pair.has(ZONES[k].a) && pair.has(ZONES[k].b));
+  const loads = Object.entries(load).sort((a, b) => b[1] - a[1]);
+  const dominant = !coherence && loads[0][1] - loads[1][1] >= 1.0 ? loads[0][0] : null;
+
+  // evidence for and against the current read
+  const strength = w => Math.abs(w) >= 1.2 ? 'High' : Math.abs(w) >= .6 ? 'Medium' : 'Low';
+  const supports = [], contradicts = [];
+  for (const { q, opt } of signals(s)) {
+    const w = opt.sig[top] || 0;
+    if (w >= .3) supports.push({ obs: opt.obs || opt.t, strength: strength(w), w, from: q.title });
+    else if (w <= -.3) contradicts.push({ obs: opt.obs || opt.t, strength: strength(w), w, from: q.title });
   }
-  const ranked = Object.keys(edge).sort((x, y) => edge[y] - edge[x] || x.localeCompare(y));
-  const vals = Object.values(lens);
-  // coherence: every lens carrying friction, none standing out, and no single mechanism severe enough to be the constraint on its own
-  const coreSev = coreSeverity(answers);
-  const standout = Math.max(...Object.values(coreSev)) >= 2.5; // judged on direct answers, not implied bumps
-  const coherence = !standout && Math.min(...vals) >= 1.4 && (Math.max(...vals) - Math.min(...vals)) <= 0.7 && (edge[ranked[0]] - edge[ranked[1]]) < 0.35;
-  const zone = coherence ? 'BSP' : ranked[0];
-  const secondary = coherence ? ranked[0] : ranked[1];
+  supports.sort((a, b) => b.w - a.w); contradicts.sort((a, b) => a.w - b.w);
 
-  // the constraint: the most severe mechanism inside the zone's lenses
-  const zoneLenses = coherence ? ['B', 'S', 'P'] : [ZONES[zone].a, ZONES[zone].b];
-  const candidates = zoneLenses.flatMap(k => LENSES[k].mechs);
-  const core = coreSev;
-  const order = [...candidates];
-  const constraint = candidates.sort((x, y) => m[y] - m[x] || core[y] - core[x] || order.indexOf(x) - order.indexOf(y))[0];
-  const play = PLAYBOOKS[constraint];
+  // what we still need to know: the unasked question that best separates the top two
+  let open = null;
+  const competing = p[second] >= p[top] - .2 || p[top] < .8;
+  if (competing) {
+    const cands = QUESTIONS.filter(q => !s.asked.includes(q.id));
+    const sep = q => { const d = q.options.map(o => (o.sig[top] || 0) - (o.sig[second] || 0)); return Math.max(...d) - Math.min(...d); };
+    const best = cands.map(q => [sep(q), q]).sort((a, b) => b[0] - a[0])[0];
+    open = { between: [top, second], question: best && best[0] > 1.0 ? best[1].title : null };
+  }
 
-  // low friction: nothing rose to a level worth calling a constraint
-  const maxSevEarly = Math.max(...Object.values(m));
-  const low = maxSevEarly < 1.25 && Math.max(...vals) < 1;
-  // dominant lens: one lens far ahead of both others, so the zone is less certain than the constraint
-  const sortedLens = Object.entries(lens).sort((a, b) => b[1] - a[1]);
-  const dominant = !coherence && sortedLens[0][1] - sortedLens[1][1] >= 1.0 ? sortedLens[0][0] : null;
+  // did the read change during the conversation?
+  const mid = s.history[Math.floor(s.history.length / 2)];
+  const changedMind = !low && s.history.length >= 6 && mid && mid !== top && p[mid] >= .35 ? { from: mid, to: top } : null;
 
-  // reinforcing forces: from answers first (follow-ups, inversion, decision detail), then the playbook pool
-  const answered = selected(answers).filter(x => x.opt.force).map(x => ({ t: x.opt.force, src: x.q.id }));
+  // reinforcing forces: inversion answers first, then the playbook pattern, three at most from the pattern
+  const play = PLAYBOOKS[top];
   const seen = new Set(); const forces = [];
-  for (const f of [...answered.filter(x => x.src === 'inversion'), ...answered.filter(x => x.src !== 'inversion')]) {
-    if (!seen.has(f.t)) { seen.add(f.t); forces.push(f); }
-  }
-  // fill from the pattern only up to three in total; pattern forces are labelled as such, never passed off as evidence
+  for (const { q, opt } of signals(s)) if (opt.force && !seen.has(opt.force)) { seen.add(opt.force); forces.push({ t: opt.force, src: 'you' }); }
   for (const t of play.forces) if (forces.length < 3 && !seen.has(t)) { seen.add(t); forces.push({ t, src: 'pattern' }); }
-  const forcesOut = forces.slice(0, 4);
 
-  // confidence
-  const margin = coherence ? 0 : edge[ranked[0]] - edge[ranked[1]];
-  const followupsAnswered = FOLLOWUPS.filter(f => (answers[f.id] || []).length).length;
-  const spread = Math.max(...vals) - Math.min(...vals);
-  let confidence = 'emerging';
-  if (!coherence && margin >= 0.55 && followupsAnswered >= 1 && spread >= 0.6) confidence = 'high';
-  else if (coherence ? true : margin >= 0.25) confidence = 'moderate';
-  // a dominant lens with a clear top mechanism is a confident constraint even when the zone is a near tie
-  const maxSev = Math.max(...Object.values(m));
-  if ((dominant || standout) && maxSev >= 2.5 && confidence === 'emerging') confidence = 'moderate';
-  if (maxSev < 1.5) confidence = 'emerging';
-
-  // illustrative cost
   let estimate = null;
   if (cost && cost.managers > 0 && cost.hours > 0) {
     const hoursYear = cost.managers * cost.hours * 48;
     estimate = { managers: cost.managers, hours: cost.hours, hoursYear, rate: cost.rate || null, dollars: cost.rate ? hoursYear * cost.rate : null };
   }
+  const econ = low ? null : (ECON_READS.find(e => e.when(p, ranges)) || null);
+  const profile = PROFILE_ROWS.map(row => ({ k: row.k, expected: row.expected, observed: row.observe(p) }));
+  const label = confidenceLabel(p[top]);
+  const experiment = EXPERIMENTS[top];
 
-  const maxLens = Math.max(1, ...vals);
-  const lensNorm = Object.fromEntries(Object.keys(lens).map(k => [k, lens[k] / maxLens]));
-
-  return { m, lens, lensNorm, edge, ranked, zone, secondary, coherence, constraint, play, forces: forcesOut, confidence, margin, estimate, maxSev, followupsAnswered, low, dominant, core };
+  return { p, ranked: r, top, second, third, low, coherence, zone, dominant, lensNorm, load, supports, contradicts, open, changedMind, forces: forces.slice(0, 4), play, experiment, estimate, econ, profile, label, margin: p[top] - p[second], asked: s.asked.slice() };
 }
 
-export function isComplete(q, answers) {
-  const sel = answers[q.id];
-  return Array.isArray(sel) && sel.length > 0;
+/* ---------- learn: the experiment result is the reward signal ---------- */
+export function applyOutcome(entry, results) {
+  const exp = EXPERIMENTS[entry.hyp];
+  let out = exp && exp.outcome ? exp.outcome(results) : null;
+  if (!out) {
+    const vals = Object.values(results);
+    const ups = vals.filter(v => v === 'up').length, downs = vals.filter(v => v === 'down').length;
+    if (ups >= 2) out = { text: 'The friction decreased on most of what you watched. The hypothesis held. Run Friction again to find what is now the constraint.', delta: { [entry.hyp]: 1.0 } };
+    else if (ups === 0 && downs >= 1) out = { text: 'It got worse. Either the move was aimed at a symptom, or something is reinforcing the friction harder than expected. The runner-up explanation rises.', delta: { [entry.hyp]: -.9, [entry.second]: .7 } };
+    else if (ups === 0) out = { text: 'No change. Either the move was too small to register, or the constraint is somewhere else. The runner-up explanation rises.', delta: { [entry.hyp]: -.5, [entry.second]: .5 } };
+    else out = { text: 'A partial result. Something moved and something didn\'t, which usually means the hypothesis is right about the mechanism and wrong about where it starts.', delta: { [entry.hyp]: .2, [entry.second]: .3 } };
+  }
+  const logit = { ...entry.logit };
+  for (const h in out.delta) logit[h] = clampL((logit[h] ?? PRIOR) + out.delta[h]);
+  const p = Object.fromEntries(HYP_ORDER.map(h => [h, sigmoid(logit[h])]));
+  const newTop = HYP_ORDER.slice().sort((a, b) => p[b] - p[a])[0];
+  return { text: out.text, logit, p, newTop, changed: newTop !== entry.hyp };
 }
