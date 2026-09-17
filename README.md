@@ -64,7 +64,10 @@ Signal → Hypothesis → Question → Evidence → Decision → Act → Learn.
   or "our inference"; they are never mixed.
 - **Counterfactual.** What-not-to-do is framed as a prediction: if the read is right,
   the sensible-looking fix should make it worse, and why.
-- **Blind spot.** A secondary hypothesis with an evidence level and the cheapest test.
+- **Blind spot.** A real secondary hypothesis: it states what its cheapest test would show if it
+  is true and if it is false, so it can lose. The result is evidence in the belief (held or didn't
+  hold), and if it holds the experiment gains a step and a thing to watch. It is untested until
+  the person reports the result on their return.
 - **Experiment and learning.** Each intervention has an experiment as the Actor sees
   it: action, target, duration, expected effect, three things to watch. On return the
   user reports each as improved, unchanged or worse. The outcome becomes evidence in

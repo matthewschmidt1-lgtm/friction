@@ -564,3 +564,5 @@ table.profile tr.primary td:first-child{font-weight:700}
 .config li.lead{font-weight:700; color:var(--sun-deep)}
 .decision-note{margin:0 0 .9rem; padding:.9rem 1.1rem; border-radius:14px; background:rgba(44,140,158,.08); color:var(--ink); line-height:1.5}
 .decision-note .k{display:block; font-family:var(--font-mono); font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--tide-deep); margin-bottom:.2rem}
+
+.blind-meta span strong{color:#fff; font-weight:700}

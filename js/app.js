@@ -1,5 +1,5 @@
 // Friction v3 — app shell. The user sees a conversation; the engine sees hypotheses.
-import { LENSES, ZONES, ZONE_BY_CONSTRAINT, HYPOTHESES, COST, STAGES, CONSEQUENCE_WHY, LEVERAGE_WHY, LOW_FRICTION, OUTCOME_OPTIONS, INVERSION, CHAIN_STAGES, STAGE_ROLE, BLIND_TESTS, COUNTERFACTUALS } from './content.js';
+import { LENSES, ZONES, ZONE_BY_CONSTRAINT, HYPOTHESES, COST, STAGES, CONSEQUENCE_WHY, LEVERAGE_WHY, LOW_FRICTION, OUTCOME_OPTIONS, INVERSION, CHAIN_STAGES, STAGE_ROLE, BLIND_RESULT_OPTIONS, COUNTERFACTUALS } from './content.js';
 import { newSession, applyAnswer, undoLast, nextQuestion, progress, diagnose, applyOutcome, confidences, byId } from './engine.js';
 
 const STORAGE = 'friction.v3';
@@ -12,7 +12,7 @@ const fmt = n => Math.round(n).toLocaleString();
 const state = {
   screen: 'arrival', session: newSession(), current: null, sel: [],
   cost: { managers: '', hours: '', rate: '', revenue: 'Prefer not to say', profit: 'Prefer not to say' },
-  result: null, learn: { results: {}, note: '', outcome: null }, history: load(),
+  result: null, learn: { results: {}, note: '', outcome: null, blind: null }, history: load(),
 };
 function load() { try { return JSON.parse(localStorage.getItem(STORAGE) || '[]'); } catch { return []; } }
 function persist() { try { localStorage.setItem(STORAGE, JSON.stringify(state.history)); } catch {} }
@@ -228,8 +228,13 @@ const SCREENS = {
 
       <div class="jstep stagger">
         ${step('04', 'Possible blind spot', 'What everyone may have learned to accept')}
-        <div class="blind"><p class="eyebrow">A secondary hypothesis</p><h2 class="display md">${esc(play.blind)}</h2><p>Sometimes the hardest thing to see is what everyone has learned to accept. This is not a finding. It is the hypothesis that would explain why the primary one has persisted.</p>
-          <div class="blind-meta"><div><span class="k">Evidence</span><span>${esc(r.label.key === 'high' ? 'Moderate' : r.label.key === 'strong' ? 'Moderate' : 'Emerging')}</span></div><div><span class="k">Cheapest test</span><span>${esc(BLIND_TESTS[r.top] || '')}</span></div></div></div>
+        <div class="blind"><p class="eyebrow">A secondary hypothesis · untested</p><h2 class="display md">${esc(play.blind)}</h2><p>Sometimes the hardest thing to see is what everyone has learned to accept. This is not a finding. It is the hypothesis that would explain why the primary one has persisted, and it can be wrong.</p>
+          <div class="blind-meta">
+            <div><span class="k">Cheapest test</span><span>${esc(r.blind.test || '')}</span></div>
+            <div><span class="k">If it's true, you'll see</span><span>${esc(r.blind.ifTrue || '')}</span></div>
+            <div><span class="k">If it's false, you'll see</span><span>${esc(r.blind.ifFalse || '')}</span></div>
+            <div><span class="k">Why it matters</span><span>Run it before the experiment. If it holds, add this step: <strong>${esc(r.blind.step || '')}</strong> And watch: <strong>${esc(r.blind.watch || '')}</strong>. If it doesn't hold, the read weakens and the lighter experiment is enough.</span></div>
+          </div></div>
       </div>
 
       <div class="jstep stagger">
@@ -283,11 +288,13 @@ const SCREENS = {
         <div class="row"><span class="k">The read · ${esc(fmtDate(last.at))}</span><span class="v">${esc(last.constraint)}</span></div>
         <div class="row"><span class="k">The experiment</span><span class="v">${esc(last.experimentTitle)}</span></div>
       </div>
+      ${last.blindTest ? `<p class="eyebrow" style="margin-top:2rem">The blind-spot test</p>
+      <div class="outcome-row"><span class="w">${esc(last.blindTest)}</span><div class="seg" role="group" aria-label="Blind-spot test result">${BLIND_RESULT_OPTIONS.map(o => `<button class="seg-b" data-blind="${o.key}" aria-pressed="${state.learn.blind === o.key}">${o.t}</button>`).join('')}</div></div>` : ''}
       <p class="eyebrow" style="margin-top:2rem">For each thing you watched</p>
       <div class="outcomes">
         ${last.watch.map(w => `<div class="outcome-row"><span class="w">${esc(w)}</span><div class="seg" role="group" aria-label="${esc(w)}">${OUTCOME_OPTIONS.map(o => `<button class="seg-b" data-outcome="${esc(w)}" data-val="${o.key}" aria-pressed="${res[w] === o.key}">${o.t}</button>`).join('')}</div></div>`).join('')}
       </div>
-      ${outcome ? `<div class="response"><p class="k">What we learned</p><p class="verdict-line"><strong>${outcome.verdict === 'strengthened' ? 'The experiment strengthened the read.' : outcome.verdict === 'weakened' ? 'The experiment weakened the read.' : 'The experiment weakened part of the read.'}</strong> Predicted: all ${outcome.predicted} improve. Observed: ${outcome.observed} of ${outcome.predicted}.</p><p>${esc(outcome.text)}</p>${outcome.changed ? `<p style="margin-top:.6rem"><strong>The read has changed.</strong> The strongest explanation is now <strong>${esc(hypName(outcome.newTop).toLowerCase())}</strong>. Run Friction again and it will start from there.</p>` : `<p style="margin-top:.6rem">The read stands: <strong>${esc(hypName(last.hyp).toLowerCase())}</strong>, now ${esc(confidenceLabelText(outcome.p[last.hyp]).toLowerCase())}.</p>`}</div>
+      ${outcome ? `<div class="response"><p class="k">What we learned</p>${outcome.blindText ? `<p>${esc(outcome.blindText)}</p>` : ''}<p class="verdict-line"><strong>${outcome.verdict === 'strengthened' ? 'The experiment strengthened the read.' : outcome.verdict === 'weakened' ? 'The experiment weakened the read.' : 'The experiment weakened part of the read.'}</strong> Predicted: all ${outcome.predicted} improve. Observed: ${outcome.observed} of ${outcome.predicted}.</p><p>${esc(outcome.text)}</p>${outcome.changed ? `<p style="margin-top:.6rem"><strong>The read has changed.</strong> The strongest explanation is now <strong>${esc(hypName(outcome.newTop).toLowerCase())}</strong>. Run Friction again and it will start from there.</p>` : `<p style="margin-top:.6rem">The read stands: <strong>${esc(hypName(last.hyp).toLowerCase())}</strong>, now ${esc(confidenceLabelText(outcome.p[last.hyp]).toLowerCase())}.</p>`}</div>
       <p class="eyebrow" style="margin-top:1.6rem">What surprised you?</p>
       <label class="sr-only" for="learnNote">What surprised you?</label>
       <textarea id="learnNote" placeholder="One line is enough. It becomes the next signal.">${esc(state.learn.note)}</textarea>` : ''}
@@ -333,6 +340,7 @@ function bind() {
   app.querySelectorAll('[data-reveal]').forEach(b => b.addEventListener('click', () => reveal(b.hasAttribute('data-skip'))));
   app.querySelector('[data-copy]')?.addEventListener('click', copySummary);
   app.querySelectorAll('[data-outcome]').forEach(b => b.addEventListener('click', () => { state.learn.results[b.dataset.outcome] = b.dataset.val; render(); }));
+  app.querySelectorAll('[data-blind]').forEach(b => b.addEventListener('click', () => { state.learn.blind = b.dataset.blind; render(); }));
   app.querySelector('[data-interpret]')?.addEventListener('click', interpret);
   app.querySelector('#learnNote')?.addEventListener('input', e => { state.learn.note = e.target.value; });
   app.querySelector('[data-close-loop]')?.addEventListener('click', closeLoop);
@@ -378,20 +386,20 @@ function reveal(skip) {
   const r = diagnose(state.session, cost, ranges);
   state.result = r;
   state.history.push({ at: Date.now(), hyp: r.top, second: r.second, decision: r.decision, evidence: state.session.evidence.slice(), model: r.modelVersion, zone: r.zone, low: !!r.low,
-    constraint: r.low ? 'Low friction' : r.play.constraint, experimentTitle: r.low ? 'Hold the picture' : (r.decisionPlay || r.play).move.t, watch: r.low ? ['Whether this picture holds'] : r.experiment.watch, days: r.low ? 90 : r.experiment.days, closed: false });
+    blindTest: r.low ? null : r.blind.test, blindStep: r.low ? null : r.blind.step, blindWatch: r.low ? null : r.blind.watch, constraint: r.low ? 'Low friction' : r.play.constraint, experimentTitle: r.low ? 'Hold the picture' : (r.decisionPlay || r.play).move.t, watch: r.low ? ['Whether this picture holds'] : r.experiment.watch, days: r.low ? 90 : r.experiment.days, closed: false });
   if (state.history.length > 12) state.history = state.history.slice(-12);
   persist(); go('result');
 }
 function interpret() {
   const last = state.history.at(-1);
-  state.learn.outcome = applyOutcome(last, state.learn.results);
+  state.learn.outcome = applyOutcome(last, state.learn.results, state.learn.blind);
   render();
 }
 function closeLoop() {
   const last = state.history.at(-1);
-  last.closed = true; last.results = state.learn.results; last.learned = state.learn.note.trim(); last.closedAt = Date.now();
+  last.closed = true; last.results = state.learn.results; last.blindResult = state.learn.blind; last.learned = state.learn.note.trim(); last.closedAt = Date.now();
   if (state.learn.outcome) { last.newTop = state.learn.outcome.newTop; last.evidenceAfter = state.learn.outcome.evidence; last.pAfter = state.learn.outcome.p; }
-  persist(); state.learn = { results: {}, note: '', outcome: null }; begin();
+  persist(); state.learn = { results: {}, note: '', outcome: null, blind: null }; begin();
 }
 function summaryText() {
   const r = state.result;
@@ -406,7 +414,7 @@ function summaryText() {
     r.open ? `Still to understand: is it ${hypName(r.top).toLowerCase()}, or ${hypName(r.second).toLowerCase()}?${r.open.question ? ' Ask: ' + r.open.question : ''}` : '', '',
     `WHERE IT SITS: ${ZONES[r.zone].name} — ${ZONES[r.zone].label}`, '',
     'WHAT IT\'S COSTING: ' + p.consequences.join(', '), est ? `Illustrative estimate: ${fmt(est.hoursYear)} hours a year${est.dollars ? ` (≈ $${fmt(est.dollars)})` : ''}.` : '', r.econ ? `${r.econ.t} (${r.econ.conf} confidence)` : '', '',
-    `POSSIBLE BLIND SPOT: ${p.blind}`, '', `WHAT NOT TO DO: ${p.notDo.t} ${p.notDo.d}`, '',
+    `POSSIBLE BLIND SPOT (untested): ${p.blind}`, `Test: ${r.blind.test}`, `If true: ${r.blind.ifTrue}`, `If false: ${r.blind.ifFalse}`, `If it holds, add to the experiment: ${r.blind.step} Watch: ${r.blind.watch}`, '', `WHAT NOT TO DO: ${p.notDo.t} ${p.notDo.d}`, '',
     `EXPERIMENT (${e.days} days): ${e.hypothesis}`, ...e.steps.map((s, i) => `  ${i + 1}. ${s}`), 'Watch: ' + e.watch.join('; '), '',
     `ONE QUESTION: ${p.question}`, '', 'Signal → Hypothesis → Question → Evidence → Act → Learn', location.origin + location.pathname,
   ].filter(x => x !== null).join('\n');

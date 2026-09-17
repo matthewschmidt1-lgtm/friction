@@ -5,7 +5,7 @@
 // Decision: the intervention with the highest expected value under the belief.
 // Learn: experiment outcomes are evidence too, so the belief and the decision move together.
 import { HYPOTHESES, HYP_ORDER, OPENER, QUESTIONS, INVERSION, ALL_QUESTIONS, ACTOR, ZONES, PLAYBOOKS, EXPERIMENTS, EXPERIMENT_SPECS, ECON_READS, PROFILE_ROWS, PROFILE_PRIMARY, confidenceLabel,
-         NETWORK, NETWORK_ORDER, INTERVENTIONS, QUESTION_COST, VOI, MODEL_VERSION } from './content.js';
+         NETWORK, NETWORK_ORDER, INTERVENTIONS, QUESTION_COST, VOI, MODEL_VERSION, BLIND_SPOTS } from './content.js';
 
 export const byId = Object.fromEntries(ALL_QUESTIONS.map(q => [q.id, q]));
 const N = HYP_ORDER.length;
@@ -136,17 +136,23 @@ export function nextQuestion(s) {
 export function voiTable(s) { const p = s.belief.marg; return QUESTIONS.filter(q => !s.asked.includes(q.id) && (!q.gate || q.gate(p))).map(q => ({ id: q.id, ...valueOfInformation(s, q) })).sort((a, b) => b.score - a.score); }
 export function progress(s) { return Math.min(1, s.asked.length / (ACTOR.maxQuestions + 2)); }
 
-/* ---------- diagnosis ---------- */
-export function diagnose(s, cost, ranges = {}) {
-  const p = s.belief.marg;
-  const r0 = ranked(s);
-  // The read prefers the cause over its effects: among states within reach of the top marginal that
-  // the person gave direct evidence for, take the most upstream one in the causal order.
-  const direct = {}; for (const { opt } of signals(s)) for (const h in opt.sig) if (opt.sig[h] > 0) direct[h] = (direct[h] || 0) + opt.sig[h];
+/* ---------- the read: prefer the cause over its effects ---------- */
+// Among states within reach of the top marginal that carry enough direct evidence, take the most
+// upstream one in the causal order. Used by the diagnosis and by the learning step alike.
+export function readFrom(p, evidence) {
+  const r0 = HYP_ORDER.slice().sort((a, b) => p[b] - p[a]);
+  const direct = {}; for (const e of evidence) if (e.src !== 'outcome' && e.src !== 'blind') for (const h in e.w) if (e.w[h] > 0) direct[h] = (direct[h] || 0) + e.w[h];
   const reach = r0.filter(h => p[h] >= p[r0[0]] - .12 && (direct[h] || 0) >= 2.5);
   const upstream = NETWORK_ORDER.find(h => reach.includes(h));
   const top = upstream || r0[0];
-  const r = [top, ...r0.filter(h => h !== top)];
+  return [top, ...r0.filter(h => h !== top)];
+}
+
+/* ---------- diagnosis ---------- */
+export function diagnose(s, cost, ranges = {}) {
+  const p = s.belief.marg;
+  const r = readFrom(p, s.evidence);
+  const top = r[0];
   const second = r[1], third = r[2];
   const low = p[top] < .42;
   const lensOf = h => HYPOTHESES[h].lens;
@@ -195,7 +201,7 @@ export function diagnose(s, cost, ranges = {}) {
   const decisionPlay = PLAYBOOKS[decision];
   const seen = new Set(); const forces = [];
   const profile = PROFILE_ROWS.map(row => ({ k: row.k, expected: row.expected, good: row.good, observed: row.observe(p), primary: (PROFILE_PRIMARY[top] || []).includes(row.k) }));
-  if (low) return { p, ranked: r, top, second, third, low, coherence: false, zone, dominant: null, lensNorm, load, supports: [], contradicts: [], open: null, changedMind: null, forces: [], play, decision: top, decisionPlay: play, experiment: EXPERIMENTS[top], spec: EXPERIMENT_SPECS[top], evs, mpe: [], estimate: null, econ: null, profile, label: { key: 'none', label: 'No significant friction', d: 'Nothing you said rose above a weak signal. The strongest was ' + HYPOTHESES[top].name.toLowerCase() + ', and it is not worth acting on.' }, margin: p[top] - p[second], asked: s.asked.slice(), modelVersion: MODEL_VERSION };
+  if (low) return { p, ranked: r, top, second, third, low, coherence: false, zone, dominant: null, lensNorm, load, supports: [], contradicts: [], open: null, changedMind: null, forces: [], play, decision: top, decisionPlay: play, experiment: EXPERIMENTS[top], spec: EXPERIMENT_SPECS[top], evs, mpe: [], estimate: null, econ: null, profile, blind: { statement: '', status: 'n/a' }, label: { key: 'none', label: 'No significant friction', d: 'Nothing you said rose above a weak signal. The strongest was ' + HYPOTHESES[top].name.toLowerCase() + ', and it is not worth acting on.' }, margin: p[top] - p[second], asked: s.asked.slice(), modelVersion: MODEL_VERSION };
   for (const { opt } of signals(s)) if (opt.force && !seen.has(opt.force)) { seen.add(opt.force); forces.push({ t: opt.force, src: 'you' }); }
   for (const t of play.forces) if (forces.length < 3 && !seen.has(t)) { seen.add(t); forces.push({ t, src: 'pattern' }); }
 
@@ -217,11 +223,18 @@ export function diagnose(s, cost, ranges = {}) {
     decision: { key: decision, action: (spec || {}).action, ev: evs[0].ev, alternatives: evs.slice(1, 3).map(x => ({ key: x.key, ev: x.ev })) },
     nextTest: open && open.question ? { kind: 'question', t: open.question } : { kind: 'experiment', t: `${experiment.days}-day ${((spec || {}).action || 'experiment')}`.toLowerCase() },
   };
-  return { p, ranked: r, top, second, third, low, coherence, zone, dominant, lensNorm, load, supports, contradicts, open, changedMind, forces: forces.slice(0, 4), play, decision, decisionPlay, experiment, spec, evs, mpe: s.belief.mpe, estimate, econ, profile, label, critic, margin: margin0, asked: s.asked.slice(), modelVersion: MODEL_VERSION };
+  const blind = { statement: play.blind, ...(BLIND_SPOTS[top] || {}), status: 'untested' };
+  critic.blindSpot = { hyp: top, statement: play.blind, test: blind.test, prediction: { ifTrue: blind.ifTrue, ifFalse: blind.ifFalse }, status: 'untested' };
+  return { p, ranked: r, top, second, third, low, coherence, zone, dominant, lensNorm, load, supports, contradicts, open, changedMind, forces: forces.slice(0, 4), play, decision, decisionPlay, experiment, spec, evs, mpe: s.belief.mpe, estimate, econ, profile, label, critic, blind, margin: margin0, asked: s.asked.slice(), modelVersion: MODEL_VERSION };
 }
 
-/* ---------- learn: the experiment result is evidence, and the decision moves with the belief ---------- */
-export function applyOutcome(entry, results) {
+/* ---------- learn: the blind-spot test and the experiment result are both evidence ---------- */
+export function blindEvidence(entry, result) {
+  const spec = BLIND_SPOTS[entry.hyp]; if (!spec || !result || result === 'skipped') return null;
+  const w = result === 'held' ? spec.held : spec.notHeld;
+  return { w, src: 'blind', obs: result === 'held' ? 'Blind-spot test held' : 'Blind-spot test did not hold' };
+}
+export function applyOutcome(entry, results, blindResult) {
   const key = entry.decision || entry.hyp;
   const exp = EXPERIMENTS[key];
   const watch = exp ? exp.watch : Object.keys(results);
@@ -235,10 +248,12 @@ export function applyOutcome(entry, results) {
     else out = { text: `${ups} of ${predicted} improved. The experiment weakened part of the read: the mechanism looks right, but something the read didn't account for is holding the rest. The runner-up explanation rises.`, delta: { [key]: .2, [entry.second]: .4 }, verdict: 'partly weakened' };
   }
   out.verdict = out.verdict || (out.weakened ? 'partly weakened' : (ups === predicted ? 'strengthened' : 'partly weakened'));
-  const evidence = [...(entry.evidence || []), { w: out.delta, src: 'outcome', obs: 'Experiment result' }];
+  const be = blindEvidence(entry, blindResult);
+  const evidence = [...(entry.evidence || []), ...(be ? [be] : []), { w: out.delta, src: 'outcome', obs: 'Experiment result' }];
   const belief = posterior(evidence);
   const p = belief.marg;
-  const newTop = HYP_ORDER.slice().sort((a, b) => p[b] - p[a])[0];
-  const newDecision = expectedValues(p)[0].key;
-  return { text: out.text, evidence, p, newTop, newDecision, changed: newTop !== entry.hyp, decisionChanged: newDecision !== key, verdict: out.verdict, predicted, observed: ups, weakened: out.weakened || null };
+  const newTop = readFrom(p, evidence)[0];
+  const newDecision = expectedValues(p).map(x => ({ ...x, ev: x.key === newTop ? x.ev : x.ev * .88 })).sort((a, b) => b.ev - a.ev)[0].key;
+  const blindText = blindResult === 'held' ? 'The blind-spot test held, which supports the read and means the experiment needed its extra step.' : blindResult === 'notHeld' ? 'The blind-spot test did not hold. That weakens the read on its own, independent of the experiment.' : null;
+  return { text: out.text, blindText, evidence, p, newTop, newDecision, changed: newTop !== entry.hyp, decisionChanged: newDecision !== key, verdict: out.verdict, predicted, observed: ups, weakened: out.weakened || null };
 }

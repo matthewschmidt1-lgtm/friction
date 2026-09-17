@@ -697,20 +697,106 @@ export const CHAIN_STAGES = {
 };
 export const STAGE_ROLE = { 0: 'Origin', 1: 'Transmission', 2: 'Transmission', 3: 'Amplification', 4: 'Amplification', 5: 'Consequence' };
 
-// The blind spot as a secondary hypothesis: a statement, and the cheapest test of it.
-export const BLIND_TESTS = {
-  direction:       'Ask each leader, separately, to write the top three. Count the distinct lists.',
-  focus:           'Ask three managers to name one thing that was formally stopped this year. Count the silences.',
-  economics:       'Ask three people which of the top five priorities makes the most money. Compare the answers.',
-  decision_rights: 'Pick the last three stalled decisions and ask who owned each. Count the shrugs.',
-  information:     'Take the last decision that waited "for data". Ask whether the data existed somewhere at the time.',
-  execution:       'List last quarter\'s commitments. Mark the ones that happened. Ask what happened to the rest.',
-  leverage:        'Ask the three most relied-upon people what they do by hand that the process should do.',
-  centralized:     'Ask three managers which decisions they believe they own without escalation. Compare with what you believe they own.',
-  capability:      'Ask a manager who "isn\'t ready" what they have been shown about how the decision is made. Listen for "nothing".',
-  talent:          'Pull last week\'s calendars for your five best people. Mark the hours on the top three priorities.',
-  trust:           'Ask three people, privately, what they would say in the leadership meeting if there were no cost. Note what they haven\'t said.',
+// ---------- The blind spot as a real secondary hypothesis ----------
+// Each one states what the cheapest test would show if it is true and if it is false, so it can lose.
+// The result is evidence in the belief (held / didn't hold), and if it holds, the experiment changes:
+// an extra step and an extra thing to watch. Untested until the person reports the result.
+export const BLIND_SPOTS = {
+  direction: {
+    test: 'Ask each leader, separately, to write the top three. Count the distinct lists.',
+    ifTrue: 'You get three or more different lists, and each leader is confident theirs is the shared one.',
+    ifFalse: 'The lists match on at least two of three items, and the differences are about wording, not direction.',
+    held: { direction: .9, focus: .3 }, notHeld: { direction: -1.0, execution: .3 },
+    step: 'Before the three-things session, show each leader the other lists. The exercise is not to agree; it is to see that they had not.',
+    watch: 'Leaders who revise their own list after seeing the others',
+  },
+  focus: {
+    test: 'Ask three managers to name one thing that was formally stopped this year. Count the silences.',
+    ifTrue: 'Nobody can name one, or they name something that quietly faded rather than something that was decided.',
+    ifFalse: 'At least two name a specific stop, with a date and a reason.',
+    held: { focus: .9, execution: .2 }, notHeld: { focus: -.9, direction: .3 },
+    step: 'Announce the stop-doing list as a decision, with a date, in the same channel used for new priorities.',
+    watch: 'Stopped items that quietly restart',
+  },
+  economics: {
+    test: 'Ask three people which of the top five priorities makes the most money. Compare the answers.',
+    ifTrue: 'Three different answers, or "all of them", or "that\'s not how we think about it."',
+    ifFalse: 'The same answer twice, with a reason that mentions customers, margin or cash.',
+    held: { economics: .9, information: .2 }, notHeld: { economics: -.9, focus: .3 },
+    step: 'Publish the five value lines to everyone delivering them, not only to leadership.',
+    watch: 'People below leadership who can name the value driver of their own work',
+  },
+  decision_rights: {
+    test: 'Pick the last three stalled decisions and ask who owned each. Count the shrugs.',
+    ifTrue: 'At least two of three get a shrug, two names, or "it depends."',
+    ifFalse: 'Each gets one name, and the name matches who actually moved it.',
+    held: { decision_rights: .9, centralized: .2 }, notHeld: { decision_rights: -1.0, information: .4 },
+    step: 'Publish the three decision rights where the stalls happen, not in a governance document.',
+    watch: 'Decisions still routed to the old owner after publication',
+  },
+  information: {
+    test: 'Take the last decision that waited "for data". Ask whether the data existed somewhere at the time.',
+    ifTrue: 'It existed. Someone had it, or a system had it, and it did not reach the decider in time.',
+    ifFalse: 'It did not exist, or it existed but would not have settled the question.',
+    held: { information: .9, decision_rights: .2 }, notHeld: { information: -1.0, economics: .4 },
+    step: 'Name the person who had the fact and the person who needed it, and connect them directly for the next instance.',
+    watch: 'Decisions made on the first pass without a second request for data',
+  },
+  execution: {
+    test: 'List last quarter\'s commitments. Mark the ones that happened. Ask what happened to the rest.',
+    ifTrue: 'Nobody asked. The rest were quietly re-planned or forgotten, without a decision.',
+    ifFalse: 'Each slip has a reason and a decision attached: stopped, delayed on purpose, or replaced.',
+    held: { execution: .9, focus: .3 }, notHeld: { execution: -.9, focus: .4 },
+    step: 'Review the three protected commitments in public every two weeks, and record any slip as a decision, not an event.',
+    watch: 'Slips that were decided versus slips that just happened',
+  },
+  leverage: {
+    test: 'Ask the three most relied-upon people what they do by hand that the process should do.',
+    ifTrue: 'Each names several things without hesitating, and nobody above them knew.',
+    ifFalse: 'They struggle to name one, or the ones they name are already known and scheduled.',
+    held: { leverage: .9, talent: .3 }, notHeld: { leverage: -1.0, execution: .3 },
+    step: 'Give the person who did the workaround the job of designing its replacement, and the time to do it.',
+    watch: 'New workarounds appearing as old ones are removed',
+  },
+  centralized: {
+    test: 'Ask three managers which decisions they believe they own without escalation. Compare with what you believe they own.',
+    ifTrue: 'Their lists are shorter than yours, or empty, and they are not surprised by the difference.',
+    ifFalse: 'The lists match, and they can name a decision they made this month that you did not see.',
+    held: { centralized: .9, capability: -.3 }, notHeld: { centralized: -1.0, decision_rights: .5 },
+    step: 'Tell the former approvers, by name, that they no longer approve those two decisions, and tell the managers that you have told them.',
+    watch: 'Decisions quietly re-escalated in the first two weeks',
+  },
+  capability: {
+    test: 'Ask a manager who "isn\'t ready" what they have been shown about how the decision is made. Listen for "nothing".',
+    ifTrue: 'They describe being told the outcome was wrong, never how the decision should have been weighed.',
+    ifFalse: 'They describe a specific walk-through, a debrief, or a rule of thumb someone gave them.',
+    held: { capability: .9, centralized: .2 }, notHeld: { capability: -1.0, centralized: .5 },
+    step: 'Write down the three things you weigh when you make this decision, and give them the page before the first coached instance.',
+    watch: 'Debriefs that name a judgment, not a mistake',
+  },
+  talent: {
+    test: 'Pull last week\'s calendars for your five best people. Mark the hours on the top three priorities.',
+    ifTrue: 'Under a third of their hours, and most of the rest is unplanned.',
+    ifFalse: 'Half or more, and the rest is planned work they chose.',
+    held: { talent: .9, leverage: .2 }, notHeld: { talent: -1.0, focus: .4 },
+    step: 'Name who takes the fires that used to go to your best people, before you move the time.',
+    watch: 'Fires that still find their way to the best people',
+  },
+  trust: {
+    test: 'Ask three people, privately, what they would say in the leadership meeting if there were no cost. Note what they haven\'t said.',
+    ifTrue: 'Each has at least one thing, and at least one of them names something you had not heard.',
+    ifFalse: 'They have little to add, and what they have they have already said in the room.',
+    held: { trust: .9, information: .2 }, notHeld: { trust: -1.0, centralized: .4 },
+    step: 'Raise one of the unsaid things yourself in the next meeting, without naming who said it, and act on it.',
+    watch: 'Things said in the meeting that were previously only said privately',
+  },
 };
+export const BLIND_RESULT_OPTIONS = [
+  { key: 'held', t: 'It held' },
+  { key: 'notHeld', t: 'It didn\'t hold' },
+  { key: 'skipped', t: 'Didn\'t run it' },
+];
+
 
 // What not to do, as a counterfactual: if the read is right, the sensible-looking fix should make it worse.
 export const COUNTERFACTUALS = {
