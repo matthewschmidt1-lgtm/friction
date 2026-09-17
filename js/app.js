@@ -151,7 +151,7 @@ const SCREENS = {
   },
 
   result() {
-    const r = state.result; const play = r.play; const Z = ZONES[r.zone]; const exp = r.experiment;
+    const r = state.result; const play = r.play; const Z = ZONES[r.zone]; const exp = r.experiment; const dplay = r.decisionPlay || play;
     const exp_ = (title, sub, body, cls = '') => `<details class="more ${cls}"><summary><b>${title}</b>${sub ? `<span class="sum-line">${sub}</span>` : ''}<i class="caret"></i></summary><div class="more-body">${body}</div></details>`;
     const step = (n, name, tag) => `<div class="step-head"><span class="step-n">${n}</span><span class="step-name">${name}</span>${tag ? `<span class="step-tag">${tag}</span>` : ''}</div>`;
     const est = r.estimate;
@@ -209,6 +209,7 @@ const SCREENS = {
         <div class="expanders">
           ${exp_('Trace how it compounds', 'Origin, transmission, amplification, consequence', `<ol class="chain staged" aria-label="Causal chain">${play.chain.map((c, i) => `<li><span class="stage"><b>${esc((CHAIN_STAGES[r.top] || [])[i] || '')}</b><i>${esc(STAGE_ROLE[i] || '')}</i></span><span>${esc(c)}</span></li>`).join('')}</ol><div class="forces"><p class="eyebrow">What's reinforcing it</p><ul>${r.forces.map(f => `<li class="${f.src === 'pattern' ? 'from-pattern' : 'from-you'}"><small>${f.src === 'pattern' ? 'Our inference' : 'From your answers'}</small><span>${esc(f.t)}</span></li>`).join('')}</ul></div>`)}
           ${exp_('Other explanations we weighed', 'How strongly your answers support each', `<ol class="hyps">${r.ranked.slice(0, 5).map(h => `<li><span class="hyp-bar"><i style="width:${Math.round(r.p[h] * 100)}%"></i></span><span class="hyp-n">${esc(hypName(h))}</span><span class="hyp-l">${esc(confidenceLabelText(r.p[h]))}</span></li>`).join('')}</ol><p class="quiet">Confidence is shown as a label rather than a number on purpose. Nine to twelve answers can rank explanations; they can't measure them.</p>`)}
+          ${r.mpe && r.mpe.length ? exp_('The picture that best explains your answers', 'The configuration of states, in causal order', `<ol class="config">${r.mpe.map(h => `<li class="${h === r.top ? 'lead' : ''}">${esc(hypName(h))}</li>`).join('')}</ol><p class="quiet">The explanations are not independent. Unclear direction makes priority overload more likely; unclear decision rights make escalation more likely. This is the single most probable combination given everything you said, read from cause toward effect.</p>`) : ''}
           ${exp_('How to read this map', 'Three lenses, and the gaps between them', `<p>Each corner is a lens. The pools show how much of the current evidence sits in each one. The friction point sits on the gap between the lens of the current read and the lens of the strongest competing explanation.</p><div class="bars">${lensRow('B')}${lensRow('S')}${lensRow('P')}</div>`)}
         </div>
       </div>
@@ -242,12 +243,14 @@ const SCREENS = {
 
       <div class="jstep stagger">
         ${step('06', 'Take it into the business', 'One experiment, ' + exp.days + ' days')}
+        ${r.decision !== r.top ? `<p class="decision-note"><span class="k">Why this experiment</span>The read is <strong>${esc(hypName(r.top).toLowerCase())}</strong>, but the highest-value move given the uncertainty is to act on <strong>${esc(hypName(r.decision).toLowerCase())}</strong>: it relieves that and part of what sits downstream of it.</p>` : ''}
         <div class="card move experiment">
           <p class="k">Hypothesis</p><p class="t">${esc(exp.hypothesis)}</p>
           ${r.spec ? `<dl class="spec"><div><dt>Action</dt><dd>${esc(r.spec.action)}</dd></div><div><dt>Target</dt><dd>${esc(r.spec.target)}</dd></div><div><dt>Duration</dt><dd>${exp.days} days</dd></div><div><dt>Expected effect</dt><dd>${r.spec.expected.map(esc).join('<br>')}</dd></div></dl>` : ''}
           <p class="k">Steps</p><ol class="steps">${exp.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
           <p class="k">Watch</p><ul class="watchlist">${exp.watch.map(w => `<li>${esc(w)}</li>`).join('')}</ul>
           <p class="watch"><strong>Run it. Come back and tell us what happened.</strong> The point is not to prove the read right. It is to find out where it is wrong.</p>
+          ${r.evs ? exp_('Interventions we weighed', 'Expected value given the uncertainty, minus effort', `<ol class="hyps">${r.evs.slice(0, 5).map(x => `<li><span class="hyp-bar"><i style="width:${Math.round(100 * Math.max(0, x.ev) / Math.max(.001, r.evs[0].ev))}%"></i></span><span class="hyp-n">${esc((x.spec || {}).action || hypName(x.key))}</span><span class="hyp-l">${esc(x.effort)}</span></li>`).join('')}</ol><p class="quiet">Each intervention relieves its own cause fully and downstream effects partly. The bar is the expected relief across everything you might have, weighted by how likely each is, minus the effort of the move.</p>`) : ''}
           ${exp_('Further reading', 'You are not the first to run into this', reading, 'further')}
         </div>
       </div>
@@ -374,8 +377,8 @@ function reveal(skip) {
   const ranges = skip ? {} : { revenue: state.cost.revenue, profit: state.cost.profit };
   const r = diagnose(state.session, cost, ranges);
   state.result = r;
-  state.history.push({ at: Date.now(), hyp: r.top, second: r.second, logit: { ...state.session.logit }, zone: r.zone, low: !!r.low,
-    constraint: r.low ? 'Low friction' : r.play.constraint, experimentTitle: r.low ? 'Hold the picture' : r.play.move.t, watch: r.low ? ['Whether this picture holds'] : r.experiment.watch, days: r.low ? 90 : r.experiment.days, closed: false });
+  state.history.push({ at: Date.now(), hyp: r.top, second: r.second, decision: r.decision, evidence: state.session.evidence.slice(), model: r.modelVersion, zone: r.zone, low: !!r.low,
+    constraint: r.low ? 'Low friction' : r.play.constraint, experimentTitle: r.low ? 'Hold the picture' : (r.decisionPlay || r.play).move.t, watch: r.low ? ['Whether this picture holds'] : r.experiment.watch, days: r.low ? 90 : r.experiment.days, closed: false });
   if (state.history.length > 12) state.history = state.history.slice(-12);
   persist(); go('result');
 }
@@ -387,7 +390,7 @@ function interpret() {
 function closeLoop() {
   const last = state.history.at(-1);
   last.closed = true; last.results = state.learn.results; last.learned = state.learn.note.trim(); last.closedAt = Date.now();
-  if (state.learn.outcome) { last.newTop = state.learn.outcome.newTop; last.logitAfter = state.learn.outcome.logit; }
+  if (state.learn.outcome) { last.newTop = state.learn.outcome.newTop; last.evidenceAfter = state.learn.outcome.evidence; last.pAfter = state.learn.outcome.p; }
   persist(); state.learn = { results: {}, note: '', outcome: null }; begin();
 }
 function summaryText() {

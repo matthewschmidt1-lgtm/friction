@@ -16,3 +16,7 @@ To re-run after changing `js/content.js` or `js/engine.js`: serve the folder, lo
 - `evaluation-v3.json` — the in-character verdicts on the v3 output, with a better/same/worse comparison to round one.
 
 Replay: `scratchpad/run-v3.html` pattern (import engine, `newSession`, loop `nextQuestion` → `applyAnswer` with the persona's answer for that id, then `diagnose`).
+
+## Round three (v4, Bayesian network + VOI + decision network)
+
+- `diagnoses-v4.json` — the same answers replayed through the network engine: read, decision, most probable configuration, top interventions by expected value.

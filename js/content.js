@@ -756,3 +756,48 @@ export const PROFILE_PRIMARY = {
   talent:          ['Dependence on specific people'],
   trust:           ['Candour'],
 };
+
+// ---------- The causal model: a Bayesian network over the eleven hypotheses ----------
+// Each node is a binary state ("this is happening"). Roots carry a prior. Children use a noisy-OR:
+// P(child | parents) = 1 − (1 − leak) × Π over true parents of (1 − strength).
+// The signal weights on answer options are treated as log likelihood ratios against these states,
+// so every piece of content tuned so far carries over unchanged.
+export const MODEL_VERSION = '4.0';
+export const NETWORK = {
+  direction:       { prior: .20, parents: {} },
+  economics:       { prior: .20, parents: {} },
+  capability:      { prior: .15, parents: {} },
+  trust:           { prior: .20, parents: {} },
+  focus:           { leak: .12, parents: { direction: .40, economics: .30 } },
+  information:     { leak: .12, parents: { economics: .25, trust: .30 } },
+  decision_rights: { leak: .14, parents: { direction: .30, trust: .15 } },
+  centralized:     { leak: .12, parents: { decision_rights: .35, capability: .40, trust: .25 } },
+  execution:       { leak: .12, parents: { focus: .45, decision_rights: .30, information: .20 } },
+  leverage:        { leak: .14, parents: { execution: .30, decision_rights: .25 } },
+  talent:          { leak: .12, parents: { leverage: .40, focus: .30 } },
+};
+// A topological order for building configurations and reading the most probable explanation as a chain.
+export const NETWORK_ORDER = ['direction', 'economics', 'capability', 'trust', 'focus', 'information', 'decision_rights', 'centralized', 'execution', 'leverage', 'talent'];
+
+// ---------- The decision model ----------
+// Each intervention relieves its own hypothesis fully and others partly (its causal children, mostly).
+// Expected value = Σ_h P(h) × relief × importance − cost. The experiment is the highest-EV intervention,
+// which need not be the most probable hypothesis: fixing the upstream cause can be worth more.
+export const INTERVENTIONS = {
+  direction:       { relief: { direction: 1.0, focus: .25, decision_rights: .15, execution: .10 }, cost: .06, effort: 'A leadership session and a published list' },
+  focus:           { relief: { focus: 1.0, execution: .25, talent: .15 }, cost: .05, effort: 'Stopping a fifth of the active priorities' },
+  economics:       { relief: { economics: 1.0, focus: .20, information: .15 }, cost: .05, effort: 'Five one-line value traces' },
+  decision_rights: { relief: { decision_rights: 1.0, centralized: .30, execution: .20, leverage: .10 }, cost: .04, effort: 'Three decisions written up and published' },
+  information:     { relief: { information: 1.0, execution: .15 }, cost: .04, effort: 'One information path designed and tested' },
+  execution:       { relief: { execution: 1.0, leverage: .20, talent: .10 }, cost: .06, effort: 'Three protected commitments for a quarter' },
+  leverage:        { relief: { leverage: 1.0, talent: .30, execution: .10 }, cost: .06, effort: 'One workaround designed into the process' },
+  centralized:     { relief: { centralized: 1.0, decision_rights: .15, execution: .15, capability: -.10 }, cost: .05, effort: 'Two decisions moved down for thirty days' },
+  capability:      { relief: { capability: 1.0, centralized: .30 }, cost: .07, effort: 'Four coached instances of one decision' },
+  talent:          { relief: { talent: 1.0, leverage: .15 }, cost: .05, effort: 'One week audited, one block moved' },
+  trust:           { relief: { trust: 1.0, information: .25, centralized: .15, decision_rights: .10 }, cost: .07, effort: 'One meeting changed, every week, for a quarter' },
+};
+
+// ---------- The actor's economics ----------
+// A question costs attention. Value of information has to beat that cost before a question is worth asking.
+export const QUESTION_COST = { base: .006, multi: .004 };
+export const VOI = { minToAsk: .008, infoGainWeight: .06 };
