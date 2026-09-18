@@ -174,99 +174,89 @@ const SCREENS = {
     }
 
     const zoneSummary = (ZONE_BY_CONSTRAINT[r.zone] || {})[r.top] || Z.summary;
-    const openBlock = r.open ? `<div class="open">
+    const sig = x => `<li><span class="sig-s sig-${x.strength.toLowerCase()}">${x.strength}</span><span>${esc(x.obs)}</span></li>`;
+    const openBlock = r.open && r.open.question ? `<div class="open">
         <p class="eyebrow">What we're still trying to understand</p>
-        <p class="open-t">Is the constraint <strong>${esc(hypName(r.top).toLowerCase())}</strong>, or <strong>${esc(hypName(r.second).toLowerCase())}</strong>?</p>
-        ${r.open.secondEvidence && r.open.secondEvidence.length ? `<p class="open-ev"><span class="k">What points to ${esc(hypName(r.second).toLowerCase())}</span>${r.open.secondEvidence.map(x => esc(x.obs)).join(' · ')}</p>` : ''}
-        ${r.open.question ? `<p class="open-q"><span class="k">The question that would tell us</span>${esc(r.open.question)}</p>` : `<p class="quiet">The questions that would separate these have been asked. The experiment below is the next test.</p>`}
-      </div>` : `<div class="open settled"><p class="eyebrow">What we're still trying to understand</p><p class="quiet">Nothing that would change the read. The competing explanations fell away as you answered.</p></div>`;
+        <p class="open-t">Is it <strong>${esc(hypName(r.top).toLowerCase())}</strong>, or <strong>${esc(hypName(r.second).toLowerCase())}</strong>?</p>
+        <p class="open-q"><span class="k">The question that would tell us</span>${esc(r.open.question)}</p>
+      </div>` : '';
+    const why = `
+      <ol class="chain staged" aria-label="Causal chain">${play.chain.map((c, i) => `<li><span class="stage"><b>${esc((CHAIN_STAGES[r.top] || [])[i] || '')}</b><i>${esc(STAGE_ROLE[i] || '')}</i></span><span>${esc(c)}</span></li>`).join('')}</ol>
+      <div class="forces"><p class="eyebrow">What's reinforcing it</p><ul>${r.forces.map(f => `<li class="${f.src === 'pattern' ? 'from-pattern' : 'from-you'}"><small>${f.src === 'pattern' ? 'Our inference' : 'From your answers'}</small><span>${esc(f.t)}</span></li>`).join('')}</ul></div>
+      ${r.contradicts.length ? `<p class="eyebrow" style="margin-top:1rem">What cuts against it</p><ul class="sig against">${r.contradicts.slice(0, 3).map(sig).join('')}</ul>` : ''}
+      ${r.open && r.open.secondEvidence && r.open.secondEvidence.length ? `<p class="eyebrow" style="margin-top:1rem">What points to ${esc(hypName(r.second).toLowerCase())}</p><ul class="sig">${r.open.secondEvidence.map(sig).join('')}</ul>` : ''}
+      <p class="eyebrow" style="margin-top:1rem">Other explanations we weighed</p>
+      <ol class="hyps">${r.ranked.slice(0, 5).map(h => `<li><span class="hyp-bar"><i style="width:${Math.round(r.p[h] * 100)}%"></i></span><span class="hyp-n">${esc(hypName(h))}</span><span class="hyp-l">${esc(confidenceLabelText(r.p[h]))}</span></li>`).join('')}</ol>
+      ${r.mpe && r.mpe.length ? `<p class="eyebrow" style="margin-top:1rem">The picture that best explains your answers</p><ol class="config">${r.mpe.map(h => `<li class="${h === r.top ? 'lead' : ''}">${esc(hypName(h))}</li>`).join('')}</ol>` : ''}
+      <p class="quiet">Confidence is shown as a label rather than a number on purpose. About ten answers can rank explanations; they can't measure them.</p>`;
+    const costBody = `
+      ${est ? `<div class="visible-cost"><p class="k">Capacity cost</p><p class="est-big est-sun">≈ ${est.dollars ? `$${fmt(est.dollars)}` : fmt(est.hoursYear) + ' hours'} a year</p><p class="quiet">${fmt(est.managers)} managers × ${fmt(est.hours)} hours a week × 48 weeks${est.dollars ? `, at $${fmt(est.rate)} per loaded hour` : ''}. Illustrative, based on your inputs. Leadership capacity consumed, not revenue lost.</p></div>` : ''}
+      <div class="downstream"><p class="k">Potential downstream effects</p><ol class="arrows">${play.consequences.map(c => `<li><b>${esc(c)}</b><span>${esc(CONSEQUENCE_WHY[c] || '')}</span></li>`).join('')}</ol></div>
+      ${r.econ ? `<div class="econ"><p class="eyebrow">What your operating profile suggests <span class="econ-conf">· ${esc(r.econ.conf)} confidence</span></p><p class="econ-t">${esc(r.econ.t)}</p><p>${esc(r.econ.d)}</p></div>` : ''}
+      <div class="leverage" style="margin-top:1.2rem"><p class="eyebrow">What that capacity could be doing instead</p><ul>${play.leverage.map(l => `<li><b>${esc(l)}</b><span>${esc(LEVERAGE_WHY[l])}</span></li>`).join('')}</ul></div>
+      <p class="eyebrow" style="margin-top:1.2rem">Expected vs observed</p>
+      <div class="tablewrap"><table class="profile"><thead><tr><th>Trait</th><th>Expected</th><th>Observed</th></tr></thead><tbody>${r.profile.map(row => `<tr class="${row.primary ? 'primary' : ''}"><td>${esc(row.k)}<small>${row.primary ? 'Primary signal' : 'Not a primary signal'}</small></td><td>${esc(row.expected)}</td><td class="obs ${row.good && row.good.includes(row.observed) ? 'obs-ok' : 'obs-off'}">${esc(row.observed)}${row.good && row.good.includes(row.observed) ? '' : ' <span class="flag" title="outside the expected range">◆</span>'}</td></tr>`).join('')}</tbody></table></div>
+      <p class="quiet">Expected is what a business of your shape usually looks like, not a benchmark. Observed comes from your answers.</p>`;
+    const dontBody = `
+      ${COUNTERFACTUALS[r.top] ? `<p class="cf"><span class="k">Counterfactual</span>If this read is right, ${esc(COUNTERFACTUALS[r.top].should)} should ${esc(COUNTERFACTUALS[r.top].worse)}.</p>` : ''}
+      <p class="dont-t">${esc(play.notDo.t)}</p>
+      <p><span class="k">Because</span> ${COUNTERFACTUALS[r.top] ? esc(COUNTERFACTUALS[r.top].because.charAt(0).toUpperCase() + COUNTERFACTUALS[r.top].because.slice(1)) + '. ' : ''}${esc(play.notDo.d)}</p>`;
 
-    return `<section class="screen result journey">
+    return `<section class="screen result journey lean">
 
       <div class="jstep stagger">
-        ${step('01', 'Our current read', 'What appears to be getting in the way')}
+        ${step('01', 'The read', 'What appears to be getting in the way')}
         <div class="friction-head">
           <h1 class="display lg edge-name">${esc(play.constraint)}</h1>
           <details class="conf-pill conf-${r.label.key}"><summary>${esc(r.label.label)}<i class="caret"></i></summary><div class="conf-body">${esc(r.label.d)}</div></details>
         </div>
         <p class="lead">${esc(play.diagnosis)}</p>
-        ${r.changedMind ? `<p class="changed"><span class="k">We changed our mind</span>Earlier in the conversation the pattern pointed to <strong>${esc(hypName(r.changedMind.from).toLowerCase())}</strong>. Your later answers moved it. Friction is meant to do that.</p>` : ''}
-        <div class="evidence">
-          <p class="eyebrow">What supports this</p>
-          <ul class="sig">${r.supports.slice(0, 5).map(x => `<li><span class="sig-s sig-${x.strength.toLowerCase()}">${x.strength}</span><span>${esc(x.obs)}</span></li>`).join('') || '<li><span>Only the opening signal so far.</span></li>'}</ul>
-          ${r.contradicts.length ? `<p class="eyebrow" style="margin-top:1rem">What cuts against it</p><ul class="sig against">${r.contradicts.slice(0, 3).map(x => `<li><span class="sig-s sig-${x.strength.toLowerCase()}">${x.strength}</span><span>${esc(x.obs)}</span></li>`).join('')}</ul>` : ''}
-        </div>
+        ${r.changedMind ? `<p class="changed"><span class="k">We changed our mind</span>Earlier in the conversation the pattern pointed to <strong>${esc(hypName(r.changedMind.from).toLowerCase())}</strong>. Your later answers moved it.</p>` : ''}
+        <div class="evidence"><p class="eyebrow">What supports this</p><ul class="sig">${r.supports.slice(0, 3).map(sig).join('') || '<li><span>Only the opening signal so far.</span></li>'}</ul></div>
         ${openBlock}
       </div>
 
       <div class="jstep stagger">
-        ${step('02', 'Where it sits', Z.label)}
+        ${step('02', 'The gap', Z.label)}
+        ${frictionMap(r)}
         <h2 class="display md">${esc(Z.name)}</h2>
         <p class="lead">${esc(zoneSummary)}</p>
         ${r.coherence ? `<p class="quiet">No single explanation is clearly ahead. The strongest is <strong>${esc(hypName(r.top).toLowerCase())}</strong>, but it is mild. The pattern is the finding.</p>` : ''}
-        ${r.dominant ? `<p class="quiet">The pull comes mostly from <strong>${esc(LENSES[r.dominant].name)}</strong>. The constraint above is the more certain part of this read.</p>` : ''}
-        ${frictionMap(r)}
         <div class="expanders">
-          ${exp_('Trace how it compounds', 'Origin, transmission, amplification, consequence', `<ol class="chain staged" aria-label="Causal chain">${play.chain.map((c, i) => `<li><span class="stage"><b>${esc((CHAIN_STAGES[r.top] || [])[i] || '')}</b><i>${esc(STAGE_ROLE[i] || '')}</i></span><span>${esc(c)}</span></li>`).join('')}</ol><div class="forces"><p class="eyebrow">What's reinforcing it</p><ul>${r.forces.map(f => `<li class="${f.src === 'pattern' ? 'from-pattern' : 'from-you'}"><small>${f.src === 'pattern' ? 'Our inference' : 'From your answers'}</small><span>${esc(f.t)}</span></li>`).join('')}</ul></div>`)}
-          ${exp_('Other explanations we weighed', 'How strongly your answers support each', `<ol class="hyps">${r.ranked.slice(0, 5).map(h => `<li><span class="hyp-bar"><i style="width:${Math.round(r.p[h] * 100)}%"></i></span><span class="hyp-n">${esc(hypName(h))}</span><span class="hyp-l">${esc(confidenceLabelText(r.p[h]))}</span></li>`).join('')}</ol><p class="quiet">Confidence is shown as a label rather than a number on purpose. Nine to twelve answers can rank explanations; they can't measure them.</p>`)}
-          ${r.mpe && r.mpe.length ? exp_('The picture that best explains your answers', 'The configuration of states, in causal order', `<ol class="config">${r.mpe.map(h => `<li class="${h === r.top ? 'lead' : ''}">${esc(hypName(h))}</li>`).join('')}</ol><p class="quiet">The explanations are not independent. Unclear direction makes priority overload more likely; unclear decision rights make escalation more likely. This is the single most probable combination given everything you said, read from cause toward effect.</p>`) : ''}
-          ${exp_('How to read this map', 'Three lenses, and the gaps between them', `<p>Each corner is a lens. The pools show how much of the current evidence sits in each one. The friction point sits on the gap between the lens of the current read and the lens of the strongest competing explanation.</p><div class="bars">${lensRow('B')}${lensRow('S')}${lensRow('P')}</div>`)}
+          ${exp_('Why we think this', 'The chain, what reinforces it, what cuts against it', why)}
+          ${exp_('How to read the map', 'Three lenses, and the gaps between them', `<p>Each corner is a lens. The pools show how much of the current evidence sits in each one. The friction point sits on the gap between the lens of the current read and the lens of the strongest competing explanation.</p><div class="bars">${lensRow('B')}${lensRow('S')}${lensRow('P')}</div>`)}
+          ${exp_('What it\'s costing', est ? `≈ ${est.dollars ? '$' + fmt(est.dollars) : fmt(est.hoursYear) + ' hours'} a year in leadership capacity, and what it may lead to` : 'The business consequence, and what the capacity could do instead', costBody)}
         </div>
       </div>
 
       <div class="jstep stagger">
-        ${step('03', 'What it\'s costing', est ? 'Visible cost first, then what it may lead to' : 'What it may lead to')}
-        ${est ? `<div class="visible-cost"><p class="k">Capacity cost</p><p class="est-big est-sun">≈ ${est.dollars ? `$${fmt(est.dollars)}` : fmt(est.hoursYear) + ' hours'} a year</p><p class="quiet">${fmt(est.managers)} managers × ${fmt(est.hours)} hours a week × 48 weeks${est.dollars ? `, at $${fmt(est.rate)} per loaded hour` : ''}. Illustrative estimate based on your inputs. This is leadership capacity consumed, not revenue lost.</p></div>` : ''}
-        <div class="downstream"><p class="k">Potential downstream effects</p><p class="quiet" style="margin-bottom:.5rem">The financial consequence may be larger than the visible capacity cost.</p><ol class="arrows">${play.consequences.map(c => `<li><b>${esc(c)}</b><span>${esc(CONSEQUENCE_WHY[c] || '')}</span></li>`).join('')}<li><b>Opportunity cost</b><span>What the capacity could have gone to, below.</span></li></ol></div>
-        ${r.econ ? `<div class="econ"><p class="eyebrow">What your operating profile suggests <span class="econ-conf">· ${esc(r.econ.conf)} confidence</span></p><p class="econ-t">${esc(r.econ.t)}</p><p>${esc(r.econ.d)}</p></div>` : ''}
-        <div class="leverage" style="margin-top:1.2rem">
-          <p class="eyebrow">What that capacity could be doing instead</p>
-          <ul>${play.leverage.map(l => `<li><b>${esc(l)}</b><span>${esc(LEVERAGE_WHY[l])}</span></li>`).join('')}</ul>
-        </div>
-        ${exp_('Expected vs observed', 'Your operating profile, on the traits your answers can see', `<div class="tablewrap"><table class="profile"><thead><tr><th>Trait</th><th>Expected</th><th>Observed</th></tr></thead><tbody>${r.profile.map(row => `<tr class="${row.primary ? 'primary' : ''}"><td>${esc(row.k)}<small>${row.primary ? 'Primary signal' : 'Not a primary signal'}</small></td><td>${esc(row.expected)}</td><td class="obs ${row.good && row.good.includes(row.observed) ? 'obs-ok' : 'obs-off'}">${esc(row.observed)}${row.good && row.good.includes(row.observed) ? '' : ' <span class="flag" title="outside the expected range">◆</span>'}</td></tr>`).join('')}</tbody></table></div><p class="quiet">Expected is what a business of your shape usually looks like, not a benchmark. Observed comes from your answers. A row marked "not a primary signal" can sit inside the expected range even when the read is strong: the bottleneck isn't always that leaders do everything themselves, it is often that decisions still travel upward. Numeric benchmarks by industry and size are a later phase, once there is real data to draw them from.</p><ul class="cons" style="margin-top:.8rem">${play.consequences.map(c => `<li><b>${esc(c)}</b><span>${esc(CONSEQUENCE_WHY[c] || '')}</span></li>`).join('')}</ul>`)}
-      </div>
-
-      <div class="jstep stagger">
-        ${step('04', 'Possible blind spot', 'What everyone may have learned to accept')}
-        <div class="blind"><p class="eyebrow">A secondary hypothesis · untested</p><h2 class="display md">${esc(play.blind)}</h2><p>Sometimes the hardest thing to see is what everyone has learned to accept. This is not a finding. It is the hypothesis that would explain why the primary one has persisted, and it can be wrong.</p>
-          <div class="blind-meta">
-            <div><span class="k">Cheapest test</span><span>${esc(r.blind.test || '')}</span></div>
-            <div><span class="k">If it's true, you'll see</span><span>${esc(r.blind.ifTrue || '')}</span></div>
-            <div><span class="k">If it's false, you'll see</span><span>${esc(r.blind.ifFalse || '')}</span></div>
-            <div><span class="k">Why it matters</span><span>Run it before the experiment. If it holds, add this step: <strong>${esc(r.blind.step || '')}</strong> And watch: <strong>${esc(r.blind.watch || '')}</strong>. If it doesn't hold, the read weakens and the lighter experiment is enough.</span></div>
-          </div></div>
-      </div>
-
-      <div class="jstep stagger">
-        ${step('05', 'What not to do', 'The fix that would make it worse')}
-        <div class="dont">
-          ${COUNTERFACTUALS[r.top] ? `<p class="cf"><span class="k">Counterfactual</span>If this read is right, ${esc(COUNTERFACTUALS[r.top].should)} should ${esc(COUNTERFACTUALS[r.top].worse)}.</p>` : ''}
-          <p class="dont-t">${esc(play.notDo.t)}</p>
-          <p><span class="k">Because</span> ${COUNTERFACTUALS[r.top] ? esc(COUNTERFACTUALS[r.top].because.charAt(0).toUpperCase() + COUNTERFACTUALS[r.top].because.slice(1)) + '. ' : ''}${esc(play.notDo.d)}</p>
-        </div>
-      </div>
-
-      <div class="jstep stagger">
-        ${step('06', 'Take it into the business', 'One experiment, ' + exp.days + ' days')}
+        ${step('03', 'What to test', 'One experiment, ' + exp.days + ' days')}
         ${r.decision !== r.top ? `<p class="decision-note"><span class="k">Why this experiment</span>The read is <strong>${esc(hypName(r.top).toLowerCase())}</strong>, but the highest-value move given the uncertainty is to act on <strong>${esc(hypName(r.decision).toLowerCase())}</strong>: it relieves that and part of what sits downstream of it.</p>` : ''}
+        <div class="blind compact">
+          <p class="eyebrow">First, test the blind spot · untested</p>
+          <h2 class="display md">${esc(play.blind)}</h2>
+          <p><strong>${esc(r.blind.test || '')}</strong></p>
+          ${exp_('What you\'d see, and why it matters', '', `<div class="blind-meta"><div><span class="k">If it's true</span><span>${esc(r.blind.ifTrue || '')}</span></div><div><span class="k">If it's false</span><span>${esc(r.blind.ifFalse || '')}</span></div><div><span class="k">If it holds</span><span>Add this step to the experiment: <strong>${esc(r.blind.step || '')}</strong> And watch: <strong>${esc(r.blind.watch || '')}</strong>. If it doesn't hold, the read weakens and the lighter experiment is enough.</span></div></div>`, 'on-dark')}
+        </div>
         <div class="card move experiment">
           <p class="k">Hypothesis</p><p class="t">${esc(exp.hypothesis)}</p>
-          ${r.spec ? `<dl class="spec"><div><dt>Action</dt><dd>${esc(r.spec.action)}</dd></div><div><dt>Target</dt><dd>${esc(r.spec.target)}</dd></div><div><dt>Duration</dt><dd>${exp.days} days</dd></div><div><dt>Expected effect</dt><dd>${r.spec.expected.map(esc).join('<br>')}</dd></div></dl>` : ''}
+          ${r.spec ? `<p class="spec-line"><b>${esc(r.spec.action)}</b> · ${esc(r.spec.target)} · ${exp.days} days</p>` : ''}
           <p class="k">Steps</p><ol class="steps">${exp.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
           <p class="k">Watch</p><ul class="watchlist">${exp.watch.map(w => `<li>${esc(w)}</li>`).join('')}</ul>
           <p class="watch"><strong>Run it. Come back and tell us what happened.</strong> The point is not to prove the read right. It is to find out where it is wrong.</p>
-          ${r.evs ? exp_('Interventions we weighed', 'Expected value given the uncertainty, minus effort', `<ol class="hyps">${r.evs.slice(0, 5).map(x => `<li><span class="hyp-bar"><i style="width:${Math.round(100 * Math.max(0, x.ev) / Math.max(.001, r.evs[0].ev))}%"></i></span><span class="hyp-n">${esc((x.spec || {}).action || hypName(x.key))}</span><span class="hyp-l">${esc(x.effort)}</span></li>`).join('')}</ol><p class="quiet">Each intervention relieves its own cause fully and downstream effects partly. The bar is the expected relief across everything you might have, weighted by how likely each is, minus the effort of the move.</p>`) : ''}
+          ${exp_('What not to do', play.notDo.t, dontBody)}
+          ${r.evs ? exp_('Interventions we weighed', 'Expected value given the uncertainty, minus effort', `<ol class="hyps">${r.evs.slice(0, 5).map(x => `<li><span class="hyp-bar"><i style="width:${Math.round(100 * Math.max(0, x.ev) / Math.max(.001, r.evs[0].ev))}%"></i></span><span class="hyp-n">${esc((x.spec || {}).action || hypName(x.key))}</span><span class="hyp-l">${esc(x.effort)}</span></li>`).join('')}</ol>`) : ''}
           ${exp_('Further reading', 'You are not the first to run into this', reading, 'further')}
         </div>
       </div>
 
       <div class="jstep stagger">
-        ${step('07', 'One question', 'For your next leadership meeting')}
+        ${step('04', 'One question', 'For your next leadership meeting')}
         <p class="q-inv">${esc(play.question)}</p>
       </div>
 
       <div class="jstep stagger">
-        ${step('08', 'Learn', 'Close the loop')}
+        ${step('05', 'Learn', 'Close the loop')}
         <div class="card">
           <div class="loop"><b>Signal</b><i>→</i>Hypothesis<i>→</i>Question<i>→</i>Evidence<i>→</i>Act<i>→</i><b>Learn</b></div>
           <p class="lede" style="font-size:1rem">The goal isn't a better score. It's to find out whether the gap has narrowed. This page will remember the read and the experiment, and update both when you come back.</p>

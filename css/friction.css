@@ -566,3 +566,17 @@ table.profile tr.primary td:first-child{font-weight:700}
 .decision-note .k{display:block; font-family:var(--font-mono); font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--tide-deep); margin-bottom:.2rem}
 
 .blind-meta span strong{color:#fff; font-weight:700}
+
+/* ---------- lean diagnosis ---------- */
+.lean .jstep{padding-bottom:2rem}
+.lean .map{margin:.4rem auto 1rem}
+.lean .evidence{margin-top:1rem}
+.lean .sig li{padding:.55rem .8rem}
+.blind.compact{padding:1.2rem 1.3rem 1rem}
+.blind.compact .display{font-size:clamp(1.1rem,3.3vw,1.35rem)}
+.blind.compact>p{margin-top:.6rem; font-size:1rem}
+.blind.compact details.more{margin-top:.8rem}
+.blind.compact .blind-meta{border-top:0; padding-top:0; margin-top:0}
+.spec-line{color:var(--ink-dim); margin:.2rem 0 .6rem}
+.spec-line b{color:var(--deep)}
+.experiment details.more{margin-top:.7rem}
