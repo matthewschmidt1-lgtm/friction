@@ -583,3 +583,24 @@ table.profile tr.primary td:first-child{font-weight:700}
 
 /* bold text inside expanders on the dark blind-spot card stays white (was losing to details.more .more-body strong) */
 details.more.on-dark .more-body strong, details.more.on-dark .more-body b{color:#fff}
+
+/* ---------- diagnosis: more air between and within sections ---------- */
+.lean .jstep{padding-bottom:3.4rem; margin-bottom:0}
+.lean .jstep+.jstep{padding-top:3.4rem}
+.lean .step-head{margin-bottom:1.5rem}
+.lean .friction-head{margin-bottom:.9rem}
+.lean .changed{margin-top:1.5rem}
+.lean .evidence{margin-top:1.6rem}
+.lean .open{margin-top:1.6rem}
+.lean .map{margin:.6rem auto 1.6rem}
+.lean .jstep>h2.display.md{margin-bottom:.9rem}
+.lean .expanders{margin-top:1.8rem; gap:.7rem}
+.lean .decision-note{margin-bottom:1.6rem}
+.lean .blind.compact{margin-bottom:1.6rem}
+.lean .experiment .k{margin-top:1.1rem}
+.lean .experiment .watch{margin-top:1.2rem}
+.lean .experiment details.more{margin-top:.9rem}
+@media (max-width:640px){
+  .lean .jstep{padding-bottom:2.9rem}
+  .lean .jstep+.jstep{padding-top:2.9rem}
+}
