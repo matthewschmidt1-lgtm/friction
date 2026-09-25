@@ -580,3 +580,6 @@ table.profile tr.primary td:first-child{font-weight:700}
 .spec-line{color:var(--ink-dim); margin:.2rem 0 .6rem}
 .spec-line b{color:var(--deep)}
 .experiment details.more{margin-top:.7rem}
+
+/* bold text inside expanders on the dark blind-spot card stays white (was losing to details.more .more-body strong) */
+details.more.on-dark .more-body strong, details.more.on-dark .more-body b{color:#fff}
