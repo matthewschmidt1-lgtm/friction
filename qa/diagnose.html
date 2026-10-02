@@ -10,7 +10,7 @@ try {
   const L = [];
   for (const pid of ids) {
     const p = all[pid]; const s = newSession();
-    L.push(`════════ ${pid}: ${p.name || ''}`, '', 'QUESTIONS THE APP ASKED, IN ORDER, AND THE ANSWER GIVEN');
+    L.push(`======== ${pid}: ${p.name || ''}`, '', 'QUESTIONS THE APP ASKED, IN ORDER, AND THE ANSWER GIVEN');
     let q, n = 0;
     while ((q = nextQuestion(s))) {
       n++; let idx = p.answers[q.id];
