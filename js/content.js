@@ -44,6 +44,7 @@ export const HYPOTHESES = {
   conflict_avoidance: { lens: 'P', name: 'Disagreement is avoided rather than worked through', importance: 1.0 },
   blame:           { lens: 'P', name: 'Problems are met with blame rather than ownership', importance: .9 },
   loss:            { lens: 'P', name: 'The organization is carrying a loss it hasn\'t processed', importance: 1.0 },
+  pressure:        { lens: 'S', name: 'Targets and incentives reward the wrong behaviour', importance: 1.0 },
 };
 export const HYP_ORDER = Object.keys(HYPOTHESES);
 
@@ -80,6 +81,8 @@ export const OPENER = {
     o('Our best people are stuck on fires', { talent: .9, leverage: .4 }, 'Top people spend their time on rescue work'),
     o('People don\'t say what they think', { trust: .9, conflict_avoidance: .5 }, 'Problems aren\'t raised openly'),
     o('Effort is high but results aren\'t', { economics: .5, focus: .4, execution: .3, talent: .2 }, 'Effort isn\'t converting to results'),
+    o('Cash or margin is tighter than it should be', { economics: 1.0, pressure: .2 }, 'Cash or margin is tight'),
+    o('We can\'t hire or keep the right people', { talent: .7, capability: .5, pressure: .2 }, 'Hiring and keeping the right people is hard'),
     o('Nothing major is in the way', {}, 'Nothing major named', { nothing: true }),
     o('I\'m tired, and I can\'t tell if it\'s the business or me', { loss: .4 }, 'The leader is tired and unsure where the problem sits', { tired: true }),
   ],
@@ -261,7 +264,7 @@ export const QUESTIONS = [
       o('It didn\'t get raised, so nothing happened', { trust: 1.3, conflict_avoidance: .5 }, 'Serious problems go unraised'),
       o('It depends who raised it', { trust: .6, direction: .2 }, 'Whether a problem is heard depends on who raises it'),
     ] },
-  { id: 'conflict', lens: 'P', act: .9, event: true, short: 'The last open disagreement between leaders',
+  { id: 'conflict', lens: 'P', act: .9, event: true, required: true, short: 'The last open disagreement between leaders',
     eyebrow: 'People · What actually happens', title: 'When did two of your leaders last disagree openly, in front of others, about something that mattered?',
     options: [
       o('This month', { conflict_avoidance: -1.0, trust: -.3 }, 'Leaders disagreed openly this month'),
@@ -299,9 +302,9 @@ export const QUESTIONS = [
       o('Nothing in particular', { direction: -.3, centralized: -.3, capability: -.3, information: -.3, trust: -.3 }, 'Nothing in particular limits action'),
     ] },
   // ----- You -----
-  { id: 'self', lens: 'P', act: .9, required: true, short: 'Your own part',
+  { id: 'self', lens: 'P', act: .9, required: true, multi: true, max: 2, short: 'Your own part',
     eyebrow: 'You · Your own part', title: 'When this problem shows up, what is your own part in it, honestly?',
-    help: 'Everyone who leads is part of the pattern somewhere. Most tools skip this question.',
+    help: 'Everyone who leads is part of the pattern somewhere. Pick up to two.',
     options: [
       o('I step in and decide, so it doesn\'t land on others', { centralized: 1.1 }, 'The leader steps in and decides', { own: 'centralized' }),
       o('I avoid the hard conversation', { conflict_avoidance: 1.1, trust: .3 }, 'The leader avoids the hard conversation', { own: 'conflict_avoidance' }),
@@ -313,12 +316,52 @@ export const QUESTIONS = [
       o('I\'m not sure yet', {}, 'The leader isn\'t sure of their part'),
     ] },
   { id: 'loss', lens: 'P', act: 1.0, event: true, required: true, short: 'A loss in the last year',
-    eyebrow: 'Before we go further', title: 'In the last twelve months, has the organization lost someone or something it cared about: a person, a team, a client, a product, people in a layoff?',
+    eyebrow: 'Before we go further', title: 'Has the organization lost someone or something it cared about that it hasn\'t fully moved past: a person, a team, a client, a product, people in a layoff?',
+    help: 'Recent or not. Some losses are years old and still in the room.',
     options: [
-      o('No', { loss: -1.0 }, 'No significant loss this year'),
+      o('No', { loss: -1.0 }, 'No significant loss'),
       o('Yes, and we\'ve talked about it openly', { loss: .2 }, 'A loss that has been talked about openly'),
       o('Yes, and we haven\'t really talked about it', { loss: 1.6, trust: .3 }, 'A loss that hasn\'t been talked about', { grief: true }),
       o('Yes, recently, and it\'s still raw', { loss: 1.8 }, 'A recent loss that is still raw', { grief: true }),
+    ] },
+  { id: 'missed', lens: 'S', act: 1.0, event: true, required: true, short: 'The last missed number',
+    eyebrow: 'System · What actually happens', title: 'Think of the last person who missed an important number or deadline. What happened next?',
+    options: [
+      o('We looked at why together and changed something', { pressure: -1.0, blame: -.6 }, 'A miss led to a shared look at the cause'),
+      o('A hard conversation, then support', { pressure: -.3, blame: -.2 }, 'A miss led to a hard conversation and support'),
+      o('They were put on a plan, or moved out', { pressure: 1.0, blame: .6 }, 'Missing a number costs the person'),
+      o('Nothing much. Targets slip here', { pressure: -.4, execution: .9 }, 'Missed targets carry no consequence'),
+      o('The number was quietly made to work', { pressure: 1.4, trust: .3 }, 'Numbers are quietly made to work'),
+      o('I let them know I was disappointed', { blame: .7, pressure: .4 }, 'The leader shows disappointment at a miss', { own: 'blame' }),
+      o('I don\'t know what happened', { information: .7, pressure: .3 }, 'The leader doesn\'t know what happens after a miss'),
+    ] },
+  { id: 'rulebreak', lens: 'S', act: .9, event: true, short: 'When a target is hit the wrong way', gate: p => Math.max(p.pressure, p.blame) >= .3 || p.trust >= .4,
+    eyebrow: 'System · Following up', title: 'When someone hits their target by bending a rule or cutting a corner, what usually happens?',
+    options: [
+      o('It\'s addressed, even if it costs us the number', { pressure: -1.0 }, 'Corners cut are addressed even at the cost of the number'),
+      o('A quiet word, and the result still counts', { pressure: .9 }, 'Results count even when a corner was cut'),
+      o('Nobody says much', { pressure: 1.0, conflict_avoidance: .5 }, 'Corners cut go unremarked'),
+      o('They\'re held up as someone who gets it done', { pressure: 1.5 }, 'People who cut corners to hit targets are held up as examples'),
+      o('I\'d probably not hear about it', { pressure: .5, information: .6, trust: .4 }, 'The leader wouldn\'t hear about corners cut'),
+      o('I haven\'t seen it happen', { pressure: -.2 }, 'The leader hasn\'t seen a target hit the wrong way'),
+    ] },
+  { id: 'collide', lens: 'S', act: .9, event: true, short: 'When a deadline met a concern', gate: p => p.pressure >= .22,
+    eyebrow: 'System · Following up', title: 'The last time a deadline or target collided with a quality, safety or customer concern, which gave way?',
+    options: [
+      o('The deadline or target moved', { pressure: -1.0 }, 'The deadline gave way to the concern'),
+      o('We found an honest way to do both', { pressure: -.4 }, 'Both the deadline and the concern were met'),
+      o('The concern was noted, and we shipped', { pressure: 1.3, trust: .3 }, 'The concern gave way to the deadline'),
+      o('The person raising it was asked to find a way around it', { pressure: 1.1, trust: .6 }, 'The person raising a concern was asked to work around it'),
+      o('It hasn\'t come up', { pressure: -.1 }, 'No collision the leader can recall'),
+    ] },
+  { id: 'margin_last', lens: 'B', act: .9, event: true, short: 'Who set the price', gate: p => p.economics >= .22,
+    eyebrow: 'Business · What actually happens', title: 'Think of the last piece of work you lost money on, or won mostly on price. Who set the price or the discount?',
+    options: [
+      o('We don\'t know which work loses money', { economics: 1.4, information: .5 }, 'Which work loses money isn\'t known'),
+      o('Whoever was selling, case by case', { economics: 1.3, decision_rights: .3 }, 'Price is set case by case by whoever sells'),
+      o('I did, personally', { economics: .4, centralized: .7 }, 'The leader sets price personally', { own: 'centralized' }),
+      o('A clear rule, applied the same way every time', { economics: -.8 }, 'Pricing follows a clear rule'),
+      o('We walked away because the margin was wrong', { economics: -1.0 }, 'Work is turned down when the margin is wrong'),
     ] },
 ];
 
@@ -335,8 +378,8 @@ export const INVERSION = {
     o('Continue rewarding the current behavior', { economics: .1, trust: .1 }, 'Rewarding the current behaviour', { force: 'Rewarding the current behaviour.' }),
     o('Keep solving the symptom', { leverage: .2 }, 'Solving the symptom again', { force: 'Solving the symptom again.' }),
     o('Do nothing', { execution: .1 }, 'Doing nothing', { force: 'Doing nothing.' }),
-    o('Take the criticism personally and defend myself', { trust: .2, blame: .1 }, 'Taking criticism personally', { force: 'Taking the criticism personally and defending yourself.' }),
-    o('Keep things comfortable instead of saying what I see', { conflict_avoidance: .2 }, 'Keeping things comfortable', { force: 'Keeping things comfortable instead of saying what you see.' }),
+    o('Take the criticism personally and defend myself', { trust: .2, blame: .1 }, 'Taking criticism personally', { force: 'Taking the criticism personally and defending yourself.', admits: true }),
+    o('Keep things comfortable instead of saying what I see', { conflict_avoidance: .2 }, 'Keeping things comfortable', { force: 'Keeping things comfortable instead of saying what you see.', admits: true }),
   ],
 };
 export const ALL_QUESTIONS = [OPENER, ...QUESTIONS, INVERSION];
@@ -382,6 +425,7 @@ export const ZONES = {
 // The zone summary, tailored to which constraint fired inside it. Falls back to ZONES[zone].summary.
 export const ZONE_BY_CONSTRAINT = {
   BS: {
+    pressure: 'The business sets targets the system can only hit by cutting corners, and the numbers don\'t show how they were hit.',
     direction: 'Leadership hasn\'t settled what matters most, so the organization is executing several answers at once and experiencing it as slowness.',
     focus: 'The business keeps committing to more than the system has capacity to deliver, and nothing is formally stopped to make room.',
     economics: 'Priorities aren\'t tied to what creates value, so the system executes hard against a scoreboard that doesn\'t decide anything.',
@@ -402,6 +446,7 @@ export const ZONE_BY_CONSTRAINT = {
     conflict_avoidance: 'The system runs on decisions nobody really tested, because disagreeing in the room feels riskier than working around it later.',
     blame: 'The system makes problems expensive to report, because the first question is who. So problems surface late and sideways.',
     loss: 'The organization is carrying something it hasn\'t talked about, and the system is absorbing it as slowness.',
+    pressure: 'The system rewards hitting the number more than raising a problem, so people protect the number and the problems go quiet.',
   },
   PB: {
     centralized: 'People are working hard, but the authority to act on what matters hasn\'t reached them, so effort turns into escalation.',
@@ -478,7 +523,7 @@ export const PLAYBOOKS = {
       bk('google', 'Decision velocity was treated at Google as a competitive advantage in its own right. The authors describe giving smart people context and then letting them decide, on the grounds that a good decision made quickly and corrected beats a perfect one made late. Stuck decisions are the opposite of that design.'),
     ],
     constraint: 'Decisions get stuck',
-    diagnosis: 'Important decisions don\'t have a clear owner, so they wait. They travel upward, management becomes the bottleneck, and leaders spend their time on decisions that should have been made two levels down. The organization reads this as caution. It is the absence of decision rights.',
+    diagnosis: 'Important decisions aren\'t clearly held: either nobody owns them, or too many people have to say yes. Either way they wait. They travel upward, management becomes the bottleneck, and leaders spend their time on decisions that should have been made two levels down. The organization reads this as caution. It is the absence of decision rights.',
     chain: ['Decision rights are unclear', 'People escalate to be safe', 'Management becomes a bottleneck', 'Execution slows', 'Leaders spend more time firefighting', 'Less capacity for strategic work'],
     forces: ['Decision authority is unclear, so escalation is the rational choice.', 'Leaders intervene before teams have a chance to solve problems.', 'People are accountable for outcomes without equivalent authority.', 'Existing processes quietly reward escalation over judgment.'],
     consequences: ['Slower decisions', 'Management capacity', 'Delayed revenue'],
@@ -487,7 +532,7 @@ export const PLAYBOOKS = {
     notDo: { t: 'Don\'t fix this by adding another approval layer.', d: 'Your answers suggest the problem is not insufficient control. It is unclear decision ownership. Adding governance would increase the friction.' },
     policy: 'Move decisions to the lowest competent level, explicitly.',
     move: { t: 'Fix the five decisions that escalate most.', steps: ['Identify the five decisions that most frequently reach senior leadership.', 'For each one write down: who recommends, who decides, who must be consulted, what information is required, what guardrails apply, and when it is reviewed.', 'Move each decision to the lowest competent level, and tell the people who used to make it that they no longer do.'] },
-    question: 'Which decisions are we still making at the top because we don\'t trust the organization to make them, and what would need to be true to move them down?',
+    question: 'Which of our important decisions wait because it isn\'t clear who makes them, or because too many people have to say yes?',
     metric: { t: 'Median time from issue raised to decision made', d: 'Track it for the five decisions you moved. It should fall within a quarter.' },
   },
   execution: {
@@ -652,6 +697,24 @@ export const PLAYBOOKS = {
     question: 'What was our own part in the last thing that went wrong, and did anyone say it out loud?',
     metric: { t: 'Problems reported by the person closest to them, before anyone else finds them', d: 'Count them monthly. It should rise as the cost of reporting falls.' },
   },
+  pressure: {
+    reading: [
+      bk('munger', 'Munger\'s rule is to look at the incentive before anything else. People rarely set out to cut corners; they respond to what the system pays for and what it punishes. When a number decides who is safe, the number gets hit, and whatever it was meant to measure stops mattering.'),
+      bk('meadows', 'Meadows calls it seeking the wrong goal: a system produces exactly what its measures reward, even when that defeats the purpose. The fix is rarely more oversight. It is changing what gets counted, and what happens to the people who say the measure is wrong.'),
+    ],
+    constraint: 'Targets and incentives reward the wrong behaviour',
+    diagnosis: 'The numbers people are measured on, and what happens when they miss them, have become the real strategy. People hit the target, or make it look hit, even when that means cutting corners, hiding problems or overriding a concern. Leaders see results and conclude the system works. The cost arrives later, and all at once.',
+    chain: ['A target becomes the measure of a person', 'Missing it carries a real cost', 'People protect the number, not the purpose', 'Concerns that threaten the number go quiet', 'Leaders see the number and trust it', 'The cost arrives late, and large'],
+    forces: ['Missing a number costs a person more than raising a problem costs the business.', 'People who hit their numbers by bending rules are held up as examples.', 'Concerns about quality or safety are treated as obstacles to the deadline.', 'Leaders see the dashboard, not how it was produced.'],
+    consequences: ['Customer experience', 'Risk and reputation', 'Employee frustration'],
+    leverage: ['Customers', 'Talent', 'Trust'],
+    blind: 'Your best numbers may be where your biggest risk is hiding.',
+    notDo: { t: 'Don\'t fix this by adding compliance checks on top of the same targets.', d: 'More oversight on top of the same pressure teaches people to hide the corners more carefully. Change what happens when someone misses a number, or raises a concern that threatens one.' },
+    policy: 'Make it safe to miss a number for a good reason, and costly to hit one the wrong way.',
+    move: { t: 'Look behind your best number.', steps: ['Pick the target your organization is proudest of hitting this year.', 'Ask three people who do the work, privately, what it took to hit it and what they would stop doing if the target went away.', 'For the next quarter, publicly back one person who missed a number for a good reason.'] },
+    question: 'What would people stop doing tomorrow if their target disappeared, and is that what we want them doing?',
+    metric: { t: 'Concerns raised that put a target at risk', d: 'Count them each month. If it stays at zero while every target is hit, the targets are winning.' },
+  },
   loss: {
     reading: [
       bk('conscious', 'Feeling feelings is one of the commitments, and the authors are direct about why: emotions that are not felt do not go away, they go into the work. A leadership team that is carrying a loss and treating it as a performance problem will see slower decisions, flatter energy and more friction, and will try to fix them with structure.'),
@@ -783,8 +846,15 @@ export const EXPERIMENTS = {
       if (r['Problems reported by the person closest to them'] === 'up' && r['Time from problem noticed to problem raised'] !== 'up') return { text: 'People report more of their own problems, but still late. The cost of reporting has fallen; something else, perhaps how much they can act on, still slows it.', delta: { blame: .3, centralized: .5, information: .4 } };
       return null;
     } },
+  pressure: { hypothesis: 'Targets reward the wrong behaviour, so problems that threaten the number go quiet.',
+    steps: ['Pick the target the organization is proudest of hitting this year.', 'Ask three people who do the work, privately, what it took to hit it and what they would stop doing if it went away.', 'For the next quarter, publicly back one person who missed a number for a good reason, and say why.'],
+    days: 60, watch: ['Concerns raised that put a target at risk', 'Corners people admit to cutting', 'Misses explained openly rather than hidden'],
+    outcome: r => {
+      if (r['Corners people admit to cutting'] === 'up' && r['Concerns raised that put a target at risk'] !== 'up') return { text: 'People admit the corners in private but still don\'t raise them in the open. The targets matter, and so does the cost of speaking up; this may be as much about safety to speak as about the targets.', delta: { pressure: .4, trust: .7 } };
+      return null;
+    } },
   loss: { hypothesis: 'The organization is carrying a loss that hasn\'t been named.',
-    steps: ['Name the loss to the team, out loud, and say that it matters. Include your own part of it if you are carrying it too.', 'Make unhurried room for people to talk about it, with a facilitator if the loss is heavy.', 'Wait two or three weeks before any structural change, and notice what eases on its own.'],
+    steps: ['Name the loss to the team, out loud, and say that it matters. Include your own part of it if you are carrying it too.', 'Make unhurried room for people to talk about it, with someone from outside the leadership team to facilitate. Get support for yourself first if you are carrying it too.', 'Wait two or three weeks before any structural change, and notice what eases on its own.'],
     days: 30, watch: ['Energy and pace in meetings', 'Whether people talk about the loss openly', 'Friction that eased without any structural change'],
     outcome: r => {
       if (r['Friction that eased without any structural change'] === 'up') return { text: 'Some of the friction eased once the loss was named. That part was grief, not structure. Run Friction again to see what is left.', delta: { loss: 1.0 } };
@@ -818,11 +888,11 @@ export const ECON_READS = [
 // Expected vs observed on the operating traits the answers can actually see. Qualitative on purpose:
 // numeric benchmarks need real data by industry and size, and this file does not invent them.
 export const PROFILE_ROWS = [
-  { k: 'Dependence on specific people', expected: 'Low to moderate', good: ['Low', 'Moderate'], from: ['leverage', 'repeat', 'overrule', 'given', 'self'], observe: p => Math.max(p.centralized, p.leverage) >= .65 ? 'High' : Math.max(p.centralized, p.leverage) >= .45 ? 'Moderate' : 'Low' },
-  { k: 'Decision latency', expected: 'Days, not weeks', good: ['Low'], from: ['decisions', 'comeback', 'waiting', 'given', 'analysis'], observe: p => Math.max(p.decision_rights, p.information) >= .65 ? 'High' : Math.max(p.decision_rights, p.information) >= .45 ? 'Moderate' : 'Low' },
-  { k: 'Priority load', expected: 'A handful, with a stop-doing list', good: ['Low'], from: ['focus', 'execution_why', 'business_uncertainty'], observe: p => p.focus >= .65 ? 'High' : p.focus >= .45 ? 'Moderate' : 'Low' },
-  { k: 'Rework and workarounds', expected: 'Rare, and traced to cause', good: ['Low'], from: ['leverage', 'repeat', 'execution_why'], observe: p => p.leverage >= .65 ? 'High' : p.leverage >= .45 ? 'Moderate' : 'Low' },
-  { k: 'Candour', expected: 'Problems raised early', good: ['High'], from: ['trust', 'trust_last', 'conflict', 'blame_first', 'gossip'], observe: p => Math.max(p.trust, p.conflict_avoidance, p.blame) >= .65 ? 'Low' : Math.max(p.trust, p.conflict_avoidance, p.blame) >= .45 ? 'Mixed' : 'High' },
+  { k: 'Dependence on specific people', expected: 'Low to moderate', good: ['Low', 'Moderate'], hyps: ['centralized', 'leverage'], floor: 'High', from: ['leverage', 'repeat', 'overrule', 'given', 'self'], observe: p => Math.max(p.centralized, p.leverage) >= .65 ? 'High' : Math.max(p.centralized, p.leverage) >= .45 ? 'Moderate' : 'Low' },
+  { k: 'Decision latency', expected: 'Days, not weeks', good: ['Low'], hyps: ['decision_rights', 'information'], floor: 'Moderate', from: ['decisions', 'comeback', 'waiting', 'given', 'analysis'], observe: p => Math.max(p.decision_rights, p.information) >= .65 ? 'High' : Math.max(p.decision_rights, p.information) >= .45 ? 'Moderate' : 'Low' },
+  { k: 'Priority load', expected: 'A handful, with a stop-doing list', good: ['Low'], hyps: ['focus'], floor: 'Moderate', from: ['focus', 'execution_why', 'business_uncertainty'], observe: p => p.focus >= .65 ? 'High' : p.focus >= .45 ? 'Moderate' : 'Low' },
+  { k: 'Rework and workarounds', expected: 'Rare, and traced to cause', good: ['Low'], hyps: ['leverage'], floor: 'Moderate', from: ['leverage', 'repeat', 'execution_why'], observe: p => p.leverage >= .65 ? 'High' : p.leverage >= .45 ? 'Moderate' : 'Low' },
+  { k: 'Candour', expected: 'Problems raised early', good: ['High'], hyps: ['trust', 'conflict_avoidance', 'blame', 'pressure'], floor: 'Mixed', from: ['trust', 'trust_last', 'conflict', 'blame_first', 'gossip', 'missed', 'rulebreak', 'collide'], observe: p => Math.max(p.trust, p.conflict_avoidance, p.blame, p.pressure) >= .65 ? 'Low' : Math.max(p.trust, p.conflict_avoidance, p.blame, p.pressure) >= .45 ? 'Mixed' : 'High' },
 ];
 export const LOW_FRICTION = {
   name: 'No clear constraint',
@@ -831,6 +901,18 @@ export const LOW_FRICTION = {
   watch: 'Run Friction again in a quarter, and ask someone who reports to you to run it too. If both pictures match, you can trust it more.',
 };
 
+
+// When the belief is low but the person gave answers that usually point to a problem, the page says so instead.
+export const LOW_MIXED = {
+  name: 'No single constraint stood out',
+  summary: 'But some of your answers usually mean something, and they are worth a second look before you conclude nothing is wrong.',
+  detail: 'Leaders tend to describe their organizations more favourably than the people who work in them do. That isn\'t a flaw in you; it is where you sit. The most useful next step is to ask two or three people who report to you the same questions and compare.',
+  watch: 'Ask two or three people who report to you to run Friction. Where their answers differ from yours is where to look first.',
+};
+// How answers are weighed. Leaders over-report health, so reassuring answers about general impressions count for less than
+// reassuring answers about something that actually happened. Admissions about your own part, and problems described
+// through something that actually happened, count for more.
+export const SELF_REPORT = { reassuringImpression: .6, admission: 1.25, event: 1.2 };
 
 export const OUTCOME_OPTIONS = [ { key: 'up', t: 'Improved' }, { key: 'same', t: 'No change' }, { key: 'down', t: 'Worse' } ];
 
@@ -851,6 +933,7 @@ export const CHAIN_STAGES = {
   trust:           ['PEOPLE', 'MANAGEMENT', 'SYSTEM', 'EXECUTION', 'PEOPLE', 'PEOPLE'],
   conflict_avoidance: ['PEOPLE', 'MANAGEMENT', 'SYSTEM', 'EXECUTION', 'MANAGEMENT', 'BUSINESS'],
   blame:           ['MANAGEMENT', 'PEOPLE', 'PEOPLE', 'SYSTEM', 'MANAGEMENT', 'PEOPLE'],
+  pressure:        ['BUSINESS', 'MANAGEMENT', 'PEOPLE', 'PEOPLE', 'MANAGEMENT', 'ECONOMICS'],
   loss:            ['BUSINESS', 'PEOPLE', 'PEOPLE', 'EXECUTION', 'MANAGEMENT', 'PEOPLE'],
 };
 export const STAGE_ROLE = { 0: 'Origin', 1: 'Transmission', 2: 'Transmission', 3: 'Amplification', 4: 'Amplification', 5: 'Consequence' };
@@ -964,6 +1047,14 @@ export const BLIND_SPOTS = {
     step: 'Say "this was mine" yourself, first, about something real, in front of the team.',
     watch: 'People who name their own part without being asked',
   },
+  pressure: {
+    test: 'Ask the person closest to your best number, privately: "What would you stop doing if this target went away?"',
+    ifTrue: 'They name something the business shouldn\'t be doing, or hesitate before they answer.',
+    ifFalse: 'They name nothing they\'d stop, and the way they hit it is how you would want it hit.',
+    held: { pressure: .9, trust: .3 }, notHeld: { pressure: -1.0, economics: .3 },
+    step: 'Put one measure next to the target that counts how it was hit, not only whether.',
+    watch: 'Corners people admit to cutting',
+  },
   loss: {
     test: 'Ask two people you trust, privately: "Have we really talked about what happened?"',
     ifTrue: 'They pause, and then they talk. Something hasn\'t been said.',
@@ -995,6 +1086,7 @@ export const COUNTERFACTUALS = {
   trust:           { should: 'an anonymous survey', worse: 'confirm to everyone that speaking directly is unsafe', because: 'the evidence points to what happens when someone speaks, not to a lack of channels' },
   conflict_avoidance: { should: 'an alignment offsite', worse: 'produce more agreement that doesn\'t hold', because: 'the evidence points to a disagreement that hasn\'t been had, not to a lack of time together' },
   blame:           { should: 'tighter accountability', worse: 'teach people to hide problems longer', because: 'the evidence points to the cost of reporting a problem, not to a lack of consequences' },
+  pressure:        { should: 'stricter controls and compliance', worse: 'teach people to hide the corners more carefully', because: 'the evidence points to what the targets reward, not to a lack of oversight' },
   loss:            { should: 'a structural change', worse: 'ask people to perform while it still hurts', because: 'the evidence points to a loss that hasn\'t been named, not to a broken structure' },
 };
 
@@ -1013,6 +1105,7 @@ export const EXPERIMENT_SPECS = {
   trust:           { action: 'Change one meeting', target: 'The main leadership meeting', expected: ['↑ problems raised before incidents', '↓ time from noticed to raised', '↑ disagreements voiced'] },
   conflict_avoidance: { action: 'Require one objection per decision', target: 'The next three leadership decisions', expected: ['↑ objections voiced in the room', '↓ decisions reopened', '↓ things said only privately'] },
   blame:           { action: 'Lead with your own part', target: 'The next review of something that went wrong', expected: ['↑ problems reported by the person closest', '↓ complaints routed through third people', '↓ time to raise a problem'] },
+  pressure:        { action: 'Look behind your best number', target: 'The target you are proudest of', expected: ['↑ concerns raised that put a target at risk', '↑ corners admitted', '↑ misses explained openly'] },
   loss:            { action: 'Name the loss together', target: 'The whole team', expected: ['↑ energy and pace', 'the loss is talked about openly', 'some friction eases without structural change'] },
 };
 
@@ -1031,6 +1124,7 @@ export const PROFILE_PRIMARY = {
   trust:           ['Candour'],
   conflict_avoidance: ['Candour'],
   blame:           ['Candour'],
+  pressure:        ['Candour'],
   loss:            [],
 };
 
@@ -1039,24 +1133,25 @@ export const PROFILE_PRIMARY = {
 // P(child | parents) = 1 − (1 − leak) × Π over true parents of (1 − strength).
 // The signal weights on answer options are treated as log likelihood ratios against these states,
 // so every piece of content tuned so far carries over unchanged.
-export const MODEL_VERSION = '5.0';
+export const MODEL_VERSION = '5.1';
 export const NETWORK = {
   direction:       { prior: .18, parents: {} },
   economics:       { prior: .18, parents: {} },
   capability:      { prior: .16, parents: {} },
   trust:           { prior: .18, parents: {} },
   loss:            { prior: .08, parents: {} },
+  pressure:        { prior: .12, parents: {} },
   focus:           { leak: .08, parents: { direction: .35, economics: .25 } },
-  information:     { leak: .09, parents: { economics: .2, trust: .25 } },
+  information:     { leak: .09, parents: { economics: .2, trust: .25, pressure: .15 } },
   decision_rights: { leak: .10, parents: { direction: .25, trust: .12 } },
   conflict_avoidance: { leak: .09, parents: { trust: .35 } },
-  blame:           { leak: .08, parents: { trust: .3 } },
+  blame:           { leak: .08, parents: { trust: .3, pressure: .3 } },
   centralized:     { leak: .06, parents: { decision_rights: .3, capability: .35, trust: .2 } },
-  execution:       { leak: .08, parents: { focus: .4, decision_rights: .25, information: .15 } },
+  execution:       { leak: .08, parents: { focus: .4, decision_rights: .25, information: .15, conflict_avoidance: .3 } },
   leverage:        { leak: .10, parents: { execution: .25, decision_rights: .2 } },
   talent:          { leak: .09, parents: { leverage: .35, focus: .25 } },
 };
-export const NETWORK_ORDER = ['direction', 'economics', 'capability', 'trust', 'loss', 'focus', 'information', 'decision_rights', 'conflict_avoidance', 'blame', 'centralized', 'execution', 'leverage', 'talent'];
+export const NETWORK_ORDER = ['direction', 'economics', 'capability', 'trust', 'loss', 'pressure', 'focus', 'information', 'decision_rights', 'conflict_avoidance', 'blame', 'centralized', 'execution', 'leverage', 'talent'];
 // Answers about the same thing are correlated, so their evidence is tempered and capped per hypothesis
 // rather than multiplied as if each were independent. Experiment results are not tempered.
 export const EVIDENCE = { temper: .6, capPos: 3.2, capNeg: -2.4 };
@@ -1079,6 +1174,7 @@ export const INTERVENTIONS = {
   trust:           { relief: { trust: 1.0, information: .25, centralized: .15, decision_rights: .10 }, cost: .07, effort: 'One meeting changed, every week, for a quarter' },
   conflict_avoidance: { relief: { conflict_avoidance: 1.0, direction: .2, decision_rights: .1 }, cost: .05, effort: 'One objection per decision, three decisions' },
   blame:           { relief: { blame: 1.0, trust: .2, information: .1 }, cost: .06, effort: 'Your own part, said first, for a month' },
+  pressure:        { relief: { pressure: 1.0, blame: .2, trust: .15, information: .1 }, cost: .06, effort: 'One target examined, one miss backed in public' },
   loss:            { relief: { loss: 1.0, trust: .1 }, cost: .04, effort: 'One unhurried conversation, then wait' },
 };
 

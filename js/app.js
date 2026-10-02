@@ -1,5 +1,5 @@
-// Friction v3 — app shell. The user sees a conversation; the engine sees hypotheses.
-import { LENSES, ZONES, ZONE_BY_CONSTRAINT, HYPOTHESES, COST, STAGES, CONSEQUENCE_WHY, LEVERAGE_WHY, LOW_FRICTION, OUTCOME_OPTIONS, INVERSION, CHAIN_STAGES, STAGE_ROLE, BLIND_RESULT_OPTIONS, COUNTERFACTUALS } from './content.js';
+// Friction v5.1 — app shell. The user sees a conversation; the engine sees hypotheses.
+import { LENSES, ZONES, ZONE_BY_CONSTRAINT, HYPOTHESES, COST, STAGES, CONSEQUENCE_WHY, LEVERAGE_WHY, LOW_FRICTION, LOW_MIXED, OUTCOME_OPTIONS, INVERSION, CHAIN_STAGES, STAGE_ROLE, BLIND_RESULT_OPTIONS, COUNTERFACTUALS } from './content.js';
 import { newSession, applyAnswer, undoLast, nextQuestion, progress, diagnose, applyOutcome, confidences, byId } from './engine.js';
 
 const STORAGE = 'friction.v3';
@@ -161,19 +161,27 @@ const SCREENS = {
     const griefBlock = withExperiment => `<div class="jstep stagger"><div class="grief">
         <p class="eyebrow">Before anything structural</p>
         <h2 class="display md">This may not be mainly a structure problem.</h2>
-        <p>You told us the organization has lost something this year and it hasn't really been talked about, or is still raw. Structural changes land hard on people who are grieving. Name the loss together first. If it is heavy, bring in someone to facilitate so the leaders can take part rather than run it.</p>
+        <p>You told us the organization has lost something it cared about, and it hasn't really been talked about, or is still raw. Structural changes land hard on people who are grieving. Name the loss together first, with someone from outside the leadership team to facilitate, so the leaders can take part rather than run it. If you are carrying it too, get support for yourself first.</p>
         ${withExperiment ? '<p>The experiment further down is still there for when you\'re ready.</p>' : ''}
       </div></div>`;
+    const tiredBlock = r.tired ? `<div class="jstep stagger"><div class="grief tired">
+        <p class="eyebrow">Before the business</p>
+        <h2 class="display md">You said you're tired, and you can't tell whether it's the business or you.</h2>
+        <p>Both can be true, and this page can only see the business. Before you take on anything below, take one thing off your own week, not add one. If the tiredness has lasted more than a few weeks, talk to someone about you, not the organization.</p>
+        ${r.low ? '' : '<p>The read below is about the organization. Hold it lightly until you have had some rest.</p>'}
+      </div></div>` : '';
     if (r.low) {
       const inv = (state.session.answers.inversion || []).map(i => INVERSION.options[i]);
+      const L = r.mixed ? LOW_MIXED : LOW_FRICTION;
+      const concernsBlock = r.mixed ? `<div class="concerns"><p class="eyebrow">Answers worth a second look</p><ul class="sig">${r.concerns.map(c => `<li><span><q>${esc(unq(c.said))}</q><small>${esc(c.q)}${c.means ? ` · usually points to: ${esc(c.means.toLowerCase())}` : ''}</small></span></li>`).join('')}</ul></div>` : '';
       return `<section class="screen result journey">
-      ${r.grief ? griefBlock(false) : ''}
-      <div class="jstep stagger">${step('01', 'Our current read', 'Nothing to fix yet')}
-        <h1 class="display lg edge-name">${esc(LOW_FRICTION.name)}</h1><p class="lead">${esc(LOW_FRICTION.summary)}</p>${frictionMap(r)}<p class="low-detail">${esc(LOW_FRICTION.detail)}</p></div>
+      ${r.grief ? griefBlock(false) : ''}${tiredBlock}
+      <div class="jstep stagger">${step('01', 'Our current read', r.mixed ? 'Worth a second look' : 'Nothing to fix yet')}
+        <h1 class="display lg edge-name">${esc(L.name)}</h1><p class="lead">${esc(L.summary)}</p>${concernsBlock}${frictionMap(r)}<p class="low-detail">${esc(L.detail)}</p></div>
       <div class="jstep stagger">${step('02', 'Your guards', 'What would make it worse')}
         <ul class="cons">${inv.map(o => `<li><b>${esc(o.t)}</b></li>`).join('')}</ul></div>
       <div class="jstep stagger">${step('03', 'Watch', 'The only metric that matters here')}
-        <div class="metric"><p class="metric-t">Whether this picture holds</p><p>${esc(LOW_FRICTION.watch)}</p></div></div>
+        <div class="metric"><p class="metric-t">Whether this picture holds</p><p>${esc(L.watch)}</p></div></div>
       <div class="jstep stagger">${step('04', 'Learn', 'Close the loop')}
         <div class="card"><div class="loop"><b>Signal</b><i>→</i>Hypothesis<i>→</i>Question<i>→</i>Evidence<i>→</i>Act<i>→</i><b>Learn</b></div>
         <div class="result-actions"><button class="btn btn-deep" data-copy>Copy the read</button><button class="btn btn-ghost" data-go="begin">Run it again</button><span class="saved">✓ Saved on this device</span></div></div></div>
@@ -181,7 +189,7 @@ const SCREENS = {
     }
 
     const zoneSummary = (ZONE_BY_CONSTRAINT[r.zone] || {})[r.top] || Z.summary;
-    const sig = x => `<li><span class="sig-s sig-${x.strength.toLowerCase()}">${x.strength}</span><span><q>${esc(x.said)}</q><small>${esc(x.q)}</small></span></li>`;
+    const sig = x => `<li><span class="sig-s sig-${x.strength.toLowerCase()}">${x.strength}</span><span><q>${esc(unq(x.said))}</q><small>${esc(x.q)}</small></span></li>`;
     const openBlock = r.open && r.open.question ? `<div class="open">
         <p class="eyebrow">What we're still trying to understand</p>
         <p class="open-t">${r.open.frame === 'upstream' ? `Both look present. Which comes first: <strong>${esc(hypName(r.top).toLowerCase())}</strong>, or <strong>${esc(hypName(r.second).toLowerCase())}</strong>?` : `Is it <strong>${esc(hypName(r.top).toLowerCase())}</strong>, or <strong>${esc(hypName(r.second).toLowerCase())}</strong>?`}</p>
@@ -193,7 +201,7 @@ const SCREENS = {
       ${r.contradicts.length ? `<p class="eyebrow" style="margin-top:1rem">What cuts against it</p><ul class="sig against">${r.contradicts.slice(0, 3).map(sig).join('')}</ul>` : ''}
       ${r.open && r.open.secondEvidence && r.open.secondEvidence.length ? `<p class="eyebrow" style="margin-top:1rem">What points to ${esc(hypName(r.second).toLowerCase())}</p><ul class="sig">${r.open.secondEvidence.map(sig).join('')}</ul>` : ''}
       <p class="eyebrow" style="margin-top:1rem">Other explanations we weighed</p>
-      <ol class="hyps">${r.ranked.slice(0, 5).map(h => `<li><span class="hyp-bar"><i style="width:${Math.round(r.p[h] * 100)}%"></i></span><span class="hyp-n">${esc(hypName(h))}</span><span class="hyp-l">${esc(confidenceLabelText(r.p[h]))}</span></li>`).join('')}</ol>
+      <ol class="hyps">${r.ranked.slice(0, 5).map(h => `<li><span class="hyp-bar"><i style="width:${Math.round(r.p[h] * 100)}%"></i></span><span class="hyp-n">${esc(hypName(h))}</span><span class="hyp-l">${esc(h === r.top ? 'The read' : rivalText(r.p[h], r.p[r.top]))}</span></li>`).join('')}</ol>
       ${r.mpe && r.mpe.length ? `<p class="eyebrow" style="margin-top:1rem">The picture that best explains your answers</p><ol class="config">${r.mpe.map(h => `<li class="${h === r.top ? 'lead' : ''}">${esc(hypName(h))}</li>`).join('')}</ol>` : ''}
       <p class="quiet">Confidence is shown as a label rather than a number on purpose. About ten answers can rank explanations; they can't measure them.</p>`;
     const costBody = `
@@ -211,7 +219,7 @@ const SCREENS = {
 
     return `<section class="screen result journey lean">
 
-      ${r.grief && r.top !== 'loss' ? griefBlock(true) : ''}
+      ${r.grief && r.top !== 'loss' ? griefBlock(true) : ''}${tiredBlock}
       <div class="jstep stagger">
         ${step('01', 'The read', 'What appears to be getting in the way')}
         <div class="friction-head">
@@ -219,7 +227,7 @@ const SCREENS = {
           <details class="conf-pill conf-${r.label.key}"><summary>${esc(r.label.label)}<i class="caret"></i></summary><div class="conf-body">${esc(r.label.d)}</div></details>
         </div>
         <p class="lead">${esc(play.diagnosis)}</p>
-        ${r.ownSaid && r.ownSaid.length ? `<p class="own-note"><span class="k">In your words</span>${r.ownSaid.map(x => `<q>${esc(x)}</q>`).join(' ')}</p>` : ''}
+        ${r.ownSaid && r.ownSaid.length ? `<p class="own-note"><span class="k">In your words</span>${r.ownSaid.map(x => `<q>${esc(unq(x))}</q>`).join(' ')}</p>` : ''}
         ${r.paired ? `<p class="paired"><span class="k">Close behind</span><strong>${esc(hypName(r.paired))}</strong>. These may be one problem seen from two sides; the experiment below tests the first.</p>` : ''}
         ${r.changedMind ? `<p class="changed"><span class="k">We changed our mind</span>Earlier in the conversation the pattern pointed to <strong>${esc(hypName(r.changedMind.from).toLowerCase())}</strong>. Your later answers moved it.</p>` : ''}
         ${r.notes && r.notes.length ? `<div class="notice"><span class="k">Worth noticing</span>${r.notes.map(t => `<p>${esc(t)}</p>`).join('')}</div>` : ''}
@@ -306,6 +314,10 @@ const SCREENS = {
     </section>`;
   },
 };
+// Answer text that is itself a quotation shouldn't be quoted twice.
+const unq = t => String(t).replace(/^"(.*)"$/, '$1');
+// Rivals are described relative to the read, never with a confidence label that could outrank it.
+function rivalText(ph, ptop) { return ph >= ptop + .1 ? 'As likely, less direct evidence' : ph >= ptop - .1 ? 'About as likely' : ph >= ptop - .3 ? 'Less likely' : 'Much less likely'; }
 function confidenceLabelText(p) { return p >= .8 ? 'High confidence' : p >= .65 ? 'Strong pattern' : p >= .45 ? 'Emerging pattern' : 'Early signal'; }
 
 /* ---------- the map ---------- */
@@ -387,7 +399,7 @@ function reveal(skip) {
   const r = diagnose(state.session, cost, ranges);
   state.result = r;
   state.history.push({ at: Date.now(), hyp: r.top, second: r.second, decision: r.decision, evidence: state.session.evidence.slice(), model: r.modelVersion, zone: r.zone, low: !!r.low,
-    blindTest: r.low ? null : r.blind.test, blindStep: r.low ? null : r.blind.step, blindWatch: r.low ? null : r.blind.watch, constraint: r.low ? 'Low friction' : r.play.constraint, experimentTitle: r.low ? 'Hold the picture' : (r.decisionPlay || r.play).move.t, watch: r.low ? ['Whether this picture holds'] : r.experiment.watch, days: r.low ? 90 : r.experiment.days, closed: false });
+    blindTest: r.low ? null : r.blind.test, blindStep: r.low ? null : r.blind.step, blindWatch: r.low ? null : r.blind.watch, constraint: r.low ? (r.mixed ? LOW_MIXED.name : LOW_FRICTION.name) : r.play.constraint, experimentTitle: r.low ? 'Hold the picture' : (r.decisionPlay || r.play).move.t, watch: r.low ? ['Whether this picture holds'] : r.experiment.watch, days: r.low ? 90 : r.experiment.days, closed: false });
   if (state.history.length > 12) state.history = state.history.slice(-12);
   persist(); go('result');
 }
@@ -404,7 +416,7 @@ function closeLoop() {
 }
 function summaryText() {
   const r = state.result;
-  if (r.low) return ['FRICTION — CURRENT READ', '', LOW_FRICTION.name, LOW_FRICTION.summary, '', LOW_FRICTION.detail, '', location.origin + location.pathname].join('\n');
+  if (r.low) { const L = r.mixed ? LOW_MIXED : LOW_FRICTION; return ['FRICTION — CURRENT READ', '', L.name, L.summary, ...(r.concerns || []).map(c => `  · "${c.said}" (${c.q}${c.means ? `; usually points to: ${c.means.toLowerCase()}` : ''})`), '', L.detail, '', location.origin + location.pathname].join('\n'); }
   const p = r.play, e = r.experiment, est = r.estimate;
   return [
     'FRICTION — CURRENT READ', '',

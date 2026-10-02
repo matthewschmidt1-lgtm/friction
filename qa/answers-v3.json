@@ -80,6 +80,9 @@
    ],
    "gossip": [
     1
+   ],
+   "missed": [
+    1
    ]
   },
   "rationale": {
@@ -203,6 +206,9 @@
    ],
    "gossip": [
     2
+   ],
+   "missed": [
+    3
    ]
   },
   "rationale": {
@@ -325,6 +331,9 @@
     1
    ],
    "gossip": [
+    1
+   ],
+   "missed": [
     1
    ]
   },
@@ -449,6 +458,9 @@
    ],
    "gossip": [
     0
+   ],
+   "missed": [
+    3
    ]
   },
   "rationale": {
@@ -572,6 +584,9 @@
    ],
    "gossip": [
     0
+   ],
+   "missed": [
+    2
    ]
   },
   "rationale": {
@@ -694,6 +709,9 @@
     1
    ],
    "gossip": [
+    1
+   ],
+   "missed": [
     1
    ]
   },
@@ -818,6 +836,12 @@
    ],
    "gossip": [
     1
+   ],
+   "missed": [
+    3
+   ],
+   "margin_last": [
+    1
    ]
   },
   "rationale": {
@@ -940,6 +964,9 @@
    ],
    "gossip": [
     2
+   ],
+   "missed": [
+    0
    ]
   },
   "rationale": {
@@ -1062,6 +1089,9 @@
     1
    ],
    "gossip": [
+    1
+   ],
+   "missed": [
     1
    ]
   },

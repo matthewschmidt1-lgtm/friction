@@ -3,9 +3,9 @@
 *Find what's getting in the way.*
 
 A guided diagnosis, not an assessment. Ten to fifteen questions about observable
-behaviour, chosen as you answer: an opener, five required questions (a behavioural
+behaviour, chosen as you answer: an opener, seven required questions (a behavioural
 candour question, the last time a problem was raised, overruling, your own part,
-and loss), adaptive follow-ups where the answers point, one inversion question, and
+loss, the last open disagreement, and the last missed number), adaptive follow-ups where the answers point, one inversion question, and
 an optional cost estimate. About five minutes. No score.
 
 The output is a **Friction Diagnosis**: the friction zone (Business ↔ System,
@@ -35,14 +35,17 @@ in the browser's `localStorage` under `friction.v3` and never leave the device.
 
 Signal → Hypothesis → Question → Evidence → Decision → Act → Learn.
 
-- **Belief: a Bayesian network.** The fourteen hypotheses (v5 added conflict avoidance,
-  blame, and unprocessed loss) are binary states in a small causal network (leadership
+- **Belief: a Bayesian network.** The fifteen hypotheses (v5 added conflict avoidance,
+  blame, and unprocessed loss; v5.1 added targets and incentives that reward the wrong
+  behaviour) are binary states in a small causal network (leadership
   alignment → priority load → decision rights → escalation, and so on) with noisy-OR
-  conditional probabilities. Fourteen nodes make 16,384 joint configurations, so
+  conditional probabilities. Fifteen nodes make 32,768 joint configurations, so
   inference is exact by enumeration: no approximation, no library. Every answer option
   is a likelihood factor; its signal weights are log likelihood ratios. Per-hypothesis
   evidence is balanced (`BALANCE`, so hypotheses with many questions aren't favoured),
-  tempered, and capped (`EVIDENCE`), because self-report answers are correlated.
+  tempered, and capped (`EVIDENCE`), because self-report answers are correlated. Leaders
+  over-report health, so reassuring impressions count for less than reassuring events, and
+  admissions about your own part count for more.
 - **The read comes from direct evidence.** Among states near the top of the belief, the
   one with the most direct evidence wins; a cause the person named in their own words
   ("it's me" options) gets a bonus; near-ties go upstream. When two are close, both
@@ -51,6 +54,8 @@ Signal → Hypothesis → Question → Evidence → Decision → Act → Learn.
   strong evidence from three different questions including a behavioural one, nothing
   against it, and no unasked lens. Inconsistencies (e.g. opener says "nothing major"
   but answers say otherwise) are noted and lower the label.
+- **An honest null.** "No clear constraint" appears only when the answers are reassuring. If
+  answers that usually point to a problem are present, the page quotes them instead.
 - **Hard stop for grief.** If the person says the organization has an unprocessed or
   raw loss, the page leads with that before any structural advice.
 - **Actor: value of information.** For each unasked question the engine simulates every

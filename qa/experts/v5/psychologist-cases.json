@@ -42,6 +42,24 @@
    "inversion": [
     0,
     2
+   ],
+   "missed": [
+    2
+   ],
+   "conflict": [
+    2
+   ],
+   "authority": [
+    1
+   ],
+   "margin_last": [
+    3
+   ],
+   "rulebreak": [
+    5
+   ],
+   "collide": [
+    1
    ]
   }
  },
@@ -94,6 +112,15 @@
    "inversion": [
     0,
     2
+   ],
+   "missed": [
+    2
+   ],
+   "conflict": [
+    0
+   ],
+   "collide": [
+    1
    ]
   }
  },
@@ -105,7 +132,7 @@
   "expertBelief": "Impossible sales targets with daily pressure, fear of termination, ethics hotline complaints handled as individual-employee issues rather than system signals, and a leader who defended the model and screened bad news. Pressure to hit numbers produced fraud; the leader's insulation and the incentive system were the cause, not a few bad apples.",
   "answers": {
    "opener": [
-    8
+    10
    ],
    "leverage": [
     1
@@ -149,6 +176,21 @@
    "inversion": [
     2,
     6
+   ],
+   "missed": [
+    2
+   ],
+   "rulebreak": [
+    0
+   ],
+   "gossip": [
+    2
+   ],
+   "collide": [
+    1
+   ],
+   "people_limits": [
+    3
    ]
   }
  },
@@ -160,7 +202,7 @@
   "expertBelief": "Healthy, with a leader who actively seeks and models candour; the main risk is the one he names: success dulling it, plus scale. Nothing major is broken. A good diagnostic should say low friction or small, and not invent a crisis.",
   "answers": {
    "opener": [
-    8
+    10
    ],
    "leverage": [
     1
@@ -191,6 +233,12 @@
    ],
    "inversion": [
     9
+   ],
+   "missed": [
+    0
+   ],
+   "conflict": [
+    0
    ]
   }
  },
@@ -214,6 +262,7 @@
     3
    ],
    "self": [
+    1,
     4
    ],
    "trust_last": [
@@ -247,6 +296,15 @@
    "inversion": [
     3,
     9
+   ],
+   "missed": [
+    3
+   ],
+   "conflict": [
+    2
+   ],
+   "waiting": [
+    0
    ]
   }
  },
@@ -302,6 +360,15 @@
    ],
    "inversion": [
     3
+   ],
+   "missed": [
+    3
+   ],
+   "conflict": [
+    2
+   ],
+   "talent": [
+    1
    ]
   }
  },
@@ -357,6 +424,15 @@
    ],
    "inversion": [
     3
+   ],
+   "missed": [
+    3
+   ],
+   "conflict": [
+    2
+   ],
+   "talent": [
+    1
    ]
   }
  }

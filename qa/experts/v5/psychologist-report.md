@@ -114,3 +114,71 @@ Note: my answers here were the sincere answers of someone who does not see the p
 - Quoting the respondent's words in "What supports this" is an honest design.
 - The loss banner and the three-step loss experiment (name it, make unhurried room, wait before structural change) are the best new content.
 - Healthy answers no longer produce a manufactured problem.
+
+## v5.1 re-run
+
+Same six cases plus C6b, re-answered through the same take.sh and diagnose.sh flow. Openers kept (indices shifted by the coordinator; I did not switch any). Only one answer revised on my own initiative: C5 "Your own part" is now two answers, "I avoid the hard conversation" and "I'm too stretched to see it closely". Loss answers kept (no change for the person). Answers to the new questions are listed per case. One slip of mine worth stating: on the first C1 pass I ran diagnose before answering `margin_last`, so it defaulted to "We don't know which work loses money" and produced a spurious economics read; I answered it properly ("A clear rule, applied the same way every time", the plausible Nokia answer) and the results below are the clean run.
+
+### C1 Nokia (Kallasvuo)
+New answers: last missed number "They were put on a plan, or moved out"; last open disagreement between leaders "I can't remember one"; who set the price "A clear rule, applied the same way every time".
+**Read:** "No single constraint stood out. But some of your answers usually mean something, and they are worth a second look before you conclude nothing is wrong." It lists four answers: "They were put on a plan, or moved out" (usually points to targets and incentives reward the wrong behaviour); "I can't remember one" (disagreement is avoided rather than worked through); "Too many people have to approve it" (decision rights unclear); "I don't think I'm part of it". Then: "Leaders tend to describe their organizations more favourably than the people who work in them do. That isn't a flaw in you; it is where you sit." WATCH: "Ask two or three people who report to you to run Friction."
+**Match:** partial. The first two listed items are exactly the Nokia mechanism (punishment for missing numbers, no open conflict at the top), which is what Vuori and Huy describe. It does not name fear or filtered information. **Surfaced something new?** Yes: it put the answerer's own answers next to what they usually mean, without telling him he is wrong. **Label:** none, and none needed; the page does not claim a diagnosis. **Experiment:** only "ask your reports"; correct and safe. **Usefulness 3.** Better than v5 (was 2): same restraint, but now it points at the right evidence.
+
+### C2 Uber (Kalanick)
+New answers: missed number "They were put on a plan, or moved out"; last leader disagreement "This month" (Uber's top team argued often). The "corners cut" question was not served to this path.
+**Read:** "No single constraint stood out" with three second-look items: "I step in and decide, so it doesn't land on others" (decision authority more centralized than the business requires); "They were put on a plan, or moved out" (targets and incentives reward the wrong behaviour); "A lot" (performance depends on workarounds). Same 360 advice.
+**Match:** partial. The incentives pointer and the leader's own stepping-in are right. It misses what was actually wrong (conduct tolerated for performers), because the question that would find it (`rulebreak`) was not asked. **New vs confirm:** surfaced the leader's own part and the incentive pattern. **Label:** honest. **Usefulness 3.** Better than v5 (was 2).
+
+### C3 Wells Fargo (Tolstedt)
+New answers: missed number "They were put on a plan, or moved out"; rule bent to hit a target: "It's addressed, even if it costs us the number" (what she would have said); how often you hear frustration about a colleague from a third person: "Rarely".
+**Read:** "No single constraint stood out" with four second-look items: "They were put on a plan, or moved out" (targets and incentives reward the wrong behaviour); "I can't remember one" (disagreement avoided); "Who did this?" (problems are met with blame rather than ownership); "I don't think I'm part of it".
+**Match:** partial, near good on content. These are three of the four real causes, in her own words. It stops short of a read: no hypothesis named, no experiment, because her own reassuring answers (the rule-break answer in particular) kept every hypothesis below the line. That is the blind spot working as designed, and the page's closing line is the right response to it. **New vs confirm:** surfaced. **Label:** honest. **Usefulness 3.** Better than v5 (was 1): v5 said "nothing rose above a weak signal" for this same set of answers.
+
+### C4 Pixar (Catmull)
+New answers: missed number "We looked at why together and changed something"; last leader disagreement "This month".
+**Read:** "No clear constraint. Your answers didn't point to a constraint... nothing you described rose above a weak signal."
+**Match:** match, and now **for a reason**: this page differs from C1 to C3 (which got the "second look" page). It is the first time the tool distinguishes Pixar from Wells Fargo. **Usefulness 3** (right verdict, still no content; a one-line "your answers show you ask for and act on bad news, here is what to protect" would be 4). Better than v5 (same text, but now meaningful).
+
+### C5 Grief composite
+New answers: missed number "Nothing much. Targets slip here"; last leader disagreement "I can't remember one"; own part now two answers (see above).
+**Read:** BANNER (unchanged): "Before anything structural. This may not be mainly a structure problem. Name the loss together first; the experiment is there for when you're ready." Headline: "Disagreement is avoided rather than worked through [Emerging pattern]", "Close behind: Performance depends on people working around the system", with "In your words: 'I avoid the hard conversation'" and supports quoted. "Why this experiment: the read is 'Disagreement is avoided...', but the highest-value move is to act on 'The organization is carrying a loss it hasn't processed'." Experiment unchanged (name the loss, unhurried room, wait two or three weeks).
+**Match:** partial. The headline is a defensible symptom of grief (nobody says the hard thing) and the tool is now using my words, which is good. The loss still is not the headline, and the "What not to do" is now about alignment offsites, which has nothing to do with a bereaved family business. Facilitator still optional ("if the loss is heavy"), no advice to the CEO to get her own support. The "Other explanations" list now uses relative language ("as likely, less direct evidence") instead of four "(High confidence)" labels, which fixes my v5 complaint. "Candour=Mixed*" is better than "High". **Surfaced?** Yes. **Label:** better; "Emerging pattern" is fair. **Usefulness 3.** Slightly better than v5: labels fixed, but the safety gaps remain.
+
+### C6 and C6b Agency, harmony (MD is part of it)
+New answers: missed number "Nothing much. Targets slip here"; last leader disagreement "I can't remember one" (both variants). In C6b the earlier `waiting` answer ("Nobody wants to be the one who says no") was no longer asked, because the path changed; self "I avoid the hard conversation" and inversion "Avoid the difficult conversation" kept.
+**Read (both):** "Agreed priorities don't reliably happen [Strong pattern]". Supports: "Nothing much. Targets slip here", "We agree on things that then don't happen", "Follow-through". Experiment: list last quarter's commitments, pick three, owner/date/capacity, declare the rest "not this quarter". Disagreement-avoidance: "much less likely" (C6), "much less likely" (C6b). Closing question: "What did we commit to last quarter that didn't happen, and what did we do about it?"
+**Match:** miss. This is the same wrong read as v4 and worse than v5 on label: **"Strong pattern" from two Medium answers is overconfident.** And it is inconsistent with C5: the same "I can't remember one" produced a conflict-avoidance headline there, but here a leader who also said she can't remember anyone telling her something unwelcome, avoids the hard conversation, and keeps the harmony inversion answer still gets the symptom read, with conflict avoidance ranked "much less likely". The `conflict` question did fire (progress) but the opener and the "targets slip" answers outweighed three behavioural answers. **New vs confirm:** it confirmed her own story ("we agree and then it doesn't happen") and called it strong. **Experiment:** harmless, but it will be agreed to politely and not done. **Usefulness 2.** Worse than v5 on honesty of the label; about the same on content.
+
+### Before and after
+
+| Case | v5 read | v5.1 read (label) | Verdict | Usefulness (v5 to v5.1) |
+|---|---|---|---|---|
+| C1 Nokia | No clear constraint | No single constraint stood out; second look at "put on a plan", "can't remember [a disagreement]", "too many approve", "not part of it" | partial | 2 to 3 |
+| C2 Uber | No clear constraint | No single constraint stood out; second look at "I step in and decide", "put on a plan", "A lot" of workarounds | partial | 2 to 3 |
+| C3 Wells Fargo | No clear constraint | No single constraint stood out; second look at "put on a plan", "can't remember one", "Who did this?" | partial (good content, no read) | 1 to 3 |
+| C4 Pixar | No clear constraint | No clear constraint | match | 3 to 3 (now discriminating) |
+| C5 Grief | Workarounds [Emerging] + loss banner and experiment | Disagreement is avoided [Emerging] + loss banner and experiment; rivals no longer all "High" | partial | 3 to 3 |
+| C6 Harmony | Decisions get stuck [Emerging] | Agreed priorities don't reliably happen [Strong pattern] | miss, overconfident | 2 to 2 |
+| C6b | Decisions get stuck [Emerging] | Same as C6 | miss | 2 to 2 |
+
+Mean usefulness for C1 to C6: (3 + 3 + 3 + 3 + 3 + 2) / 6 = **2.8**, up from 2.2.
+
+### Now fixed
+- The tool no longer gives Pixar and Wells Fargo the same page. The "answers worth a second look" page is the single biggest improvement since v5.
+- The "nothing you described rose above a weak signal" falsehood only survives on the page for a case where it is true (C4).
+- The page quotes the answer, says what it usually means, and says plainly that leaders describe themselves more favourably than staff do. That sentence is accurate and well pitched.
+- The last-missed-number, blame, gossip, rule-bending and conflict questions now exist and appear on the paths where they matter.
+- C5's labels: relative language ("as likely, less direct evidence") replaces four "(High confidence)".
+
+### Not fixed
+- Still no read for the pathologies of C1 to C3: the tool lists the evidence but stops short of "this looks like fear and filtered truth / target pressure / blame". No experiment is offered in those cases beyond "ask your reports". That is honest but undersells what it already knows.
+- C6 is still a miss and now carries the strongest label in my run ("Strong pattern") on the wrong problem. Conflict-avoidance answers are outweighed by the opener and the missed-number answer.
+- Loss is still not the headline when it is unspoken (C5). The facilitator is optional, nothing tells the leader to get her own support first, and the "What not to do" text belongs to a different problem.
+- `rulebreak` did not appear for Uber (C2) at all, where it matters most.
+- Blind-spot and "What not to do" text is chosen by the read, not by the case (C5's alignment-offsite warning).
+- "Candour=" row semantics still unclear.
+
+### Top three remaining recommendations
+1. **Let behavioural answers set the headline when they cluster, and cap the label.** Three or more of {"can't remember an open disagreement", "can't remember anyone telling me", "heard, nothing changed", "avoid the hard conversation" (own part or inversion), "Nobody wants to say no"} should make conflict avoidance the headline in C6 as it already did in C5. Never show "Strong pattern" on two Medium answers about a symptom the leader picked in the opener.
+2. **Convert the "second look" page into a read plus a safe experiment when the second-look items form a known pattern.** C1 to C3 each listed three or four items that together describe fear or pressure. Name the pattern as a tentative hypothesis (clearly labelled Early signal), offer the one cheap experiment (ask three reports the same questions and compare; or run the ten-second behaviour log), and keep the 360 advice first.
+3. **Make loss a hard stop with its own safety copy.** When loss is unspoken or raw, put it first as the headline, quote the answer in "What supports this", require a facilitator, tell the leader to get support for herself before speaking to the team, and replace the structural "What not to do" with loss-specific warnings (no restructure, no new targets in the next weeks, no forced sharing).

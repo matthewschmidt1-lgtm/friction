@@ -1,14 +1,16 @@
-// Friction v5 — engine.
-// Belief: exact Bayesian inference over a causal network of fourteen binary states (16,384 configurations).
+// Friction v5.1 — engine.
+// Belief: exact Bayesian inference over a causal network of fifteen binary states (32,768 configurations).
 // Evidence: each answer option carries log likelihood ratios. Answers about the same thing are correlated, so evidence is
 //   summed per hypothesis, then tempered and capped (EVIDENCE), instead of multiplied as if independent.
-// Actor: value of information, with five questions that are always asked (candour, the last raised problem, the overrule
-//   question, your own part, recent loss) before the engine may stop.
+// Self-report: reassuring answers about impressions count for less than reassuring answers about events; admissions about
+//   your own part count for more (SELF_REPORT).
+// Actor: value of information, with seven questions that are always asked (candour, the last raised problem, the overrule
+//   question, your own part, loss, the last open disagreement, the last missed number) before the engine may stop.
 // Read: chosen by direct evidence, honouring what the person said about their own part; two close causes are shown together.
 // Confidence: from evidence strength, margin, independent sources, at least one event-based answer, coverage, consistency.
 // Decision: the intervention with the highest expected value. Learn: experiment results are untempered evidence.
 import { HYPOTHESES, HYP_ORDER, OPENER, QUESTIONS, INVERSION, ALL_QUESTIONS, ACTOR, ZONES, PLAYBOOKS, EXPERIMENTS, EXPERIMENT_SPECS, ECON_READS, PROFILE_ROWS, PROFILE_PRIMARY, confidenceLabel,
-         NETWORK, NETWORK_ORDER, INTERVENTIONS, QUESTION_COST, VOI, MODEL_VERSION, BLIND_SPOTS, EVIDENCE } from './content.js';
+         NETWORK, NETWORK_ORDER, INTERVENTIONS, QUESTION_COST, VOI, MODEL_VERSION, BLIND_SPOTS, EVIDENCE, SELF_REPORT } from './content.js';
 
 export const byId = Object.fromEntries(ALL_QUESTIONS.map(q => [q.id, q]));
 const N = HYP_ORDER.length;
@@ -40,11 +42,12 @@ const MEDIAN = (() => { const v = Object.values(AVAILABLE).sort((a, b) => a - b)
 export const BALANCE = Object.fromEntries(HYP_ORDER.map(h => [h, Math.max(.65, Math.min(1.35, MEDIAN / (AVAILABLE[h] || MEDIAN)))]));
 const temper = x => x >= 0 ? Math.min(EVIDENCE.capPos, EVIDENCE.temper * x) : Math.max(EVIDENCE.capNeg, EVIDENCE.temper * x);
 // Effective log-weight per hypothesis: answers are summed, tempered and capped; raw evidence (experiments, blind-spot tests) is added as is.
-function weights(evidence, extra = null) {
+const selfReport = (w, event, own) => w < 0 ? (event ? w : w * SELF_REPORT.reassuringImpression) : w * (own ? SELF_REPORT.admission : 1) * (event ? SELF_REPORT.event : 1);
+function weights(evidence, extra = null, extraCtx = {}) {
   const ans = new Float64Array(N), raw = new Float64Array(N);
   const add = (t, h, w, bal) => { if (IDX[h] === undefined) return; t[IDX[h]] += bal && w > 0 ? w * BALANCE[h] : w; };
-  for (const e of evidence) { const t = e.raw ? raw : ans; for (const h in e.w) add(t, h, e.w[h], !e.raw); }
-  if (extra) for (const h in extra) add(ans, h, extra[h], true);
+  for (const e of evidence) { const t = e.raw ? raw : ans; for (const h in e.w) add(t, h, e.raw ? e.w[h] : selfReport(e.w[h], e.event, e.own), !e.raw); }
+  if (extra) for (const h in extra) add(ans, h, selfReport(extra[h], extraCtx.event, extraCtx.own), true);
   const W = new Float64Array(N);
   for (let i = 0; i < N; i++) W[i] = temper(ans[i]) + raw[i];
   return W;
@@ -85,7 +88,7 @@ export function recompute(s) {
   s.evidence = []; s.history = [];
   for (const qid of s.asked) {
     const q = byId[qid];
-    for (const i of s.answers[qid] || []) { const opt = q.options[i]; if (opt) s.evidence.push({ w: opt.sig, src: qid, obs: opt.obs || opt.t, said: opt.t, own: opt.own || null }); }
+    for (const i of s.answers[qid] || []) { const opt = q.options[i]; if (opt) s.evidence.push({ w: opt.sig, src: qid, obs: opt.obs || opt.t, said: opt.t, own: opt.own || null, event: !!q.event }); }
     s.belief = posterior(s.evidence); s.history.push(ranked(s)[0]);
   }
   if (!s.asked.length) s.belief = posterior([]);
@@ -112,7 +115,7 @@ const bestEV = marg => expectedValues(marg)[0];
 function answerOutcomes(s, q) {
   const base = s.belief; const W0 = base.W;
   const outs = q.options.map(opt => {
-    const W1 = weights(s.evidence, opt.sig);
+    const W1 = weights(s.evidence, opt.sig, { event: q.event, own: opt.own });
     const touched = []; for (let i = 0; i < N; i++) { const d = W1[i] - W0[i]; if (Math.abs(d) > 1e-9) touched.push([i, Math.exp(d)]); }
     const acc = new Float64Array(N); let lik = 0;
     for (let st = 0; st < STATES; st++) {
@@ -148,6 +151,9 @@ export function nextQuestion(s) {
   if (n >= ACTOR.maxQuestions && !reqLeft.length) return INVERSION;
   // a tired leader is asked about loss first
   if (chosen(s, 'opener').some(o => o.tired) && reqLeft.some(q => q.id === 'loss')) return byId.loss;
+  // once money has been named as a worry, ask the behavioural price question rather than leave it to chance
+  const moneyNamed = s.evidence.some(e => (e.w.economics || 0) >= .9);
+  if (moneyNamed && !s.asked.includes('margin_last') && n < ACTOR.maxQuestions - reqLeft.length) return byId.margin_last;
   const candidates = QUESTIONS.filter(q => isOpen(s, q, p));
   if (!candidates.length) return INVERSION;
   const scored = candidates.map(q => ({ q, ...valueOfInformation(s, q) }));
@@ -229,7 +235,11 @@ export function diagnose(s, cost, ranges = {}) {
   const play = PLAYBOOKS[top];
   const profile = PROFILE_ROWS.map(row => {
     const asked = (row.from || []).some(id => s.asked.includes(id));
-    return { k: row.k, expected: row.expected, good: row.good, observed: asked ? row.observe(p) : 'Not asked', asked, primary: asked && (PROFILE_PRIMARY[top] || []).includes(row.k) };
+    let observed = asked ? row.observe(p) : 'Not asked';
+    // never report a healthy reading that the person's own answers contradict
+    const flagged = asked && signals(s).some(({ q, opt }) => (row.from || []).includes(q.id) && (row.hyps || []).some(h => (opt.sig[h] || 0) >= .6));
+    if (flagged && row.good.includes(observed) && row.floor) observed = row.floor;
+    return { k: row.k, expected: row.expected, good: row.good, observed, asked, primary: asked && (PROFILE_PRIMARY[top] || []).includes(row.k) };
   });
   const evs = expectedValues(p);
 
@@ -245,9 +255,21 @@ export function diagnose(s, cost, ranges = {}) {
   }
   const ownSaid = s.evidence.filter(e => e.own === top).map(e => e.said);
   const grief = chosen(s, 'loss').some(o => o.grief) && p.loss >= .2;
+  const tired = !!(opener && opener.tired);
+  // answers that usually point to a problem, in the person's own words, whatever the overall belief says
+  const concerns = [];
+  for (const { q, opt } of signals(s)) {
+    if (q.id === 'opener') continue;
+    if (q.id === 'inversion') { if (opt.admits) concerns.push({ said: opt.t, q: 'You named this as a way to make it worse', hyp: null }); continue; }
+    const [h, w] = Object.entries(opt.sig).sort((a, b) => b[1] - a[1])[0] || [];
+    if (h && w >= (opt.own ? .7 : .9)) concerns.push({ said: opt.t, q: q.short || q.eyebrow, hyp: h, means: H(h), w: w * (q.event ? 1.2 : 1) + (opt.own ? .3 : 0) });
+  }
+  concerns.sort((a, b) => (b.w || 0) - (a.w || 0));
+  if (denial) concerns.push({ said: chosen(s, 'self').find(o => o.denial).t, q: 'Your own part', hyp: null });
 
-  if (low) return { p, ranked: r, top, second, third, low, coherence: false, zone, dominant: null, lensNorm, load, supports: [], contradicts: [], open: null, changedMind: null, forces: [], play, decision: top, decisionPlay: play, experiment: EXPERIMENTS[top], spec: EXPERIMENT_SPECS[top], evs, mpe: [], estimate: null, econ: null, profile, notes, grief, paired: null, ownSaid: [], blind: { statement: '', status: 'n/a' },
-    label: { key: 'none', label: 'No clear constraint', d: 'Nothing you described rose above a weak signal. That doesn\'t rule one out.' }, margin: p[top] - p[second], asked: s.asked.slice(), modelVersion: MODEL_VERSION };
+  const mixed = low && concerns.filter(c => c.hyp || c.q === 'You named this as a way to make it worse').length >= 2;
+  if (low) return { p, ranked: r, top, second, third, low, mixed, concerns: mixed ? concerns : [], tired, coherence: false, zone, dominant: null, lensNorm, load, supports: [], contradicts: [], open: null, changedMind: null, forces: [], play, decision: top, decisionPlay: play, experiment: EXPERIMENTS[top], spec: EXPERIMENT_SPECS[top], evs, mpe: [], estimate: null, econ: null, profile, notes, grief, paired: null, ownSaid: [], blind: { statement: '', status: 'n/a' },
+    label: mixed ? { key: 'mixed', label: 'No single constraint', d: 'No single explanation rose above the rest, but some of your answers usually point to a problem.' } : { key: 'none', label: 'No clear constraint', d: 'Nothing you described rose above a weak signal. That doesn\'t rule one out.' }, margin: p[top] - p[second], asked: s.asked.slice(), modelVersion: MODEL_VERSION };
 
   // decision: acting off the read has to earn it
   const evsAdj = evs.map(x => ({ ...x, ev: x.key === top ? x.ev : x.ev * .88 })).sort((a, b) => b.ev - a.ev);
@@ -271,7 +293,9 @@ export function diagnose(s, cost, ranges = {}) {
 
   let estimate = null;
   if (cost && cost.managers > 0 && cost.hours > 0) { const hoursYear = cost.managers * cost.hours * 48; estimate = { managers: cost.managers, hours: cost.hours, hoursYear, rate: cost.rate || null, dollars: cost.rate ? hoursYear * cost.rate : null }; }
-  const econEntry = ECON_READS.find(e => e.when(p, ranges));
+  // an economic statement needs at least one financial input; without it, the page says nothing about money
+  const gaveFinancials = ['revenue', 'profit'].some(k => ranges[k] && ranges[k] !== 'Prefer not to say') || !!estimate;
+  const econEntry = gaveFinancials ? ECON_READS.find(e => e.when(p, ranges)) : null;
   const econ = econEntry && econEntry.t ? econEntry : null;
 
   // confidence: earned by evidence, not by how saturated the network is
@@ -283,8 +307,8 @@ export function diagnose(s, cost, ranges = {}) {
   const measured = h => s.asked.some(id => id !== 'opener' && id !== 'inversion' && byId[id].options.some(o => Math.abs(o.sig[h] || 0) >= .8));
   const unmeasured = HYP_ORDER.filter(h => h !== top && p[h] >= .4 && !measured(h));
   let key = p[top] >= .85 && margin0 >= .2 && sources >= 3 && eventSupport && !against && !unmeasured.length && !sel.paired ? 'high'
-    : p[top] >= .65 && margin0 >= .1 && sources >= 2 && against <= 1 ? 'strong'
-    : p[top] >= .45 ? 'emerging' : 'early';
+    : p[top] >= .65 && margin0 >= .1 && sources >= 2 && supports.some(x => x.w >= 1.2) && against <= 1 ? 'strong'
+    : p[top] >= .45 && sources >= 2 ? 'emerging' : 'early';
   if (coherence && (key === 'high' || key === 'strong')) key = 'emerging';
   for (let i = 0; i < downgrade; i++) key = DOWN[key];
   const base = confidenceLabel({ high: .8, strong: .65, emerging: .45, early: 0 }[key]);
@@ -309,7 +333,7 @@ export function diagnose(s, cost, ranges = {}) {
     nextTest: open ? { kind: 'question', t: open.question } : { kind: 'experiment', t: `${experiment.days}-day ${((spec || {}).action || 'experiment')}`.toLowerCase() },
     blindSpot: { hyp: top, statement: play.blind, test: blind.test, prediction: { ifTrue: blind.ifTrue, ifFalse: blind.ifFalse }, status: 'untested' },
   };
-  return { p, ranked: r, top, second, third, low, coherence, zone, dominant, lensNorm, load, supports, contradicts, open, changedMind, forces, play, decision, decisionPlay, experiment, spec, evs: evsAdj, mpe: s.belief.mpe, estimate, econ: grief ? null : econ, profile, label, critic, blind, notes, grief, paired: sel.paired, ownSaid, margin: margin0, asked: s.asked.slice(), modelVersion: MODEL_VERSION };
+  return { p, ranked: r, top, second, third, low, mixed: false, concerns, tired, coherence, zone, dominant, lensNorm, load, supports, contradicts, open, changedMind, forces, play, decision, decisionPlay, experiment, spec, evs: evsAdj, mpe: s.belief.mpe, estimate, econ: grief ? null : econ, profile, label, critic, blind, notes, grief, paired: sel.paired, ownSaid, margin: margin0, asked: s.asked.slice(), modelVersion: MODEL_VERSION };
 }
 
 /* ---------- learn: the blind-spot test and the experiment result are both evidence, untempered ---------- */

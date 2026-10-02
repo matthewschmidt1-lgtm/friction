@@ -617,3 +617,5 @@ details.more.on-dark .more-body strong, details.more.on-dark .more-body b{color:
 .grief .display{margin:.2rem 0 .7rem} .grief p{color:var(--ink); line-height:1.6} .grief p+p{margin-top:.6rem}
 td.obs-na{color:var(--ink-dim); font-weight:500}
 .low-detail{color:var(--ink-dim); line-height:1.65; margin-top:.4rem}
+.concerns{margin:1.2rem 0 .4rem} .concerns .sig small{display:block; margin-top:.2rem; color:var(--ink-dim)}
+.grief.tired{border-left-color:var(--sun, #E08A3C)}

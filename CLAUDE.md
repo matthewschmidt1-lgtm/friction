@@ -35,26 +35,36 @@ DESIGN.md         creative direction and experience architecture
 README.md         how the engine thinks, how to edit content, deploy steps
 ```
 
-## How the engine thinks (v5)
+## How the engine thinks (v5.1)
 
 Signal → Hypothesis → Question → Evidence → Decision → Act → Learn.
 
-- **Belief.** Fourteen binary states in a causal Bayesian network (`NETWORK` in content.js)
-  with noisy-OR conditionals. 16,384 configurations enumerated exactly in `engine.js`; no
+- **Belief.** Fifteen binary states in a causal Bayesian network (`NETWORK` in content.js)
+  with noisy-OR conditionals. 32,768 configurations enumerated exactly in `engine.js`; no
   library. Every answer option carries `sig` (log likelihood ratios per state) and `obs`
   (the observation in plain words); options may carry `own` ("it's me"), `denial`,
   `grief`, `nothing`, `tired`, `force`. Positive evidence per state is scaled by `BALANCE`
   (available weight vs the median), then tempered and capped by `EVIDENCE`; experiment
-  outcomes and blind-spot tests use raw evidence.
+  outcomes and blind-spot tests use raw evidence. `SELF_REPORT`: reassuring answers to
+  impression questions count ×.6 (leaders over-report health); reassuring answers to `event`
+  questions count in full; admissions (`own`) count ×1.25.
 - **Read.** `readFrom` picks from states within .12 of the top by direct evidence, plus a
   bonus for the person's own words; near-ties go upstream; close seconds are `paired`.
 - **Confidence label.** High needs p≥.85, margin ≥.2, three distinct questions with strong
   evidence including a behavioural (`event`) one, nothing against, every lens asked, and
   no pairing. `notes` (consistency checks) and coherence lower it. Random answering gives
   High in about 1 run in 300; keep it that way.
-- **Required questions.** `trust`, `trust_last`, `overrule`, `self`, `loss` are always asked
-  (`required: true`); the "tired" opener goes to `loss` first. A grief-flagged loss answer
-  sets `grief`: the page leads with it and the decision becomes `loss`.
+- **Required questions.** `trust`, `trust_last`, `overrule`, `self`, `loss`, `conflict`, `missed`
+  are always asked (`required: true`); the "tired" opener goes to `loss` first. A grief-flagged loss answer
+  sets `grief`: the page leads with it and the decision becomes `loss`. The tired opener sets
+  `tired`: a "Before the business" banner.
+- **Null reads.** "No clear constraint" only when the answers are actually reassuring. If two or
+  more answers usually point to a problem (`concerns`: an answer whose top weight is ≥ .9, an
+  admission ≥ .7, an inversion pick flagged `admits`), the page is "No single constraint stood
+  out" (`LOW_MIXED`) and quotes them. Reads from one answer are Early signal, never Emerging.
+- **Page honesty.** Rival explanations are described relative to the read, never with a label
+  that could outrank it. Profile rows can't read healthy when an answer behind them says
+  otherwise (`hyps`/`floor`). Economic statements need a financial input.
 - **Actor.** `nextQuestion` scores unasked questions by value of information: simulate each
   answer, weight by predictive probability, re-infer, re-run the decision, measure the gain in
   expected value minus `QUESTION_COST`. Samples every lens twice, asks the separator when the
@@ -94,6 +104,17 @@ forces, blind spot, notDo, policy, move, question, metric, two readings), `EXPER
    iframe; `document.body.dataset.q` exposes the current question id so a script can answer.
    The Browser pane is often hidden, which pauses rendering; prefer headless screenshots.
 5. Commit with a message that explains why; push. Matthew checks the live site himself.
+
+## Real-world testing (2026-10)
+
+`qa/take.sh FILE CASE` shows the next question for a case, the way a person meets it;
+`qa/diagnose.sh FILE CASE` shows the page. Three Sonnet testers (organizational psychologist,
+decision scientist, intuitive) took it as real leaders (Nokia, Uber, Wells Fargo, Boeing,
+Microsoft, Kodak, Theranos, Twitter, Zappos, Pixar) and practice composites, writing what the
+answerer believes and what is actually wrong before seeing a question. Cases and reports are in
+`qa/experts/v5/`. The biggest lesson: the answerer matters more than the facts (Nokia's CEO and
+a Nokia middle manager get different reads). When adding opener options, append them or migrate
+saved answer indices.
 
 ## Gotchas
 

@@ -39,6 +39,18 @@
    "inversion": [
     0,
     6
+   ],
+   "missed": [
+    0
+   ],
+   "conflict": [
+    1
+   ],
+   "talent": [
+    1
+   ],
+   "direction": [
+    1
    ]
   }
  },
@@ -94,6 +106,18 @@
    "inversion": [
     3,
     9
+   ],
+   "missed": [
+    2
+   ],
+   "rulebreak": [
+    2
+   ],
+   "collide": [
+    2
+   ],
+   "analysis": [
+    3
    ]
   }
  },
@@ -105,7 +129,7 @@
   "expertBelief": "Schedule and cost pressure driven by incentives and a shareholder-value culture outweighed engineering voice; delegated certification (ODA) put Boeing staff in conflict; MCAS single-sensor design was hidden from pilots to avoid simulator training (a sales promise); engineers could not push back. Primary: incentives/economics driving trust failure (candour); secondary: unclear decision authority between engineering and program management.",
   "answers": {
    "opener": [
-    8
+    10
    ],
    "leverage": [
     1
@@ -136,6 +160,21 @@
    ],
    "inversion": [
     7
+   ],
+   "missed": [
+    2
+   ],
+   "conflict": [
+    2
+   ],
+   "blame_first": [
+    1
+   ],
+   "talent": [
+    1
+   ],
+   "collide": [
+    1
    ]
   }
  },
@@ -191,6 +230,21 @@
    "inversion": [
     7,
     6
+   ],
+   "missed": [
+    2
+   ],
+   "conflict": [
+    1
+   ],
+   "collide": [
+    1
+   ],
+   "margin_last": [
+    3
+   ],
+   "blame_first": [
+    1
    ]
   }
  },
@@ -202,7 +256,7 @@
   "expertBelief": "Economics: film earned very high margins while digital captured a fraction (digital cameras, minilabs, inkjet printers had little profit pool); no digital business could replace film profit, and Kodak lagged in resolving which bets to fund. Primary: unit economics/profit pool; secondary: direction (hedging between film and digital over decades, protecting film culture).",
   "answers": {
    "opener": [
-    7
+    8
    ],
    "focus": [
     0
@@ -247,6 +301,24 @@
    "inversion": [
     6,
     7
+   ],
+   "missed": [
+    2
+   ],
+   "margin_last": [
+    3
+   ],
+   "conflict": [
+    1
+   ],
+   "authority": [
+    1
+   ],
+   "rulebreak": [
+    5
+   ],
+   "collide": [
+    1
    ]
   }
  },
@@ -300,6 +372,27 @@
    "inversion": [
     4,
     6
+   ],
+   "missed": [
+    5
+   ],
+   "conflict": [
+    2
+   ],
+   "rulebreak": [
+    1
+   ],
+   "collide": [
+    4
+   ],
+   "blame_first": [
+    0
+   ],
+   "gossip": [
+    1
+   ],
+   "people_limits": [
+    3
    ]
   }
  },
@@ -311,7 +404,7 @@
   "expertBelief": "Nothing material is wrong: good delivery, profit stable, people candid, decisions made at the right level. A clean control: ideal output is low friction or a minor, proportionate note with a cheap experiment.",
   "answers": {
    "opener": [
-    8
+    10
    ],
    "leverage": [
     1
@@ -345,6 +438,92 @@
    ],
    "inversion": [
     7
+   ],
+   "missed": [
+    0
+   ],
+   "conflict": [
+    1
+   ],
+   "decisions": [
+    6
+   ]
+  }
+ },
+ "C5b": {
+  "name": "C5b: same owner choosing the new margin opener",
+  "who": "Owner-CEO of a 45-person B2B equipment-services firm, this year, who says his account managers lack ownership and drive",
+  "source": "practice composite",
+  "answererBelief": "My account managers do not take ownership and do not push customers; they need to be more accountable and hungry. We are busy but profit is thin because of people not performing.",
+  "expertBelief": "Economics: price list set years ago, discounts at the discretion of reps to hold volume, top customers are unprofitable after service cost; gross margin has slipped from 38 to 27 percent. Busy but thin profit is a pricing/unit-economics problem, not a motivation problem. Reps respond to a commission on revenue.",
+  "answers": {
+   "opener": [
+    8
+   ],
+   "focus": [
+    1
+   ],
+   "execution": [
+    2
+   ],
+   "leverage": [
+    2
+   ],
+   "self": [
+    5
+   ],
+   "trust_last": [
+    0
+   ],
+   "overrule": [
+    1
+   ],
+   "trust": [
+    1
+   ],
+   "loss": [
+    0
+   ],
+   "talent": [
+    2
+   ],
+   "repeat": [
+    3
+   ],
+   "execution_why": [
+    7,
+    3
+   ],
+   "business_uncertainty": [
+    5
+   ],
+   "inversion": [
+    4,
+    6
+   ],
+   "missed": [
+    5
+   ],
+   "conflict": [
+    2
+   ],
+   "rulebreak": [
+    1
+   ],
+   "collide": [
+    4
+   ],
+   "blame_first": [
+    0
+   ],
+   "gossip": [
+    1
+   ],
+   "people_limits": [
+    3
+   ],
+   "margin_last": [
+    1
    ]
   }
  }

@@ -115,3 +115,78 @@ Method: six cases, answered in character, no reading of source. Case file: qa/ex
 3. Add a family / ownership / succession path and an unspoken-thing question. The ONE QUESTION worked for C5; build a branch so the experiment is a private one-to-one conversation instead of a meeting opener.
 4. When the engine has two close candidates (C4), lead with the stronger one or show both evenly. Today the page headlined an "Emerging pattern" while listing "Decision rights are unclear" as "Strong pattern" in the alternatives, and recommended a leadership-alignment test when he had answered "Mostly similar".
 5. Give a defensive or confident user a way in. A null page is honest, but add: "If everything above felt easy to answer, that is information. Which question was hardest to answer honestly?" plus the "ask your reports the same questions" step made concrete (a shareable link/short form).
+
+## v5.1 re-run
+
+New questions that appeared: "missed" (last missed number or deadline), "conflict" (last open leader disagreement), "rulebreak" (targets hit by bending a rule, only for C2), "margin_last" (who set the price, C5 only), plus "direction" and "waiting" in some paths. Opener now has "Cash or margin is tighter than it should be" and "We can't hire or keep the right people".
+
+### C1 Nokia
+- New answers: missed "We looked at why together and changed something"; conflict "This quarter"; direction "Almost identical". Self ("I don't think I'm part of it") and loss ("No") unchanged.
+- Friction: unchanged, "No clear constraint", same text. No banner.
+- Verdict: miss (honest null), same as v5. Usefulness 2. Equal to v5.
+- Felt: still smooth. The new questions were easy to answer flatteringly; "This quarter" and "looked at why together" cost him nothing. Nothing in this path is able to catch a proud man.
+
+### C2 Theranos
+- New answers: conflict "Never"; missed "They were put on a plan, or moved out"; rulebreak "I haven't seen it happen". Others unchanged.
+- Friction: "No single constraint stood out. But some of your answers usually mean something, and they are worth a second look before you conclude nothing is wrong." It lists five answers: "A lot" (workarounds), "I step in and decide, so it doesn't land on others", "Never" (last open disagreement; "disagreement is avoided rather than worked through"), "They were put on a plan, or moved out" ("targets and incentives reward the wrong behaviour"), "Take the criticism personally and defend myself". Then: "Leaders tend to describe their organizations more favourably than the people who work in them do. That isn't a flaw in you; it is where you sit." Watch: ask two or three reports to run it.
+- Verdict: partial (was miss). It touches centralization, no open disagreement, people moved out, defensiveness: these ARE the record's fear culture and removed dissenters. It does not and cannot reach "the product doesn't work" or secrecy. Usefulness 3 (was 1).
+- Better than v5: yes, clearly. The "worth a second look" list is what I asked for: it stacks the self-incriminating answers instead of shrugging. The "where you sit" line is gentle and true.
+- Felt: for the first time I felt noticed. A defensive founder would likely read the list, bristle at "defend myself" being quoted, and either go quiet or actually read it. Good friction.
+
+### C3 Twitter
+- New answers: missed "They were put on a plan, or moved out"; conflict "Never"; waiting "A person".
+- Friction: same read, "Performance depends on people working around the system" [Emerging pattern], now "Close behind: The best people aren't on the highest-value problems". Banner unchanged ("Before anything structural... Name the loss together first"). "It isn't safe to raise problems or disagree" dropped to "(less likely)". Same two-part experiment (workaround test, loss naming, wait 2 to 3 weeks).
+- Verdict: partial, same as v5. Usefulness 4. Slightly worse on the fear dimension: "The person paid for it", "Never" disagree, and "moved out" together should lift safety, and instead safety fell to "less likely". The new questions gave it more fear evidence and it did not use it.
+- Felt: seen at the loss question, same as before.
+
+### C4 Zappos
+- New answers: missed "We looked at why together and changed something"; conflict "This month". Everything else unchanged.
+- Friction: READ "Decisions get stuck" [Emerging pattern]; "Important decisions aren't clearly held: either nobody owns them, or too many people have to say yes... It is the absence of decision rights." "Still trying to understand: is it 'Decision rights are unclear' or 'Agreed priorities don't reliably happen'?" Experiment: pick the last three stalled decisions and ask who owned each; publish who recommends, who decides, who is consulted. What not to do: "Don't fix this by adding another approval layer."
+- Verdict: match against the record (roles and decision ownership were the confusion). Still a miss against my read (ideology and fear of saying it). Usefulness 4 (was 3).
+- Better than v5: yes. In v5 the page led with a leadership-alignment test that did not fit "Mostly similar". Now it leads with decision rights, which the record backs, and the experiment is exactly what a holacracy needs.
+- Felt: the "what not to do" about approval layers matched what I had chosen as the worsener, and that felt like being listened to.
+
+### C5 Family business
+- Switched opener from "Effort is high but results aren't" to "Cash or margin is tighter than it should be" (it matches her stated belief far better; I noted this was the old gap). New answers: margin_last "Whoever was selling, case by case"; missed "Nothing much. Targets slip here"; conflict "Never"; decisions "Nobody clearly owns it"; leverage "A lot"; repeat "It depends on the person". The rest are carried over from v5 (self "I avoid the hard conversation"; loss "No").
+- Friction: READ "Disagreement is avoided rather than worked through" [Emerging pattern]; "In your words: 'I avoid the hard conversation'"; "Close behind: Decision rights are unclear". Support: [High] "Never" (the last open disagreement between leaders). "Disagreeing in the room feels riskier than working around it later." Experiment (30 days): the high-value move is decision rights, with a count of how often anyone changes their mind in meetings. ONE QUESTION: "What did someone in our last leadership meeting think and not say?"
+- Verdict: partial, a bit closer than v5. "A disagreement that has not been had yet" is nearly my reading, and the ONE QUESTION is again close. Still no succession, no father/daughter, no old loss. Usefulness 3 (same as v5).
+- Better or worse: slightly better on the unspoken thing, slightly worse on the experiment, which still assumes a leadership "room" and a rotating speaking order. In a two-person family firm there is no room.
+- Felt: relief at finally having "cash" as a choice. The cash/price question ("who set the price") was a nice real-world one and I wish it fed the page: there is no word about margin on the final page, even though my opener was cash.
+
+### C6 Exhausted owner
+- New answers: missed "The number was quietly made to work"; conflict "I can't remember one". Revised self to two answers: "I step in and decide, so it doesn't land on others" plus "I'm too stretched to see it closely" (what I wanted in v5). Opener ("I'm tired...") unchanged; loss "No" unchanged.
+- Friction: READ "Decision authority is more centralized than the business requires" [Emerging pattern]. New BANNER: "Before the business. You said you're tired and can't tell whether it's the business or you. Hold the read lightly." "In your words" now quotes both "I step in and decide, so it doesn't land on others" and "I find it hard to let go of it". Experiment still the workaround interview, 45 days; "Don't fix this with an empowerment programme."
+- Verdict: partial, a bit better. Usefulness 3 (was 2). The banner finally acknowledges her; "Hold the read lightly" is kind and honest.
+- But it is one sentence. It does not answer "business or me", offers no rest, no handoff of work, and the experiment still adds work. The cost line says "Employee frustration", about her people, not her.
+- Felt: seen for one line, then handed the same work list. Better, still not enough.
+
+### Before and after
+| Case | v5 read | v5.1 read + label | Verdict | Use v5 to v5.1 |
+|---|---|---|---|---|
+| C1 | No clear constraint | No clear constraint | miss (honest null) | 2 to 2 |
+| C2 | No clear constraint | No single constraint stood out + five answers worth a second look | partial | 1 to 3 |
+| C3 | Workarounds [Emerging] + loss banner | same, safety now "less likely" | partial | 4 to 4 |
+| C4 | Leadership not aligned [Emerging] | Decisions get stuck [Emerging], decision rights | match vs record, miss vs my read | 3 to 4 |
+| C5 | Not safe to raise problems [Emerging] | Disagreement avoided [Emerging], decision rights close behind | partial | 3 to 3 |
+| C6 | Decision authority too central [Emerging] | same + "Before the business" tired banner | partial | 2 to 3 |
+
+### Fixed
+- The null no longer shrugs when the person shows self-incriminating answers (C2).
+- Cash and hiring are now openers; I could say what I actually believed (C5).
+- Exhaustion now gets acknowledged on the page (C6).
+- "Who set the price" and "last missed number" are good, real, behavioural questions.
+- Decision-rights read for Zappos, which fits the record.
+- Two-answer "Your own part" lets a person be honest about two things (C6).
+
+### Not fixed
+- C1 still gets a null, with nothing to catch a confident, flattering answerer. The advice to ask reports remains only advice.
+- Fear in C3 is not weighted despite three supporting answers; it fell instead.
+- Family and succession, and the old unspoken loss, are still invisible (C5). Loss is still only "the organization lost something".
+- The exhausted owner's question is acknowledged but not answered, and the experiment adds work.
+- The cash/margin opener and the price question do not appear on C5's final page at all.
+- Experiments assume a leadership room (C5).
+
+### Top three remaining recommendations
+1. Make the tired banner do work: for the exhausted opener, replace or cap the experiment with one that removes work (stop one thing, hand off one named decision), say something about "business or me" directly, and ask about rest and what she misses doing.
+2. Add a family / ownership / succession screen and carry the cash and price answers through to the page. When margin or cash is the opener, the page should say something about margin; when two generations share control, the experiment should be a private conversation, not a meeting format.
+3. Use the new behavioural evidence for fear and for the null: stack "Never" disagree, "moved out", and "paid for it" into a safety read (C3), and give the C1 null path a concrete tool, such as a short link the leader sends to three reports and a way to compare side by side.
