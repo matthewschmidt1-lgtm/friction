@@ -1,0 +1,53 @@
+<!DOCTYPE html><html><body><pre id="out">pending</pre><script type="module">
+// Replays one persona's answers through the real engine exactly as the app would and prints what the user would see.
+const out = document.getElementById('out');
+try {
+  const P = new URLSearchParams(location.search);
+  const C = await import('../js/content.js');
+  const { newSession, applyAnswer, nextQuestion, diagnose } = await import('../js/engine.js');
+  const all = JSON.parse(await (await fetch('../' + P.get('file') + '?t=' + Date.now())).text());
+  const ids = P.get('pid') ? [P.get('pid')] : Object.keys(all);
+  const L = [];
+  for (const pid of ids) {
+    const p = all[pid]; const s = newSession();
+    L.push(`════════ ${pid}: ${p.name || ''}`, '', 'QUESTIONS THE APP ASKED, IN ORDER, AND THE ANSWER GIVEN');
+    let q, n = 0;
+    while ((q = nextQuestion(s))) {
+      n++; let idx = p.answers[q.id];
+      if (!idx) { idx = [0]; L.push(`  (no answer supplied for "${q.id}", defaulted to the first option)`); }
+      L.push(`  ${n}. [${q.id}] ${q.title}`, `     → ${idx.map(i => q.options[i] ? q.options[i].t : '??').join(' + ')}`);
+      applyAnswer(s, q.id, idx);
+    }
+    const cost = p.cost && p.cost.managers > 0 ? p.cost : null;
+    const r = diagnose(s, cost, p.ranges || {});
+    const H = h => C.HYPOTHESES[h].name;
+    L.push('', 'THE DIAGNOSIS PAGE');
+    if (r.low) {
+      L.push(`  01 THE READ: Low friction — ${C.LOW_FRICTION.summary}`, `     ${C.LOW_FRICTION.detail}`, `  WATCH: ${C.LOW_FRICTION.watch}`);
+    } else {
+      const play = r.play, Z = C.ZONES[r.zone], exp = r.experiment;
+      L.push(`  01 THE READ: ${play.constraint}   [${r.label.label}]`, `     ${play.diagnosis}`);
+      if (r.changedMind) L.push(`     We changed our mind: earlier it pointed to ${H(r.changedMind.from)}.`);
+      L.push('     What supports this:', ...r.supports.slice(0, 3).map(x => `       · [${x.strength}] ${x.obs}`));
+      if (r.open && r.open.question) L.push(`     Still trying to understand: is it "${H(r.top)}" or "${H(r.second)}"? The question that would tell us: ${r.open.question}`);
+      L.push('', `  02 THE GAP: ${Z.name} — ${Z.label}`, `     ${(C.ZONE_BY_CONSTRAINT[r.zone] || {})[r.top] || Z.summary}`);
+      L.push('     [expander] Why we think this:', '       Chain: ' + play.chain.join(' → '));
+      L.push(...r.forces.map(f => `       Reinforcing (${f.src === 'pattern' ? 'our inference' : 'from your answers'}): ${f.t}`));
+      if (r.contradicts.length) L.push('       What cuts against it:', ...r.contradicts.slice(0, 3).map(x => `         · ${x.obs}`));
+      L.push('       Other explanations weighed:', ...r.ranked.slice(0, 5).map(h => `         · ${H(h)} (${r.p[h] >= .8 ? 'High confidence' : r.p[h] >= .65 ? 'Strong pattern' : r.p[h] >= .45 ? 'Emerging pattern' : 'Early signal'})`));
+      if (r.mpe && r.mpe.length) L.push('       Most probable configuration: ' + r.mpe.map(H).join(' → '));
+      L.push('     [expander] What it\'s costing: ' + play.consequences.join(', ') + (r.econ ? ` | Operating profile suggests: ${r.econ.t} (${r.econ.conf})` : ''));
+      L.push('       Expected vs observed: ' + r.profile.map(x => `${x.k}=${x.observed}${x.primary ? '*' : ''}`).join('; '));
+      L.push('', `  03 WHAT TO TEST (${exp.days} days)`);
+      if (r.decision !== r.top) L.push(`     Why this experiment: the read is "${H(r.top)}", but the highest-value move is to act on "${H(r.decision)}".`);
+      L.push(`     Blind spot (untested): ${play.blind}`, `       Test: ${r.blind.test}`, `       If true: ${r.blind.ifTrue}`, `       If false: ${r.blind.ifFalse}`, `       If it holds, add: ${r.blind.step} Watch: ${r.blind.watch}`);
+      L.push(`     Hypothesis: ${exp.hypothesis}`, ...exp.steps.map((x, i) => `       ${i + 1}. ${x}`), '     Watch: ' + exp.watch.join('; '));
+      L.push(`     [expander] What not to do: ${play.notDo.t} ${play.notDo.d}`);
+      L.push(`     [expander] Further reading: ` + play.reading.map(b => b.title).join('; '));
+      L.push('', `  04 ONE QUESTION: ${play.question}`);
+    }
+    L.push('', '');
+  }
+  out.textContent = L.join('\n');
+} catch (e) { out.textContent = 'ERROR ' + e.message + '\n' + e.stack; }
+</script></body></html>
