@@ -85,7 +85,7 @@ const SCREENS = {
       <div class="lines">
         <p>Most organizations don't have a shortage of effort.</p>
         <p>They have friction between what the business needs, how the system operates, and what people are able to do.</p>
-        <p>Three lenses. About ten questions, chosen as you answer. One hypothesis worth testing.</p>
+        <p>Three lenses. Ten to fifteen questions, chosen as you answer. One hypothesis worth testing.</p>
       </div>
       <div class="cta-row">
         <button class="btn btn-primary" data-go="begin">Begin <span class="arr">→</span></button>
@@ -98,7 +98,7 @@ const SCREENS = {
     return `<section class="screen stagger">
       <p class="eyebrow">How this works</p>
       <h1 class="display lg how-title">A diagnosis that forms hypotheses, not a questionnaire that produces a score.</h1>
-      <p class="lede" style="margin-top:1rem">Friction starts from what you're seeing, forms several possible explanations, and asks the question most likely to tell them apart. It stops when one explanation is clearly ahead, usually after nine to twelve questions and about four minutes. No score, no name, no email. Everything stays in this browser.</p>
+      <p class="lede" style="margin-top:1rem">Friction starts from what you're seeing, forms several possible explanations, and asks the question most likely to tell them apart. It always asks a few questions about what actually happens, and about your own part, then stops when one explanation is clearly ahead: usually ten to fifteen questions, about five minutes. No score, no name, no email. Everything stays in this browser.</p>
       <div class="mission">
         <p class="mission-label">The goal</p>
         <p class="mission-t">Friction creates a mechanism for directing attention and problem-solving capacity toward the highest-value problems and opportunities.</p>
@@ -158,13 +158,20 @@ const SCREENS = {
     const lensRow = k => `<div class="bar"><b>${LENSES[k].name}<small>${esc(LENSES[k].line)}</small></b><div class="track"><div class="fill" style="--c:var(--lens-${k})" data-w="${Math.round(15 + 85 * r.lensNorm[k])}"></div></div></div>`;
     const reading = `<div class="reading">${play.reading.map(b => `<div class="book"><span class="book-t">${esc(b.title)} <span class="book-a">· ${esc(b.author)}</span></span><p>${esc(b.idea)}</p></div>`).join('')}</div>`;
 
+    const griefBlock = withExperiment => `<div class="jstep stagger"><div class="grief">
+        <p class="eyebrow">Before anything structural</p>
+        <h2 class="display md">This may not be mainly a structure problem.</h2>
+        <p>You told us the organization has lost something this year and it hasn't really been talked about, or is still raw. Structural changes land hard on people who are grieving. Name the loss together first. If it is heavy, bring in someone to facilitate so the leaders can take part rather than run it.</p>
+        ${withExperiment ? '<p>The experiment further down is still there for when you\'re ready.</p>' : ''}
+      </div></div>`;
     if (r.low) {
       const inv = (state.session.answers.inversion || []).map(i => INVERSION.options[i]);
       return `<section class="screen result journey">
+      ${r.grief ? griefBlock(false) : ''}
       <div class="jstep stagger">${step('01', 'Our current read', 'Nothing to fix yet')}
-        <h1 class="display lg edge-name">${esc(LOW_FRICTION.name)}</h1><p class="lead">${esc(LOW_FRICTION.summary)}</p>${frictionMap(r)}<p class="quiet">${esc(LOW_FRICTION.detail)}</p></div>
+        <h1 class="display lg edge-name">${esc(LOW_FRICTION.name)}</h1><p class="lead">${esc(LOW_FRICTION.summary)}</p>${frictionMap(r)}<p class="low-detail">${esc(LOW_FRICTION.detail)}</p></div>
       <div class="jstep stagger">${step('02', 'Your guards', 'What would make it worse')}
-        <ul class="cons">${inv.map(o => `<li><b>${esc(o.t)}</b><span>${esc(o.force || '')}</span></li>`).join('')}</ul></div>
+        <ul class="cons">${inv.map(o => `<li><b>${esc(o.t)}</b></li>`).join('')}</ul></div>
       <div class="jstep stagger">${step('03', 'Watch', 'The only metric that matters here')}
         <div class="metric"><p class="metric-t">Whether this picture holds</p><p>${esc(LOW_FRICTION.watch)}</p></div></div>
       <div class="jstep stagger">${step('04', 'Learn', 'Close the loop')}
@@ -174,15 +181,15 @@ const SCREENS = {
     }
 
     const zoneSummary = (ZONE_BY_CONSTRAINT[r.zone] || {})[r.top] || Z.summary;
-    const sig = x => `<li><span class="sig-s sig-${x.strength.toLowerCase()}">${x.strength}</span><span>${esc(x.obs)}</span></li>`;
+    const sig = x => `<li><span class="sig-s sig-${x.strength.toLowerCase()}">${x.strength}</span><span><q>${esc(x.said)}</q><small>${esc(x.q)}</small></span></li>`;
     const openBlock = r.open && r.open.question ? `<div class="open">
         <p class="eyebrow">What we're still trying to understand</p>
-        <p class="open-t">Is it <strong>${esc(hypName(r.top).toLowerCase())}</strong>, or <strong>${esc(hypName(r.second).toLowerCase())}</strong>?</p>
+        <p class="open-t">${r.open.frame === 'upstream' ? `Both look present. Which comes first: <strong>${esc(hypName(r.top).toLowerCase())}</strong>, or <strong>${esc(hypName(r.second).toLowerCase())}</strong>?` : `Is it <strong>${esc(hypName(r.top).toLowerCase())}</strong>, or <strong>${esc(hypName(r.second).toLowerCase())}</strong>?`}</p>
         <p class="open-q"><span class="k">The question that would tell us</span>${esc(r.open.question)}</p>
       </div>` : '';
     const why = `
       <ol class="chain staged" aria-label="Causal chain">${play.chain.map((c, i) => `<li><span class="stage"><b>${esc((CHAIN_STAGES[r.top] || [])[i] || '')}</b><i>${esc(STAGE_ROLE[i] || '')}</i></span><span>${esc(c)}</span></li>`).join('')}</ol>
-      <div class="forces"><p class="eyebrow">What's reinforcing it</p><ul>${r.forces.map(f => `<li class="${f.src === 'pattern' ? 'from-pattern' : 'from-you'}"><small>${f.src === 'pattern' ? 'Our inference' : 'From your answers'}</small><span>${esc(f.t)}</span></li>`).join('')}</ul></div>
+      <div class="forces"><p class="eyebrow">What's reinforcing it</p><ul>${r.forces.map(f => `<li class="${f.src === 'pattern' ? 'from-pattern' : 'from-you'}"><small>${f.src === 'pattern' ? 'Our inference' : 'You named this as a way to make it worse'}</small><span>${esc(f.t)}</span></li>`).join('')}</ul></div>
       ${r.contradicts.length ? `<p class="eyebrow" style="margin-top:1rem">What cuts against it</p><ul class="sig against">${r.contradicts.slice(0, 3).map(sig).join('')}</ul>` : ''}
       ${r.open && r.open.secondEvidence && r.open.secondEvidence.length ? `<p class="eyebrow" style="margin-top:1rem">What points to ${esc(hypName(r.second).toLowerCase())}</p><ul class="sig">${r.open.secondEvidence.map(sig).join('')}</ul>` : ''}
       <p class="eyebrow" style="margin-top:1rem">Other explanations we weighed</p>
@@ -195,7 +202,7 @@ const SCREENS = {
       ${r.econ ? `<div class="econ"><p class="eyebrow">What your operating profile suggests <span class="econ-conf">· ${esc(r.econ.conf)} confidence</span></p><p class="econ-t">${esc(r.econ.t)}</p><p>${esc(r.econ.d)}</p></div>` : ''}
       <div class="leverage" style="margin-top:1.2rem"><p class="eyebrow">What that capacity could be doing instead</p><ul>${play.leverage.map(l => `<li><b>${esc(l)}</b><span>${esc(LEVERAGE_WHY[l])}</span></li>`).join('')}</ul></div>
       <p class="eyebrow" style="margin-top:1.2rem">Expected vs observed</p>
-      <div class="tablewrap"><table class="profile"><thead><tr><th>Trait</th><th>Expected</th><th>Observed</th></tr></thead><tbody>${r.profile.map(row => `<tr class="${row.primary ? 'primary' : ''}"><td>${esc(row.k)}<small>${row.primary ? 'Primary signal' : 'Not a primary signal'}</small></td><td>${esc(row.expected)}</td><td class="obs ${row.good && row.good.includes(row.observed) ? 'obs-ok' : 'obs-off'}">${esc(row.observed)}${row.good && row.good.includes(row.observed) ? '' : ' <span class="flag" title="outside the expected range">◆</span>'}</td></tr>`).join('')}</tbody></table></div>
+      <div class="tablewrap"><table class="profile"><thead><tr><th>Trait</th><th>Expected</th><th>Observed</th></tr></thead><tbody>${r.profile.map(row => `<tr class="${row.primary ? 'primary' : ''}"><td>${esc(row.k)}<small>${!row.asked ? 'We didn\'t ask about this' : row.primary ? 'Primary signal' : 'Not a primary signal'}</small></td><td>${esc(row.expected)}</td><td class="obs ${!row.asked ? 'obs-na' : row.good && row.good.includes(row.observed) ? 'obs-ok' : 'obs-off'}">${esc(row.observed)}${!row.asked || (row.good && row.good.includes(row.observed)) ? '' : ' <span class="flag" title="outside the expected range">◆</span>'}</td></tr>`).join('')}</tbody></table></div>
       <p class="quiet">Expected is what a business of your shape usually looks like, not a benchmark. Observed comes from your answers.</p>`;
     const dontBody = `
       ${COUNTERFACTUALS[r.top] ? `<p class="cf"><span class="k">Counterfactual</span>If this read is right, ${esc(COUNTERFACTUALS[r.top].should)} should ${esc(COUNTERFACTUALS[r.top].worse)}.</p>` : ''}
@@ -204,6 +211,7 @@ const SCREENS = {
 
     return `<section class="screen result journey lean">
 
+      ${r.grief && r.top !== 'loss' ? griefBlock(true) : ''}
       <div class="jstep stagger">
         ${step('01', 'The read', 'What appears to be getting in the way')}
         <div class="friction-head">
@@ -211,7 +219,10 @@ const SCREENS = {
           <details class="conf-pill conf-${r.label.key}"><summary>${esc(r.label.label)}<i class="caret"></i></summary><div class="conf-body">${esc(r.label.d)}</div></details>
         </div>
         <p class="lead">${esc(play.diagnosis)}</p>
+        ${r.ownSaid && r.ownSaid.length ? `<p class="own-note"><span class="k">In your words</span>${r.ownSaid.map(x => `<q>${esc(x)}</q>`).join(' ')}</p>` : ''}
+        ${r.paired ? `<p class="paired"><span class="k">Close behind</span><strong>${esc(hypName(r.paired))}</strong>. These may be one problem seen from two sides; the experiment below tests the first.</p>` : ''}
         ${r.changedMind ? `<p class="changed"><span class="k">We changed our mind</span>Earlier in the conversation the pattern pointed to <strong>${esc(hypName(r.changedMind.from).toLowerCase())}</strong>. Your later answers moved it.</p>` : ''}
+        ${r.notes && r.notes.length ? `<div class="notice"><span class="k">Worth noticing</span>${r.notes.map(t => `<p>${esc(t)}</p>`).join('')}</div>` : ''}
         <div class="evidence"><p class="eyebrow">What supports this</p><ul class="sig">${r.supports.slice(0, 3).map(sig).join('') || '<li><span>Only the opening signal so far.</span></li>'}</ul></div>
         ${openBlock}
       </div>
@@ -230,7 +241,7 @@ const SCREENS = {
       </div>
 
       <div class="jstep stagger">
-        ${step('03', 'What to test', 'One experiment, ' + exp.days + ' days')}
+        ${step('03', r.grief && r.top !== 'loss' ? 'When you\'re ready' : 'What to test', 'One experiment, ' + exp.days + ' days')}
         ${r.decision !== r.top ? `<p class="decision-note"><span class="k">Why this experiment</span>The read is <strong>${esc(hypName(r.top).toLowerCase())}</strong>, but the highest-value move given the uncertainty is to act on <strong>${esc(hypName(r.decision).toLowerCase())}</strong>: it relieves that and part of what sits downstream of it.</p>` : ''}
         <div class="blind compact">
           <p class="eyebrow">First, test the blind spot · untested</p>
@@ -399,8 +410,9 @@ function summaryText() {
     'FRICTION — CURRENT READ', '',
     `${p.constraint} (${r.label.label})`, p.diagnosis, '',
     'CRITIC STATE', `Primary: ${r.critic.primary.name} — ${r.critic.primary.confidence}`, ...r.critic.supporting.map(x => `  + ${x}`), `Competing: ${r.critic.competing.name} — ${r.critic.competing.confidence}`, ...r.critic.competing.evidence.map(x => `  ~ ${x}`), ...r.critic.disconfirming.map(x => `  - ${x}`), `Next test: ${r.critic.nextTest.t}`, '',
-    'What supports this:', ...r.supports.slice(0, 5).map(x => `  · ${x.obs} (${x.strength})`),
-    r.contradicts.length ? 'What cuts against it:\n' + r.contradicts.slice(0, 3).map(x => `  · ${x.obs}`).join('\n') : '',
+    'What supports this (your answers):', ...r.supports.slice(0, 5).map(x => `  · "${x.said}" — ${x.q}`),
+    r.contradicts.length ? 'What cuts against it:\n' + r.contradicts.slice(0, 3).map(x => `  · "${x.said}" — ${x.q}`).join('\n') : '',
+    r.notes && r.notes.length ? 'Worth noticing: ' + r.notes.join(' ') : '',
     r.open ? `Still to understand: is it ${hypName(r.top).toLowerCase()}, or ${hypName(r.second).toLowerCase()}?${r.open.question ? ' Ask: ' + r.open.question : ''}` : '', '',
     `WHERE IT SITS: ${ZONES[r.zone].name} — ${ZONES[r.zone].label}`, '',
     'WHAT IT\'S COSTING: ' + p.consequences.join(', '), est ? `Illustrative estimate: ${fmt(est.hoursYear)} hours a year${est.dollars ? ` (≈ $${fmt(est.dollars)})` : ''}.` : '', r.econ ? `${r.econ.t} (${r.econ.conf} confidence)` : '', '',

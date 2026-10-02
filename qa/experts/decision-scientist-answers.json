@@ -55,19 +55,20 @@
     2
    ],
    "trust": [
-    2
+    3
    ],
    "trust_last": [
     1
    ],
    "people_limits": [
-    1
+    2
    ],
    "inversion": [
     1,
     2
    ]
-  }
+  },
+  "migratedTrust": "trust was rewritten as a behavioural question in v5; mapped by nearest meaning"
  },
  "D2": {
   "name": "60-person SaaS; true constraint: too many priorities, nothing stopped",
@@ -131,13 +132,14 @@
     0
    ],
    "people_limits": [
-    0
+    1
    ],
    "inversion": [
     0,
     4
    ]
-  }
+  },
+  "migratedTrust": "trust was rewritten as a behavioural question in v5; mapped by nearest meaning"
  },
  "D3": {
   "name": "Distribution firm; true: tie between information and capability",
@@ -201,13 +203,14 @@
     0
    ],
    "people_limits": [
-    2
+    3
    ],
    "inversion": [
     1,
     7
    ]
-  }
+  },
+  "migratedTrust": "trust was rewritten as a behavioural question in v5; mapped by nearest meaning"
  },
  "D4": {
   "name": "CEO who IS the bottleneck (centralized) but answers flatteringly",
@@ -271,13 +274,14 @@
     0
    ],
    "people_limits": [
-    0
+    1
    ],
    "inversion": [
     4,
     7
    ]
-  }
+  },
+  "migratedTrust": "trust was rewritten as a behavioural question in v5; mapped by nearest meaning"
  },
  "D5": {
   "name": "Healthy control; a well-run 150-person firm",
@@ -340,11 +344,12 @@
     0
    ],
    "people_limits": [
-    0
+    1
    ],
    "inversion": [
     7
    ]
-  }
+  },
+  "migratedTrust": "trust was rewritten as a behavioural question in v5; mapped by nearest meaning"
  }
 }

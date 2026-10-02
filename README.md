@@ -2,9 +2,11 @@
 
 *Find what's getting in the way.*
 
-A guided diagnosis, not an assessment. Nine questions about observable
-behaviour, a few adaptive follow-ups where the answers point, one inversion
-question, and an optional cost estimate. About three minutes. No score.
+A guided diagnosis, not an assessment. Ten to fifteen questions about observable
+behaviour, chosen as you answer: an opener, five required questions (a behavioural
+candour question, the last time a problem was raised, overruling, your own part,
+and loss), adaptive follow-ups where the answers point, one inversion question, and
+an optional cost estimate. About five minutes. No score.
 
 The output is a **Friction Diagnosis**: the friction zone (Business ↔ System,
 System ↔ People, People ↔ Business, or Coherence), the constraint behind it, a
@@ -33,15 +35,24 @@ in the browser's `localStorage` under `friction.v3` and never leave the device.
 
 Signal → Hypothesis → Question → Evidence → Decision → Act → Learn.
 
-- **Belief: a Bayesian network.** The eleven hypotheses are binary states in a small
-  causal network (leadership alignment → priority load → decision rights → escalation,
-  and so on) with noisy-OR conditional probabilities. Eleven nodes make 2,048 joint
-  configurations, so inference is exact by enumeration: no approximation, no library.
-  Every answer option is a likelihood factor; its signal weights are log likelihood
-  ratios. The engine reports marginals per state and the most probable configuration.
-- **The read prefers the cause.** Among states near the top of the belief that the
-  person gave direct evidence for, the most upstream one in the causal order is the
-  read, so evidence for a cause doesn't get reported as its symptom.
+- **Belief: a Bayesian network.** The fourteen hypotheses (v5 added conflict avoidance,
+  blame, and unprocessed loss) are binary states in a small causal network (leadership
+  alignment → priority load → decision rights → escalation, and so on) with noisy-OR
+  conditional probabilities. Fourteen nodes make 16,384 joint configurations, so
+  inference is exact by enumeration: no approximation, no library. Every answer option
+  is a likelihood factor; its signal weights are log likelihood ratios. Per-hypothesis
+  evidence is balanced (`BALANCE`, so hypotheses with many questions aren't favoured),
+  tempered, and capped (`EVIDENCE`), because self-report answers are correlated.
+- **The read comes from direct evidence.** Among states near the top of the belief, the
+  one with the most direct evidence wins; a cause the person named in their own words
+  ("it's me" options) gets a bonus; near-ties go upstream. When two are close, both
+  are shown ("Close behind"). The read never overrides what the person explicitly said.
+- **Confidence reflects evidence, not just probability.** High needs a clear lead,
+  strong evidence from three different questions including a behavioural one, nothing
+  against it, and no unasked lens. Inconsistencies (e.g. opener says "nothing major"
+  but answers say otherwise) are noted and lower the label.
+- **Hard stop for grief.** If the person says the organization has an unprocessed or
+  raw loss, the page leads with that before any structural advice.
 - **Actor: value of information.** For each unasked question the engine simulates every
   answer, weights each by its predictive probability under the belief, re-runs
   inference and the decision, and measures how much the expected value of the best

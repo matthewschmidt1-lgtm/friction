@@ -1,6 +1,6 @@
 # Friction — a diagnostic, not a questionnaire
 
-**Find what's getting in the way.** A person answers about ten questions; Friction forms
+**Find what's getting in the way.** A person answers ten to fifteen questions; Friction forms
 hypotheses about what is creating friction in their organization, asks the question most
 likely to tell them apart, gives one experiment to run, and updates the read when they come
 back with the result. Static site, no build, no backend. Deployed on Railway from GitHub
@@ -35,15 +35,26 @@ DESIGN.md         creative direction and experience architecture
 README.md         how the engine thinks, how to edit content, deploy steps
 ```
 
-## How the engine thinks (v4)
+## How the engine thinks (v5)
 
 Signal → Hypothesis → Question → Evidence → Decision → Act → Learn.
 
-- **Belief.** Eleven binary states in a causal Bayesian network (`NETWORK` in content.js) with
-  noisy-OR conditionals. 2,048 configurations enumerated exactly in `engine.js`; no library.
-  Every answer option carries `sig` (log likelihood ratios per state) and `obs` (the
-  observation in plain words). The read prefers the most upstream well-evidenced state
-  (`readFrom`), so a cause is not reported as its symptom.
+- **Belief.** Fourteen binary states in a causal Bayesian network (`NETWORK` in content.js)
+  with noisy-OR conditionals. 16,384 configurations enumerated exactly in `engine.js`; no
+  library. Every answer option carries `sig` (log likelihood ratios per state) and `obs`
+  (the observation in plain words); options may carry `own` ("it's me"), `denial`,
+  `grief`, `nothing`, `tired`, `force`. Positive evidence per state is scaled by `BALANCE`
+  (available weight vs the median), then tempered and capped by `EVIDENCE`; experiment
+  outcomes and blind-spot tests use raw evidence.
+- **Read.** `readFrom` picks from states within .12 of the top by direct evidence, plus a
+  bonus for the person's own words; near-ties go upstream; close seconds are `paired`.
+- **Confidence label.** High needs p≥.85, margin ≥.2, three distinct questions with strong
+  evidence including a behavioural (`event`) one, nothing against, every lens asked, and
+  no pairing. `notes` (consistency checks) and coherence lower it. Random answering gives
+  High in about 1 run in 300; keep it that way.
+- **Required questions.** `trust`, `trust_last`, `overrule`, `self`, `loss` are always asked
+  (`required: true`); the "tired" opener goes to `loss` first. A grief-flagged loss answer
+  sets `grief`: the page leads with it and the decision becomes `loss`.
 - **Actor.** `nextQuestion` scores unasked questions by value of information: simulate each
   answer, weight by predictive probability, re-infer, re-run the decision, measure the gain in
   expected value minus `QUESTION_COST`. Samples every lens twice, asks the separator when the
@@ -75,8 +86,9 @@ forces, blind spot, notDo, policy, move, question, metric, two readings), `EXPER
    pattern: a page in this folder that imports `./js/engine.js`, loops
    `newSession` → `nextQuestion` → `applyAnswer` with `qa/answers-v3.json`, then `diagnose`;
    run it with headless Chrome `--dump-dom` and compare against `qa/ground-truth.json`
-   (alias `centralized`→`authority`, `decision_rights`→`decisions`). Expect 8–9/9 on
-   constraint; a healthy control (P8) must come out "Low friction". Fuzz a few hundred
+   (alias `centralized`→`authority`, `decision_rights`→`decisions`). Expect 9/9 on zone
+   and 8–9/9 on constraint; a healthy control (P8) must come out "No clear constraint".
+   Also run 300 random-answer sessions: zero errors, High at most a few. Fuzz a few hundred
    random runs for zero errors. Delete the harness page before committing.
 4. Visual QA: headless Chrome screenshot of a wrapper page that drives the app in a 390px
    iframe; `document.body.dataset.q` exposes the current question id so a script can answer.
@@ -93,7 +105,13 @@ forces, blind spot, notDo, policy, move, question, metric, two readings), `EXPER
   both need every field the template reads.
 - Confidence is capped by the margin to the runner-up; a dead heat can never read as High.
 - The QA answers in `qa/answers-v3.json` were written by a Sonnet agent in character against
-  the visible question text only; `trust_last` and `analysis` were re-answered by the agent.
+  the visible question text only; answers to the v5 questions (`self`, `loss`, `conflict`,
+  `blame_first`, `gossip`, rewritten `trust`) are stand-ins I wrote, not agent answers. The
+  expert answer files in `qa/experts/` lack v5 answers; harnesses default to the first
+  option, which biases results. Re-answer before trusting them.
+- Self-report caps accuracy: on the scientist's synthetic single-cause test the read is
+  right about a quarter of the time whatever the selection rule. The label is honest
+  about that; don't tune the label to look more certain.
 
 ## Roadmap Matthew has set (from *Algorithms for Decision Making*)
 

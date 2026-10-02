@@ -111,8 +111,8 @@ question and one move. Then be invited back.
 Signal → Hypothesis → Question → Evidence → Decision → Act → Learn
 ```
 
-The user experiences a conversation of about ten questions. The engine holds
-eleven hypotheses with confidence, chooses each question by how much it would
+The user experiences a conversation of ten to fifteen questions. The engine holds
+fourteen hypotheses with confidence, chooses each question by how much it would
 separate the live ones, and stops when one is clearly ahead or when nothing is
 rising.
 

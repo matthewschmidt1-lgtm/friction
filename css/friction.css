@@ -604,3 +604,16 @@ details.more.on-dark .more-body strong, details.more.on-dark .more-body b{color:
   .lean .jstep{padding-bottom:2.9rem}
   .lean .jstep+.jstep{padding-top:2.9rem}
 }
+
+/* ---------- v5: own words, paired reads, notices, grief, not asked ---------- */
+.sig li q{quotes:'\201C' '\201D'; color:var(--deep); font-weight:600}
+.sig li small{display:block; font-size:.82rem; color:var(--ink-dim); margin-top:.15rem}
+.own-note,.paired,.notice{margin-top:1.3rem; padding:.9rem 1.1rem; border-radius:14px; line-height:1.5; color:var(--ink)}
+.own-note{background:rgba(44,140,158,.08)} .own-note q{quotes:'\201C' '\201D'; font-weight:600; color:var(--deep); margin-right:.4rem}
+.paired{background:rgba(184,153,106,.12)}
+.notice{background:var(--sun-soft)} .notice p{margin:0} .notice p+p{margin-top:.5rem}
+.own-note .k,.paired .k,.notice .k{display:block; font-family:var(--font-mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--sand-deep); margin-bottom:.25rem}
+.grief{padding:1.4rem 1.4rem 1.2rem; border-radius:20px; background:var(--foam-raised); border:1px solid var(--sand-line); border-left:5px solid var(--kelp); box-shadow:var(--shadow)}
+.grief .display{margin:.2rem 0 .7rem} .grief p{color:var(--ink); line-height:1.6} .grief p+p{margin-top:.6rem}
+td.obs-na{color:var(--ink-dim); font-weight:500}
+.low-detail{color:var(--ink-dim); line-height:1.65; margin-top:.4rem}

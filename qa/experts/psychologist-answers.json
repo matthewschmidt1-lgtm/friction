@@ -61,12 +61,13 @@
     1
    ],
    "people_limits": [
-    1
+    2
    ],
    "inversion": [
     0
    ]
-  }
+  },
+  "migratedTrust": "trust was rewritten as a behavioural question in v5; mapped by nearest meaning"
  },
  "O2": {
   "name": "Founder fear/control: 60-person SaaS, founder answering",
@@ -130,13 +131,14 @@
     0
    ],
    "people_limits": [
-    2
+    3
    ],
    "inversion": [
     6,
     4
    ]
-  }
+  },
+  "migratedTrust": "trust was rewritten as a behavioural question in v5; mapped by nearest meaning"
  },
  "O3": {
   "name": "Grief and layoffs: 120-person manufacturer after COO death and 15% cut",
@@ -194,19 +196,20 @@
     3
    ],
    "trust": [
-    2
+    3
    ],
    "trust_last": [
     3
    ],
    "people_limits": [
-    4
+    5
    ],
    "inversion": [
     3,
     7
    ]
-  }
+  },
+  "migratedTrust": "trust was rewritten as a behavioural question in v5; mapped by nearest meaning"
  },
  "O4": {
   "name": "Blame and gossip: 200-person logistics firm, CEO answering",
@@ -264,19 +267,20 @@
     2
    ],
    "trust": [
-    2
+    3
    ],
    "trust_last": [
     4
    ],
    "people_limits": [
-    5
+    6
    ],
    "inversion": [
     3,
     5
    ]
-  }
+  },
+  "migratedTrust": "trust was rewritten as a behavioural question in v5; mapped by nearest meaning"
  },
  "O5": {
   "name": "Healthy high-candour: 35-person design firm",
@@ -340,11 +344,12 @@
     0
    ],
    "people_limits": [
-    0
+    1
    ],
    "inversion": [
     0
    ]
-  }
+  },
+  "migratedTrust": "trust was rewritten as a behavioural question in v5; mapped by nearest meaning"
  }
 }
