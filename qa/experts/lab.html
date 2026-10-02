@@ -1,0 +1,178 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"></head><body><pre id="out">pending</pre><script type="module">
+const out = document.getElementById('out'); const L = []; const log = (...a) => L.push(a.join(' '));
+try {
+const P = new URLSearchParams(location.search); const exp = P.get('exp');
+const C = await import('../../js/content.js');
+const E = await import('../../js/engine.js');
+const { newSession, applyAnswer, nextQuestion, diagnose, byId } = E;
+const personas = JSON.parse(await (await fetch('decision-scientist-answers.json?t=' + Date.now())).text());
+const H = h => h;
+// run with an answer function (q) => indices
+function run(ansFn) {
+  const s = newSession(); const asked = []; let q;
+  while ((q = nextQuestion(s))) { const idx = ansFn(q, s); asked.push(q.id + ':' + idx.join('+')); applyAnswer(s, q.id, idx); }
+  const r = diagnose(s, null, {});
+  return { s, r, asked };
+}
+const fromAnswers = a => (q) => a[q.id] || [0];
+const summ = x => x.r.low ? `LOW(top=${x.r.top} p=${x.r.p[x.r.top].toFixed(2)}) n=${x.asked.length}` : `${x.r.top}${x.r.decision!==x.r.top?'(exp:'+x.r.decision+')':''} [${x.r.label.label}] p=${x.r.p[x.r.top].toFixed(2)} 2nd=${x.r.second}:${x.r.p[x.r.second].toFixed(2)} margin=${x.r.margin.toFixed(2)} n=${x.asked.length}`;
+const sumOpt = o => Object.values(o.sig).reduce((a,b)=>a+b,0);
+const rng = (seed => () => (seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296)(12345);
+
+if (exp === 'opener') {
+  for (const pid in personas) {
+    log('--- ' + pid + ' ' + personas[pid].name);
+    for (let k = 0; k < 8; k++) {
+      const a = { ...personas[pid].answers, opener: [k] };
+      const x = run(fromAnswers(a)); log(`  opener=${k} (${C.OPENER.options[k].t}) -> ${summ(x)}`);
+    }
+  }
+}
+if (exp === 'accq') {
+  const modes = {
+    'MOST problem-confirming (max sum sig)': q => { let b = 0; q.options.forEach((o,i)=>{ if (sumOpt(o) > sumOpt(q.options[b])) b = i; }); return q.multi ? [b] : [b]; },
+    'MOST everything-fine (min sum sig)': q => { let b = 0; q.options.forEach((o,i)=>{ if (sumOpt(o) < sumOpt(q.options[b])) b = i; }); return [b]; },
+    'all middle option (floor(n/2))': q => [Math.floor(q.options.length/2)],
+    'all middle option (ceil(n/2)-1)': q => [Math.ceil(q.options.length/2)-1],
+    'always first option': q => [0],
+    'always last option': q => [q.options.length-1],
+    'second-from-last (mild problem)': q => [q.options.length-2],
+    'second option': q => [1],
+    'third option': q => [Math.min(2,q.options.length-1)],
+  };
+  for (const m in modes) { const x = run(q => modes[m](q)); log(m + ' -> ' + summ(x)); log('   asked: ' + x.asked.join(' | ')); }
+}
+if (exp === 'static') {
+  const pos = {}, cnt = {}, neg = {}, ncnt = {}, mx = {}, itemsStrong = {};
+  for (const h of C.HYP_ORDER) { pos[h]=0; cnt[h]=0; neg[h]=0; ncnt[h]=0; mx[h]=0; itemsStrong[h]=0; }
+  const rows = [];
+  for (const q of C.ALL_QUESTIONS) {
+    for (const h of C.HYP_ORDER) {
+      const ws = q.options.map(o => o.sig[h] || 0);
+      const mxp = Math.max(0, ...ws), mn = Math.min(0, ...ws);
+      if (mxp > 0) { cnt[h]++; pos[h] += mxp; if (mxp >= 1.0) itemsStrong[h]++; }
+      if (mn < 0) { ncnt[h]++; neg[h] += mn; }
+    }
+  }
+  log('hyp | prior-root? | items with +load | sum of max + per item | items strong(>=1.0 max) | items with - load | sum max - ');
+  for (const h of C.HYP_ORDER) log(`${h.padEnd(16)} | ${C.NETWORK[h].prior ? 'prior '+C.NETWORK[h].prior : 'child leak '+C.NETWORK[h].leak} | ${cnt[h]} | ${pos[h].toFixed(1)} | ${itemsStrong[h]} | ${ncnt[h]} | ${neg[h].toFixed(1)}`);
+  // main pool only (excluding opener & inversion)
+  log('\nMain pool only (QUESTIONS), per hypothesis: dedicated direct-measure items (the item whose own-hyp weight is the largest negative = "fine" option exists)');
+  for (const h of C.HYP_ORDER) {
+    const direct = C.QUESTIONS.filter(q => q.options.some(o => (o.sig[h]||0) <= -1.0)).map(q=>q.id);
+    log(`${h.padEnd(16)} items offering strong disconfirmation (<=-1.0): ${direct.join(', ') || 'NONE'}`);
+  }
+  log('\nOptions per question:'); for (const q of C.ALL_QUESTIONS) log(`  ${q.id}: ${q.options.length} options; multi=${!!q.multi}; sum-of-positive-options=${q.options.filter(o=>sumOpt(o)>0).length}, negative=${q.options.filter(o=>sumOpt(o)<0).length}, zero=${q.options.filter(o=>sumOpt(o)===0).length}; gate=${q.gate?String(q.gate).slice(0,90):'-'}`);
+  // pairwise discriminability: for each pair of hypotheses, max over questions of separation, and correlation of loadings across all options
+  const opts = C.ALL_QUESTIONS.flatMap(q => q.options.map(o => ({ q: q.id, o })));
+  const vec = h => opts.map(x => x.o.sig[h] || 0);
+  const cor = (a,b)=>{ const n=a.length, ma=a.reduce((x,y)=>x+y)/n, mb=b.reduce((x,y)=>x+y)/n; let sab=0,saa=0,sbb=0; for(let i=0;i<n;i++){sab+=(a[i]-ma)*(b[i]-mb);saa+=(a[i]-ma)**2;sbb+=(b[i]-mb)**2;} return sab/Math.sqrt(saa*sbb); };
+  log('\nPairs: max single-item separation (range of sig_a - sig_b across options of one question; best question), # items where |separation|>=1.0, option-level correlation');
+  const pairs = [];
+  for (let i=0;i<C.HYP_ORDER.length;i++) for (let j=i+1;j<C.HYP_ORDER.length;j++) {
+    const a=C.HYP_ORDER[i], b=C.HYP_ORDER[j]; let best=0,bq='',n1=0;
+    for (const q of C.QUESTIONS) { const d=q.options.map(o=>(o.sig[a]||0)-(o.sig[b]||0)); const sp=Math.max(...d)-Math.min(...d); if (sp>best){best=sp;bq=q.id;} if (sp>=1.0) n1++; }
+    pairs.push({a,b,best,bq,n1,r:cor(vec(a),vec(b))});
+  }
+  pairs.sort((x,y)=>x.best-y.best);
+  for (const p of pairs.slice(0,14)) log(`  ${p.a} ~ ${p.b}: best sep ${p.best.toFixed(2)} (${p.bq}), items sep>=1.0: ${p.n1}, r=${p.r.toFixed(2)}`);
+  log('  ... highest correlations:'); for (const p of pairs.slice().sort((x,y)=>y.r-x.r).slice(0,8)) log(`  ${p.a} ~ ${p.b}: r=${p.r.toFixed(2)} best sep ${p.best.toFixed(2)}`);
+  // prior marginals
+  const pr = E.confidences(newSession()); log('\nPrior marginals (no evidence):'); for (const h of C.HYP_ORDER) log(`  ${h}: ${pr[h].toFixed(3)}`);
+  // sum of importance etc
+  log('\nImportance: ' + C.HYP_ORDER.map(h=>h+'='+C.HYPOTHESES[h].importance).join(', '));
+}
+if (exp === 'single') {
+  // single-answer evidence alone: posterior top
+  log('A. Posterior from ONE answer alone (strongest option per question): top hypothesis and p');
+  const rows = [];
+  for (const q of C.ALL_QUESTIONS) for (let i = 0; i < q.options.length; i++) {
+    const s = newSession(); applyAnswer(s, q.id, [i]); const p = s.belief.marg; const r = E.ranked(s);
+    rows.push({ q: q.id, i, t: q.options[i].t, top: r[0], pt: p[r[0]], two: r[1], p2: p[r[1]] });
+  }
+  rows.sort((a,b)=>b.pt-a.pt);
+  for (const r of rows.slice(0,12)) log(`  ${r.q}[${r.i}] "${r.t}" -> ${r.top} ${r.pt.toFixed(2)} (2nd ${r.two} ${r.p2.toFixed(2)})`);
+  log('\nB. Leverage on a finished read: for each baseline persona, change exactly one answer (other answers fixed) and record changes in the read/label. Path may change.');
+  for (const pid of Object.keys(personas)) {
+    const base = run(fromAnswers(personas[pid].answers)); log(`--- ${pid} baseline: ${summ(base)}`);
+    const flips = [];
+    for (const qid of base.asked.map(x=>x.split(':')[0])) {
+      const q = byId[qid]; if (q.multi) continue;
+      for (let i = 0; i < q.options.length; i++) {
+        if ((personas[pid].answers[qid]||[])[0] === i) continue;
+        const a = { ...personas[pid].answers, [qid]: [i] }; const x = run(fromAnswers(a));
+        const changedTop = (x.r.low?'LOW':x.r.top) !== (base.r.low?'LOW':base.r.top);
+        if (changedTop) flips.push(`${qid}->"${q.options[i].t}" => ${x.r.low?'LOW':x.r.top} [${x.r.low?'':x.r.label.label}]`);
+      }
+    }
+    log(`   single-answer changes that flip the top read: ${flips.length}`); for (const f of flips.slice(0,40)) log('     ' + f);
+  }
+}
+if (exp === 'calib') {
+  const N = +P.get('n') || 300, beta = +(P.get('beta') || 1);
+  // truth = one dominant hypothesis (or two). Respondent answers option with prob ∝ exp(beta * sig_truth) for each truth hypothesis (summed) — a generative model matching the engine's own likelihoods when beta=1.
+  const sample = (q, truth) => {
+    const wts = q.options.map(o => Math.exp(beta * truth.reduce((a,h)=>a+(o.sig[h]||0),0)));
+    const Z = wts.reduce((a,b)=>a+b); let u = rng()*Z, i = 0; while (i < wts.length-1 && (u -= wts[i]) > 0) i++; return i; };
+  const tab = {}; let hit = 0, n = 0;
+  const byLab = {}; const confusion = {};
+  for (let t = 0; t < N; t++) {
+    const k = (t % 3 === 2) ? 2 : 1; // 1/3 of cases have two true causes
+    const truth = []; while (truth.length < k) { const h = C.HYP_ORDER[Math.floor(rng()*11)]; if (!truth.includes(h)) truth.push(h); }
+    const x = run(q => { const i = sample(q, truth); if (q.multi) { const j = sample(q, truth); return i===j?[i]:[i,j]; } return [i]; });
+    const key = x.r.low ? 'LOW' : x.r.label.label; byLab[key] = byLab[key] || { n:0, hit:0, hitUp:0, k1n:0,k1hit:0 };
+    byLab[key].n++; const h1 = truth.includes(x.r.top); if (h1) byLab[key].hit++;
+    if (k===1) { byLab[key].k1n++; if (x.r.top===truth[0]) byLab[key].k1hit++; }
+    const dd = x.r.decision; // does the experiment target a true cause
+    if (!x.r.low && truth.includes(dd)) byLab[key].hitUp++;
+  }
+  log(`N=${N} beta=${beta}. Synthetic respondents drawn from the engine's own likelihoods (beta=1) or a weaker/noisier version (beta<1).`);
+  log('label | n | top read is a true cause | top read equals the single true cause (single-cause cases) | experiment targets a true cause');
+  for (const k in byLab) { const b = byLab[k]; log(`  ${k} | ${b.n} | ${(100*b.hit/b.n).toFixed(0)}% | ${b.k1n?(100*b.k1hit/b.k1n).toFixed(0)+'% of '+b.k1n:'-'} | ${(100*b.hitUp/b.n).toFixed(0)}%`); }
+}
+if (exp === 'random') {
+  // uniformly random answers: how often each label appears
+  const N = +P.get('n') || 300; const labs = {}; const tops = {};
+  for (let t=0;t<N;t++){ const x = run(q => { const i=Math.floor(rng()*q.options.length); if(q.multi){const j=Math.floor(rng()*q.options.length); return i===j?[i]:[i,j];} return [i]; });
+    const k = x.r.low?'LOW':x.r.label.label; labs[k]=(labs[k]||0)+1; const tp = x.r.low?'LOW':x.r.top; tops[tp]=(tops[tp]||0)+1; }
+  log('Uniformly random answers, N='+N); log('labels: '+JSON.stringify(labs)); log('top reads: '+JSON.stringify(tops));
+}
+if (exp === 'select') {
+  // For each persona (and mid-run states), check the open question: informativeness about top vs second.
+  for (const pid of Object.keys(personas)) {
+    const x = run(fromAnswers(personas[pid].answers)); const r = x.r; if (r.low) { log(pid+': low friction, no open question'); continue; }
+    const p = r.p; const cands = C.QUESTIONS.filter(q => !x.s.asked.includes(q.id) && (!q.gate || q.gate(p)));
+    log(`--- ${pid}: top=${r.top} (${p[r.top].toFixed(2)}) second=${r.second} (${p[r.second].toFixed(2)}) label=${r.label.label}; open=${r.open?JSON.stringify({q:r.open.question}):'none'}`);
+    const sepOf = q => { const d = q.options.map(o => (o.sig[r.top]||0)-(o.sig[r.second]||0)); return Math.max(...d)-Math.min(...d); };
+    const tab = cands.map(q => ({ id:q.id, title:q.title, sep: sepOf(q), v: E.valueOfInformation(x.s, q) }));
+    tab.sort((a,b)=>b.sep-a.sep);
+    log('   remaining candidates (by separation of top vs second): ' + tab.map(t=>`${t.id} sep=${t.sep.toFixed(2)} voi=${t.v.voi.toFixed(3)} gain=${t.v.gain.toFixed(2)}`).join('; '));
+    if (r.open && r.open.question) { const q = C.QUESTIONS.find(q=>q.title===r.open.question); if (q) log(`   CHOSEN: ${q.id} sep=${sepOf(q).toFixed(2)} voi=${E.valueOfInformation(x.s,q).voi.toFixed(3)} (asked-list contains? ${x.s.asked.includes(q.id)})`); }
+  }
+}
+
+if (exp === 'sat') {
+  const N = +P.get('n') || 300; let up = 0, satur = 0, nonlow = 0, openShown = 0, openNull = 0, bothHigh = 0, voiFallback = 0, labelHigh = 0, highWithManyHigh = 0, highNoTrust = 0;
+  const n9 = []; const labelByNhigh = {};
+  for (let t=0;t<N;t++){ const x = run(q => { const i=Math.floor(rng()*q.options.length); if(q.multi){const j=Math.floor(rng()*q.options.length); return i===j?[i]:[i,j];} return [i]; });
+    const r = x.r; if (r.low) continue; nonlow++;
+    const am = C.HYP_ORDER.slice().sort((a,b)=>r.p[b]-r.p[a])[0]; if (am !== r.top) up++;
+    const nh = C.HYP_ORDER.filter(h=>r.p[h]>=.9).length; n9.push(nh); if (nh>=3) satur++;
+    const lab = r.label.label; labelByNhigh[lab] = labelByNhigh[lab] || []; labelByNhigh[lab].push(nh);
+    if (r.open) { if (r.open.question) { openShown++; if (r.p[r.second] >= .9 && r.p[r.top] >= .9) bothHigh++; const cands = C.QUESTIONS.filter(q => !x.s.asked.includes(q.id) && (!q.gate || q.gate(r.p))); const sc = cands.map(q=>E.valueOfInformation(x.s,q)).filter(v=>v.wouldChange && v.voi>=C.VOI.minToAsk); if (!sc.length) voiFallback++; } else openNull++; }
+    if (!x.asked.some(a=>a.startsWith('trust:'))) highNoTrust += (lab==='High confidence')?1:0;
+  }
+  log(`Random answers N=${N}, non-low=${nonlow}`);
+  log(`read (readFrom) differs from the highest-marginal hypothesis: ${up} (${(100*up/nonlow).toFixed(0)}%)`);
+  log(`runs with >=3 hypotheses at p>=0.90 simultaneously: ${satur} (${(100*satur/nonlow).toFixed(0)}%); mean number at p>=.9: ${(n9.reduce((a,b)=>a+b,0)/n9.length).toFixed(2)}`);
+  for (const k in labelByNhigh) { const a = labelByNhigh[k]; log(`   label ${k}: n=${a.length}, mean # hypotheses at p>=.9 = ${(a.reduce((x,y)=>x+y,0)/a.length).toFixed(2)}`); }
+  log(`open question shown: ${openShown}; competing but no question: ${openNull}`);
+  log(`of shown: both top and second at p>=.9 ("is it A or B" while both near-certain): ${bothHigh}; chosen only by the separation fallback (no question passes VOI threshold): ${voiFallback}`);
+}
+if (exp === 'gates') {
+  // how often the behavioural probes are never asked when self-report is flattering
+  for (const pid of ['D4','D4c','D5','D6']) { const a = JSON.parse(JSON.stringify({...(personas[pid]||{answers:{}})}));}
+}
+} catch (e) { L.push('ERROR ' + e.message + '\n' + e.stack); }
+out.textContent = L.join('\n');
+</script></body></html>

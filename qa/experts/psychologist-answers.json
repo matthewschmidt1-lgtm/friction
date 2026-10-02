@@ -1,0 +1,350 @@
+{
+ "O1": {
+  "name": "Artificial harmony: 40-person consultancy, CEO answering",
+  "answers": {
+   "opener": [
+    1
+   ],
+   "direction": [
+    1
+   ],
+   "focus": [
+    2
+   ],
+   "economics": [
+    1
+   ],
+   "business_uncertainty": [
+    0
+   ],
+   "decisions": [
+    5
+   ],
+   "comeback": [
+    5
+   ],
+   "overrule": [
+    1
+   ],
+   "given": [
+    1
+   ],
+   "waiting": [
+    3
+   ],
+   "analysis": [
+    0
+   ],
+   "execution": [
+    2
+   ],
+   "execution_why": [
+    7,
+    1
+   ],
+   "leverage": [
+    1
+   ],
+   "repeat": [
+    1
+   ],
+   "authority": [
+    1
+   ],
+   "talent": [
+    1
+   ],
+   "trust": [
+    1
+   ],
+   "trust_last": [
+    1
+   ],
+   "people_limits": [
+    1
+   ],
+   "inversion": [
+    0
+   ]
+  }
+ },
+ "O2": {
+  "name": "Founder fear/control: 60-person SaaS, founder answering",
+  "answers": {
+   "opener": [
+    0
+   ],
+   "direction": [
+    0
+   ],
+   "focus": [
+    1
+   ],
+   "economics": [
+    0
+   ],
+   "business_uncertainty": [
+    0
+   ],
+   "decisions": [
+    0
+   ],
+   "comeback": [
+    2
+   ],
+   "overrule": [
+    2
+   ],
+   "given": [
+    4
+   ],
+   "waiting": [
+    0
+   ],
+   "analysis": [
+    2
+   ],
+   "execution": [
+    1
+   ],
+   "execution_why": [
+    3,
+    2
+   ],
+   "leverage": [
+    2
+   ],
+   "repeat": [
+    3
+   ],
+   "authority": [
+    1
+   ],
+   "talent": [
+    2
+   ],
+   "trust": [
+    1
+   ],
+   "trust_last": [
+    0
+   ],
+   "people_limits": [
+    2
+   ],
+   "inversion": [
+    6,
+    4
+   ]
+  }
+ },
+ "O3": {
+  "name": "Grief and layoffs: 120-person manufacturer after COO death and 15% cut",
+  "answers": {
+   "opener": [
+    7
+   ],
+   "direction": [
+    1
+   ],
+   "focus": [
+    2
+   ],
+   "economics": [
+    1
+   ],
+   "business_uncertainty": [
+    3
+   ],
+   "decisions": [
+    0
+   ],
+   "comeback": [
+    0
+   ],
+   "overrule": [
+    3
+   ],
+   "given": [
+    1
+   ],
+   "waiting": [
+    0
+   ],
+   "analysis": [
+    0
+   ],
+   "execution": [
+    2
+   ],
+   "execution_why": [
+    1,
+    2
+   ],
+   "leverage": [
+    2
+   ],
+   "repeat": [
+    3
+   ],
+   "authority": [
+    2
+   ],
+   "talent": [
+    3
+   ],
+   "trust": [
+    2
+   ],
+   "trust_last": [
+    3
+   ],
+   "people_limits": [
+    4
+   ],
+   "inversion": [
+    3,
+    7
+   ]
+  }
+ },
+ "O4": {
+  "name": "Blame and gossip: 200-person logistics firm, CEO answering",
+  "answers": {
+   "opener": [
+    3
+   ],
+   "direction": [
+    2
+   ],
+   "focus": [
+    2
+   ],
+   "economics": [
+    1
+   ],
+   "business_uncertainty": [
+    0
+   ],
+   "decisions": [
+    3
+   ],
+   "comeback": [
+    2
+   ],
+   "overrule": [
+    2
+   ],
+   "given": [
+    3
+   ],
+   "waiting": [
+    3
+   ],
+   "analysis": [
+    1
+   ],
+   "execution": [
+    2
+   ],
+   "execution_why": [
+    6,
+    7
+   ],
+   "leverage": [
+    2
+   ],
+   "repeat": [
+    3
+   ],
+   "authority": [
+    2
+   ],
+   "talent": [
+    2
+   ],
+   "trust": [
+    2
+   ],
+   "trust_last": [
+    4
+   ],
+   "people_limits": [
+    5
+   ],
+   "inversion": [
+    3,
+    5
+   ]
+  }
+ },
+ "O5": {
+  "name": "Healthy high-candour: 35-person design firm",
+  "answers": {
+   "opener": [
+    4
+   ],
+   "direction": [
+    0
+   ],
+   "focus": [
+    1
+   ],
+   "economics": [
+    0
+   ],
+   "business_uncertainty": [
+    4
+   ],
+   "decisions": [
+    6
+   ],
+   "comeback": [
+    5
+   ],
+   "overrule": [
+    1
+   ],
+   "given": [
+    0
+   ],
+   "waiting": [
+    4
+   ],
+   "analysis": [
+    0
+   ],
+   "execution": [
+    1
+   ],
+   "execution_why": [
+    0,
+    2
+   ],
+   "leverage": [
+    1
+   ],
+   "repeat": [
+    1
+   ],
+   "authority": [
+    0
+   ],
+   "talent": [
+    1
+   ],
+   "trust": [
+    0
+   ],
+   "trust_last": [
+    0
+   ],
+   "people_limits": [
+    0
+   ],
+   "inversion": [
+    0
+   ]
+  }
+ }
+}

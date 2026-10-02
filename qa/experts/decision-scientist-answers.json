@@ -1,0 +1,350 @@
+{
+ "D1": {
+  "name": "Founder-CEO, 90-person services firm; true constraint: centralized authority (CEO reverses managers). Honest respondent",
+  "answers": {
+   "opener": [
+    0
+   ],
+   "direction": [
+    1
+   ],
+   "focus": [
+    1
+   ],
+   "economics": [
+    1
+   ],
+   "business_uncertainty": [
+    0
+   ],
+   "decisions": [
+    4
+   ],
+   "comeback": [
+    3
+   ],
+   "overrule": [
+    2
+   ],
+   "given": [
+    3
+   ],
+   "waiting": [
+    0
+   ],
+   "analysis": [
+    0
+   ],
+   "execution": [
+    2
+   ],
+   "execution_why": [
+    1,
+    6
+   ],
+   "leverage": [
+    2
+   ],
+   "repeat": [
+    3
+   ],
+   "authority": [
+    3
+   ],
+   "talent": [
+    2
+   ],
+   "trust": [
+    2
+   ],
+   "trust_last": [
+    1
+   ],
+   "people_limits": [
+    1
+   ],
+   "inversion": [
+    1,
+    2
+   ]
+  }
+ },
+ "D2": {
+  "name": "60-person SaaS; true constraint: too many priorities, nothing stopped",
+  "answers": {
+   "opener": [
+    4
+   ],
+   "direction": [
+    1
+   ],
+   "focus": [
+    3
+   ],
+   "economics": [
+    2
+   ],
+   "business_uncertainty": [
+    3
+   ],
+   "decisions": [
+    6
+   ],
+   "comeback": [
+    5
+   ],
+   "overrule": [
+    0
+   ],
+   "given": [
+    0
+   ],
+   "waiting": [
+    4
+   ],
+   "analysis": [
+    0
+   ],
+   "execution": [
+    3
+   ],
+   "execution_why": [
+    0,
+    2
+   ],
+   "leverage": [
+    1
+   ],
+   "repeat": [
+    1
+   ],
+   "authority": [
+    1
+   ],
+   "talent": [
+    2
+   ],
+   "trust": [
+    1
+   ],
+   "trust_last": [
+    0
+   ],
+   "people_limits": [
+    0
+   ],
+   "inversion": [
+    0,
+    4
+   ]
+  }
+ },
+ "D3": {
+  "name": "Distribution firm; true: tie between information and capability",
+  "answers": {
+   "opener": [
+    0
+   ],
+   "direction": [
+    0
+   ],
+   "focus": [
+    1
+   ],
+   "economics": [
+    1
+   ],
+   "business_uncertainty": [
+    0
+   ],
+   "decisions": [
+    2
+   ],
+   "comeback": [
+    2
+   ],
+   "overrule": [
+    1
+   ],
+   "given": [
+    2
+   ],
+   "waiting": [
+    2
+   ],
+   "analysis": [
+    3
+   ],
+   "execution": [
+    1
+   ],
+   "execution_why": [
+    3,
+    4
+   ],
+   "leverage": [
+    1
+   ],
+   "repeat": [
+    0
+   ],
+   "authority": [
+    1
+   ],
+   "talent": [
+    1
+   ],
+   "trust": [
+    1
+   ],
+   "trust_last": [
+    0
+   ],
+   "people_limits": [
+    2
+   ],
+   "inversion": [
+    1,
+    7
+   ]
+  }
+ },
+ "D4": {
+  "name": "CEO who IS the bottleneck (centralized) but answers flatteringly",
+  "answers": {
+   "opener": [
+    7
+   ],
+   "direction": [
+    1
+   ],
+   "focus": [
+    1
+   ],
+   "economics": [
+    1
+   ],
+   "business_uncertainty": [
+    2
+   ],
+   "decisions": [
+    6
+   ],
+   "comeback": [
+    5
+   ],
+   "overrule": [
+    0
+   ],
+   "given": [
+    0
+   ],
+   "waiting": [
+    4
+   ],
+   "analysis": [
+    0
+   ],
+   "execution": [
+    1
+   ],
+   "execution_why": [
+    2,
+    7
+   ],
+   "leverage": [
+    1
+   ],
+   "repeat": [
+    1
+   ],
+   "authority": [
+    1
+   ],
+   "talent": [
+    2
+   ],
+   "trust": [
+    0
+   ],
+   "trust_last": [
+    0
+   ],
+   "people_limits": [
+    0
+   ],
+   "inversion": [
+    4,
+    7
+   ]
+  }
+ },
+ "D5": {
+  "name": "Healthy control; a well-run 150-person firm",
+  "answers": {
+   "opener": [
+    1
+   ],
+   "direction": [
+    0
+   ],
+   "focus": [
+    0
+   ],
+   "economics": [
+    0
+   ],
+   "business_uncertainty": [
+    0
+   ],
+   "decisions": [
+    6
+   ],
+   "comeback": [
+    5
+   ],
+   "overrule": [
+    0
+   ],
+   "given": [
+    0
+   ],
+   "waiting": [
+    4
+   ],
+   "analysis": [
+    0
+   ],
+   "execution": [
+    0
+   ],
+   "execution_why": [
+    0
+   ],
+   "leverage": [
+    0
+   ],
+   "repeat": [
+    0
+   ],
+   "authority": [
+    0
+   ],
+   "talent": [
+    0
+   ],
+   "trust": [
+    0
+   ],
+   "trust_last": [
+    0
+   ],
+   "people_limits": [
+    0
+   ],
+   "inversion": [
+    7
+   ]
+  }
+ }
+}

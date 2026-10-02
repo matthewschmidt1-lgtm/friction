@@ -1,0 +1,343 @@
+{
+ "D5b": {
+  "name": "Healthy control but answers 'Sometimes' to the execution item only",
+  "answers": {
+   "opener": [
+    1
+   ],
+   "direction": [
+    0
+   ],
+   "focus": [
+    0
+   ],
+   "economics": [
+    0
+   ],
+   "business_uncertainty": [
+    0
+   ],
+   "decisions": [
+    6
+   ],
+   "comeback": [
+    5
+   ],
+   "overrule": [
+    0
+   ],
+   "given": [
+    0
+   ],
+   "waiting": [
+    4
+   ],
+   "analysis": [
+    0
+   ],
+   "execution": [
+    2
+   ],
+   "execution_why": [
+    7
+   ],
+   "leverage": [
+    0
+   ],
+   "repeat": [
+    0
+   ],
+   "authority": [
+    0
+   ],
+   "talent": [
+    0
+   ],
+   "trust": [
+    0
+   ],
+   "trust_last": [
+    0
+   ],
+   "people_limits": [
+    0
+   ],
+   "inversion": [
+    7
+   ]
+  }
+ },
+ "D6": {
+  "name": "Typical decent firm: 'Usually/Mostly/Probably' everywhere; opener 'agree but don't happen'",
+  "answers": {
+   "opener": [
+    1
+   ],
+   "direction": [
+    1
+   ],
+   "focus": [
+    1
+   ],
+   "economics": [
+    1
+   ],
+   "business_uncertainty": [
+    0
+   ],
+   "decisions": [
+    6
+   ],
+   "comeback": [
+    5
+   ],
+   "overrule": [
+    1
+   ],
+   "given": [
+    1
+   ],
+   "waiting": [
+    4
+   ],
+   "analysis": [
+    0
+   ],
+   "execution": [
+    1
+   ],
+   "execution_why": [
+    7
+   ],
+   "leverage": [
+    1
+   ],
+   "repeat": [
+    0
+   ],
+   "authority": [
+    1
+   ],
+   "talent": [
+    1
+   ],
+   "trust": [
+    1
+   ],
+   "trust_last": [
+    0
+   ],
+   "people_limits": [
+    0
+   ],
+   "inversion": [
+    7
+   ]
+  }
+ },
+ "D7": {
+  "name": "Normal firm: 'Sometimes/Depends/Mostly' (modest candour about ordinary imperfection)",
+  "answers": {
+   "opener": [
+    7
+   ],
+   "direction": [
+    1
+   ],
+   "focus": [
+    1
+   ],
+   "economics": [
+    1
+   ],
+   "business_uncertainty": [
+    0
+   ],
+   "decisions": [
+    6
+   ],
+   "comeback": [
+    5
+   ],
+   "overrule": [
+    1
+   ],
+   "given": [
+    1
+   ],
+   "waiting": [
+    4
+   ],
+   "analysis": [
+    0
+   ],
+   "execution": [
+    2
+   ],
+   "execution_why": [
+    7
+   ],
+   "leverage": [
+    1
+   ],
+   "repeat": [
+    1
+   ],
+   "authority": [
+    2
+   ],
+   "talent": [
+    2
+   ],
+   "trust": [
+    2
+   ],
+   "trust_last": [
+    0
+   ],
+   "people_limits": [
+    0
+   ],
+   "inversion": [
+    7
+   ]
+  }
+ },
+ "D4c": {
+  "name": "Bottleneck CEO picks honest opener but flatters elsewhere",
+  "answers": {
+   "opener": [
+    0
+   ],
+   "direction": [
+    1
+   ],
+   "focus": [
+    1
+   ],
+   "economics": [
+    1
+   ],
+   "business_uncertainty": [
+    0
+   ],
+   "decisions": [
+    6
+   ],
+   "comeback": [
+    5
+   ],
+   "overrule": [
+    0
+   ],
+   "given": [
+    0
+   ],
+   "waiting": [
+    4
+   ],
+   "analysis": [
+    0
+   ],
+   "execution": [
+    1
+   ],
+   "execution_why": [
+    7
+   ],
+   "leverage": [
+    1
+   ],
+   "repeat": [
+    1
+   ],
+   "authority": [
+    1
+   ],
+   "talent": [
+    1
+   ],
+   "trust": [
+    0
+   ],
+   "trust_last": [
+    0
+   ],
+   "people_limits": [
+    0
+   ],
+   "inversion": [
+    7
+   ]
+  }
+ },
+ "D8": {
+  "name": "Two true causes: leaders disagree on priorities AND people can't say so (direction + trust), honest",
+  "answers": {
+   "opener": [
+    3
+   ],
+   "direction": [
+    3
+   ],
+   "focus": [
+    2
+   ],
+   "economics": [
+    1
+   ],
+   "business_uncertainty": [
+    0
+   ],
+   "decisions": [
+    3
+   ],
+   "comeback": [
+    5
+   ],
+   "overrule": [
+    0
+   ],
+   "given": [
+    0
+   ],
+   "waiting": [
+    3
+   ],
+   "analysis": [
+    0
+   ],
+   "execution": [
+    1
+   ],
+   "execution_why": [
+    5
+   ],
+   "leverage": [
+    1
+   ],
+   "repeat": [
+    1
+   ],
+   "authority": [
+    1
+   ],
+   "talent": [
+    1
+   ],
+   "trust": [
+    3
+   ],
+   "trust_last": [
+    2
+   ],
+   "people_limits": [
+    4
+   ],
+   "inversion": [
+    3,
+    1
+   ]
+  }
+ }
+}
