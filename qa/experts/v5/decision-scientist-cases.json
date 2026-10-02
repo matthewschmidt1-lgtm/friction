@@ -1,0 +1,351 @@
+{
+ "C1": {
+  "name": "Nokia mobile phones, 2009, CEO",
+  "who": "Olli-Pekka Kallasvuo, Nokia CEO, answering in 2009 as the iPhone and Android erode Nokia's smartphone position",
+  "source": "public record",
+  "answererBelief": "Nokia is still the volume leader with huge scale and brand; the issue is speed of software and services (Symbian, Ovi) versus Apple and Google, and delivering the product roadmap on time. Organization is strong; we need to execute faster and keep investing.",
+  "expertBelief": "Fear and distorted upward information: Vuori and Huy found middle managers feared top managers' reactions and feared external shareholders, so they hid how bad Symbian was and gave over-optimistic timelines; top leaders' own temper and reorganizations deepened it. Compounded by no single software direction (Symbian, Maemo, MeeGo, S60 forks). Primary constraint trust/candour; secondary direction.",
+  "answers": {
+   "opener": [
+    4
+   ],
+   "focus": [
+    1
+   ],
+   "execution": [
+    1
+   ],
+   "economics": [
+    0
+   ],
+   "trust_last": [
+    0
+   ],
+   "self": [
+    4
+   ],
+   "overrule": [
+    1
+   ],
+   "trust": [
+    1
+   ],
+   "loss": [
+    1
+   ],
+   "leverage": [
+    1
+   ],
+   "inversion": [
+    0,
+    6
+   ]
+  }
+ },
+ "C1b": {
+  "name": "Nokia mobile phones, 2009, middle manager",
+  "who": "Middle manager in Nokia's smartphone software organization, 2009, answering about the company",
+  "source": "public record",
+  "answererBelief": "Leadership sets unrealistic targets and does not listen; we have too many platforms and reorganizations; Symbian cannot compete and the people at the top do not want to hear it, so nobody tells them.",
+  "expertBelief": "Same as C1: fear-driven filtering of bad news plus fragmented software direction. The manager sees the symptoms correctly but is also a participant in the silence (Vuori and Huy: managers themselves shaded the truth).",
+  "answers": {
+   "opener": [
+    6
+   ],
+   "trust_last": [
+    3
+   ],
+   "trust": [
+    1
+   ],
+   "blame_first": [
+    0
+   ],
+   "gossip": [
+    0
+   ],
+   "people_limits": [
+    5
+   ],
+   "self": [
+    1
+   ],
+   "overrule": [
+    1
+   ],
+   "loss": [
+    2
+   ],
+   "conflict": [
+    2
+   ],
+   "waiting": [
+    3
+   ],
+   "decisions": [
+    3
+   ],
+   "authority": [
+    3
+   ],
+   "comeback": [
+    3
+   ],
+   "inversion": [
+    3,
+    9
+   ]
+  }
+ },
+ "C2": {
+  "name": "Boeing 737 MAX program, about 2016",
+  "who": "Boeing senior leadership of the 737 MAX program and commercial airplanes, about 2016, as they would have seen it during development and certification",
+  "source": "public record",
+  "answererBelief": "We must match Airbus's A320neo on schedule and cost; the engineering is sound and the aircraft is an evolution of a proven design; certification is on track; the challenge is hitting the schedule and keeping cost and customer commitments (Southwest).",
+  "expertBelief": "Schedule and cost pressure driven by incentives and a shareholder-value culture outweighed engineering voice; delegated certification (ODA) put Boeing staff in conflict; MCAS single-sensor design was hidden from pilots to avoid simulator training (a sales promise); engineers could not push back. Primary: incentives/economics driving trust failure (candour); secondary: unclear decision authority between engineering and program management.",
+  "answers": {
+   "opener": [
+    8
+   ],
+   "leverage": [
+    1
+   ],
+   "execution": [
+    1
+   ],
+   "focus": [
+    0
+   ],
+   "trust_last": [
+    0
+   ],
+   "overrule": [
+    0
+   ],
+   "loss": [
+    0
+   ],
+   "self": [
+    6
+   ],
+   "trust": [
+    1
+   ],
+   "economics": [
+    0
+   ],
+   "inversion": [
+    7
+   ]
+  }
+ },
+ "C3": {
+  "name": "Microsoft, about 2011, Ballmer",
+  "who": "Steve Ballmer, Microsoft CEO, about 2011, answering about the company",
+  "source": "public record",
+  "answererBelief": "Microsoft is hugely profitable and strong; we are going all-in on the cloud and have Windows 8 and Windows Phone coming; the challenge is competing in new categories and executing faster, with great talent that needs to be pointed at the right bets.",
+  "expertBelief": "Stack ranking and divisional rivalry (Eichenwald, Vanity Fair 2012; Windows vs Office vs Server) made cooperation individually irrational; the best people avoided teams with other stars; internal competition beat external competition. Constraint is incentives and cross-unit coordination, with weak decision authority over cross-division bets.",
+  "answers": {
+   "opener": [
+    7
+   ],
+   "focus": [
+    1
+   ],
+   "execution": [
+    2
+   ],
+   "leverage": [
+    1
+   ],
+   "trust_last": [
+    0
+   ],
+   "self": [
+    0
+   ],
+   "overrule": [
+    1
+   ],
+   "trust": [
+    1
+   ],
+   "loss": [
+    1
+   ],
+   "economics": [
+    0
+   ],
+   "decisions": [
+    3
+   ],
+   "direction": [
+    1
+   ],
+   "authority": [
+    1
+   ],
+   "talent": [
+    1
+   ],
+   "inversion": [
+    7,
+    6
+   ]
+  }
+ },
+ "C4": {
+  "name": "Kodak, about 2005, CEO",
+  "who": "Antonio Perez, Kodak CEO, taking over in 2005 as digital substitution hits film",
+  "source": "public record",
+  "answererBelief": "Digital is the future and we are transitioning, but we have to move faster and cut costs; the problem is the speed of the transformation and the decline of film we can manage; we have great technology and brand.",
+  "expertBelief": "Economics: film earned very high margins while digital captured a fraction (digital cameras, minilabs, inkjet printers had little profit pool); no digital business could replace film profit, and Kodak lagged in resolving which bets to fund. Primary: unit economics/profit pool; secondary: direction (hedging between film and digital over decades, protecting film culture).",
+  "answers": {
+   "opener": [
+    7
+   ],
+   "focus": [
+    0
+   ],
+   "leverage": [
+    2
+   ],
+   "execution": [
+    2
+   ],
+   "self": [
+    6
+   ],
+   "trust_last": [
+    0
+   ],
+   "overrule": [
+    2
+   ],
+   "trust": [
+    1
+   ],
+   "loss": [
+    1
+   ],
+   "talent": [
+    2
+   ],
+   "repeat": [
+    1
+   ],
+   "execution_why": [
+    6,
+    0
+   ],
+   "decisions": [
+    1
+   ],
+   "comeback": [
+    3
+   ],
+   "inversion": [
+    6,
+    7
+   ]
+  }
+ },
+ "C5": {
+  "name": "Composite: people problem that is really pricing",
+  "who": "Owner-CEO of a 45-person B2B equipment-services firm, this year, who says his account managers lack ownership and drive",
+  "source": "practice composite",
+  "answererBelief": "My account managers do not take ownership and do not push customers; they need to be more accountable and hungry. We are busy but profit is thin because of people not performing.",
+  "expertBelief": "Economics: price list set years ago, discounts at the discretion of reps to hold volume, top customers are unprofitable after service cost; gross margin has slipped from 38 to 27 percent. Busy but thin profit is a pricing/unit-economics problem, not a motivation problem. Reps respond to a commission on revenue.",
+  "answers": {
+   "opener": [
+    7
+   ],
+   "focus": [
+    1
+   ],
+   "execution": [
+    2
+   ],
+   "leverage": [
+    2
+   ],
+   "self": [
+    5
+   ],
+   "trust_last": [
+    0
+   ],
+   "overrule": [
+    1
+   ],
+   "trust": [
+    1
+   ],
+   "loss": [
+    0
+   ],
+   "talent": [
+    2
+   ],
+   "repeat": [
+    3
+   ],
+   "execution_why": [
+    7,
+    3
+   ],
+   "business_uncertainty": [
+    5
+   ],
+   "inversion": [
+    4,
+    6
+   ]
+  }
+ },
+ "C6": {
+  "name": "Composite: well-run firm with a minor issue (control)",
+  "who": "COO of a 120-person well-run engineering consultancy, this year, who says Monday meetings run long and onboarding docs are stale",
+  "source": "practice composite",
+  "answererBelief": "Things are in good shape; the one nuisance is meeting hygiene and some outdated onboarding docs.",
+  "expertBelief": "Nothing material is wrong: good delivery, profit stable, people candid, decisions made at the right level. A clean control: ideal output is low friction or a minor, proportionate note with a cheap experiment.",
+  "answers": {
+   "opener": [
+    8
+   ],
+   "leverage": [
+    1
+   ],
+   "execution": [
+    1
+   ],
+   "focus": [
+    0
+   ],
+   "trust_last": [
+    0
+   ],
+   "overrule": [
+    1
+   ],
+   "loss": [
+    1
+   ],
+   "self": [
+    4
+   ],
+   "trust": [
+    0
+   ],
+   "talent": [
+    1
+   ],
+   "economics": [
+    0
+   ],
+   "inversion": [
+    7
+   ]
+  }
+ }
+}

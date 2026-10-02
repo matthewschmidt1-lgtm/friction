@@ -1,0 +1,116 @@
+# Friction v5 re-test: Dr. Rachel Okafor (organizational psychology / Conscious Leadership)
+
+Method: six real-world cases, answered in character through qa/take.sh, diagnosed with qa/diagnose.sh. Case file with beliefs written before each run: `qa/experts/v5/psychologist-cases.json` (C1 to C6, plus C6b, a sensitivity variant I added for the harmony case). I did not open js/, ground truth or other testers' files. Cost and ranges screens were not filled in.
+
+## Bottom line
+
+v5 fixed most of the honesty problems I raised in v4 (no more unmeasured "Candour = High" in most places, a "your own part" question, a behavioural candour question, loss question with a stop banner, conflict and blame questions, "Nothing major" and "I'm tired" openers). On real cases, though, the tool now has a different failure: **when the person answering is the cause and does not see it, it says "No clear constraint" and stops.** Four of my six cases (Nokia, Uber, Wells Fargo, Pixar) got the identical page. The tool cannot tell a healthy organization from a fear-driven one when the leader answers sincerely. The two cases where it said something (C5 grief, C6 harmony) were the ones where the leader gave it a lot to work with, and in C6 it said the wrong thing.
+
+Mean usefulness: (2 + 2 + 1 + 3 + 3 + 2) / 6 = **2.2 / 5**. Same as v4, but the failure type moved from "confidently wrong" to "silent". Silent is safer and better calibrated, but still not useful.
+
+## The cases
+
+### C1. Nokia mobile phones, 2009 (Kallasvuo, public record)
+**Answered as:** opener "Effort is high but results aren't"; could name what to stop "Probably"; execution "Sometimes"; workarounds "Some"; last problem raised "It was acted on"; own part "I don't think I'm part of it"; manager calls "They check first, so it rarely happens"; ten-second test "Listened, then explained why I saw it differently"; loss "Yes, talked openly" (plant closures were public); economics "Very clearly"; stuck decisions "Too many people have to approve it"; inversion "Add more priorities" and "Add another approval layer".
+**answererBelief:** Scale, brand, distribution; Apple is niche; the problem is software speed and discipline.
+**expertBelief:** Fear. Vuori and Huy: top managers feared the market and shareholders, middle managers feared the top, so bad news about software and the iPhone gap was filtered on the way up, and the CEO sat at the end of the filter. Secondary: too many platforms, nobody killing one.
+**Friction's read:** "01 THE READ: No clear constraint. Your answers didn't point to a constraint. That doesn't rule one out. It means nothing you described rose above a weak signal..." No confidence label, no close-behind, no experiment. WATCH: "ask someone who reports to you to run it too."
+**Match:** miss (but not a wrong claim). **Confirm or surface?** Neither; it confirmed by silence. **Label honesty:** the page is hedged well, but "nothing rose above a weak signal" is not accurate: "They check first, so it rarely happens" plus "explained why I saw it differently" plus "acted on" while execution is only "Sometimes" is a recognisable fear-and-filter pattern, and every one of those answers was a signal. **Experiment/safety:** none given. The "ask someone who reports to you" advice is actually the right first move for Kallasvuo. **Usefulness 2.**
+
+### C2. Uber, early 2017 (Kalanick, before the Holder report)
+**Answered as:** opener "Too many priorities, nothing gets finished"; stop 20%: "Probably"; execution "Usually"; economics "Very clearly"; last problem "acted on"; own part "I step in and decide"; manager calls "It stands"; ten-second "Listened, then explained why I saw it differently"; loss "No"; workarounds "A lot"; talent "Usually"; stuck decisions "Decisions don't really get stuck"; direction "Mostly similar"; inversion "Add more priorities", "Add another approval layer".
+**answererBelief:** Fast growth against giants, unfair press, leaks; needs winners; maybe more HR process.
+**expertBelief:** A results-over-conduct culture whose permission structure comes from the leader; complaints about high performers not acted on; fear of speaking up; rule-bending normalised. The leader's part is central and unseen.
+**Friction's read:** "No clear constraint." Same page as C1.
+**Match:** miss. **Confirm or surface:** confirmed his self-image by saying nothing. **Label honesty:** poor in the same way; he said "I step in and decide" and "A lot" depend on people making it happen, which the tool could have reflected back as a pattern. **Safety:** none, but a founder reading "No clear constraint" is licensed to continue. **Usefulness 2** (only because of the WATCH line).
+Note: my answers here were the sincere answers of someone who does not see the problem. A Kalanick who had admitted "I get tense" would likely have got something. That is the point: the tool depends on the very self-report that fails in this kind of case.
+
+### C3. Wells Fargo community bank, 2013 to 2015 (Tolstedt, public record)
+**Answered as:** opener "Nothing major is in the way"; workarounds "Some"; execution "Almost always"; last problem "It was acted on" (individuals were fired); economics "Very clearly"; loss "No"; manager calls "They check first"; own part "I don't think I'm part of it"; ten-second "Listened, then explained why I saw it differently"; stuck decisions "Decisions don't really get stuck"; talent "Usually"; last open disagreement between leaders "I can't remember one"; first question when something goes wrong **"Who did this?"**; authority "Usually"; inversion "Add another approval layer", "Keep solving the symptom".
+**answererBelief:** Sound relationship-banking model, a few bad employees, who were fired; best numbers in the industry.
+**expertBelief:** Impossible targets enforced daily, fear of dismissal, hotline complaints handled as individual misconduct instead of as a system signal, a leader who defended the model and was insulated from bad news. The system, not a few bad apples.
+**Friction's read:** "No clear constraint." Same page.
+**Match:** miss. **Confirm or surface:** confirmed her story. The questions I most wanted to see fire worked as designed: blame_first asked, conflict asked, and I answered them in a way that matches the pathology ("Who did this?", "I can't remember [an open disagreement]", "Keep solving the symptom"). Then nothing came of it. A blame-first culture with no open disagreement and a leader who explains away what she hears, rated "nothing rose above a weak signal", is a false negative. **Label honesty:** the copy overstates the absence of signal. **Experiment/safety:** none; no pressure/target hypothesis exists at all (nothing on incentives or targets in the pool I saw). **Usefulness 1.**
+
+### C4. Pixar, about 2010, Braintrust era (Catmull; healthier control)
+**Answered as:** opener "Nothing major is in the way"; workarounds "Some"; execution "Usually"; stop 20% "Probably"; last problem "acted on"; manager calls "It stands"; loss "Yes, talked openly" (a cancelled film); own part "I'm not sure yet"; ten-second "Thanked them and asked more"; economics "Very clearly"; inversion "Keep things comfortable instead of saying what I see".
+**answererBelief:** Doing well; complacency and hidden problems are the real risk; candour is hard to sustain at scale.
+**expertBelief:** Healthy. A good diagnostic should say low friction and give no crisis. The one thing worth saying is his own worry (success dulling candour).
+**Friction's read:** "No clear constraint", identical to C1 to C3.
+**Match:** match on the verdict, but only by coincidence. The page is word for word the one the pathological cases received. A tool that returns the same output for Pixar and Wells Fargo has not shown it can discriminate. **Confirm or surface:** neither; the inversion answer ("keep things comfortable") is exactly Catmull's real concern and it was not used. **Label honesty:** fine for this case. **Usefulness 3** (right answer, no content).
+
+### C5. Distributor 8 months after the founder's death, unspoken layoff (practice composite)
+**Answered as:** opener "Effort is high but results aren't"; can't name what to stop; execution "Sometimes"; uncertainty "What to stop"; own part "I'm too stretched to see it closely"; last problem "heard, nothing changed"; manager calls "They check first"; ten-second "Got tense, or went quiet"; **loss: "Yes, and we haven't really talked about it"**; reasons "No clear owner", "Lack of capacity"; workarounds "A lot"; talent "Rarely"; repeat "It depends on the person"; inversion "Avoid the difficult conversation", "Keep things comfortable".
+**answererBelief:** We are slower; need clearer roles and processes now Dad is gone.
+**expertBelief:** Unprocessed grief and loss; the CEO grieving and performing; missing informal decider is real but secondary. First move is a facilitated conversation naming the loss.
+**Friction's read:** BANNER: "Before anything structural. This may not be mainly a structure problem. Name the loss together first; the experiment is there for when you're ready." Headline read: "Performance depends on people working around the system [Emerging pattern]" with "Close behind: The best people aren't on the highest-value problems". Experiment: "Why this experiment: the read is 'Performance depends on people working around the system', but the highest-value move is to act on 'The organization is carrying a loss it hasn't processed'." Hypothesis: "The organization is carrying a loss that hasn't been named. 1. Name the loss to the team, out loud, and say that it matters. Include your own part of it if you are carrying it too. 2. Make unhurried room for people to talk about it, with a facilitator if the loss is heavy. 3. Wait two or three weeks before any structural change."
+**Match:** partial to good. The banner and the experiment are what I asked for in v4, and "wait two or three weeks before any structural change" is right. **Confirm or surface:** surfaced something the answerer did not state (she believed it was a process problem). **Label honesty:** "Emerging pattern" on the headline is fair, but the headline itself is the wrong read and contradicts the banner; the page says in one place that this is not mainly structure and in the next that the read is workarounds, with "Other explanations weighed" listing four rivals each marked "(High confidence)". Four hypotheses cannot all be high confidence; the label is meaningless there. Also "Expected vs observed: ...Candour=High" appears for a person who said she went tense or quiet, a death and an unspoken layoff; I cannot tell if this means high candour or high friction, and either way it is confusing. And the loss is never listed under "What supports this" (her answer "Yes, and we haven't really talked about it" is not quoted). **Safety:** much better than v4. Remaining concern: "with a facilitator if the loss is heavy" should read "with a facilitator" when the answer was "still raw" or a death; "Name the loss to the team, out loud" delivered by a grieving CEO with no support is risky. It also never mentions that the CEO herself may need support first. The "What not to do" says "Don't fix this by hiring more of the people who make it happen", which is irrelevant here. **Usefulness 3.**
+
+### C6. Agency leadership team, artificial harmony, MD part of the problem (practice composite)
+**Answered as:** opener "We agree on things that then don't happen"; execution "Sometimes"; reasons "No clear owner", "Follow-through"; manager calls "We talk it through afterwards"; last problem "heard, nothing changed"; own part "I'm not sure yet"; ten-second test "I can't remember anyone telling me something like that"; loss "No"; stuck decisions "Nobody clearly owns it"; comeback "No clear owner"; waiting "Agreement between leaders"; inversion "Avoid the difficult conversation".
+**answererBelief:** Great supportive team; we need better follow-through and project management.
+**expertBelief:** Conflict avoidance driven by the MD's need to be liked; no one says no; delivery risk hidden; commitments are aspirations. Low candour. The MD's part is the cause.
+**Friction's read:** "Decisions get stuck [Emerging pattern]... It is the absence of decision rights." Experiment: write who recommends, decides, is consulted for three stalled decisions. "What not to do: Don't fix this by adding another approval layer." Closing question: "Which decisions are we still making at the top because we don't trust the organization to make them..." "Other explanations weighed" lists "It isn't safe to raise problems or disagree (Early signal)". `conflict` question was **never asked**.
+**Match:** miss. This is the O1 case from v4 again, now with the wrong diagnosis in a different place, and with a decision-rights chart that a harmonious team will write beautifully and not use. **Confirm or surface:** confirmed her story ("no clear owner") and added bureaucracy. The final question frames it as the leaders not trusting the organization: the opposite of her actual issue.
+**Sensitivity (C6b):** I let the same MD be one notch more honest: own part "I avoid the hard conversation", waiting "Nobody wants to be the one who says no", inversion "Avoid the difficult conversation". Result: same read, "Decisions get stuck", same experiment. "Disagreement is avoided rather than worked through" appeared only as an "Emerging pattern" rival buried in "Other explanations", and the `conflict` question again was not asked. "Candour=Mixed". The two answers that name the disease explicitly did not change the headline. **Label honesty:** "Emerging pattern" is fair; omitting what she said under "What supports this" is not. **Safety:** the decision-rights experiment is harmless but wrong-footed. **Usefulness 2.**
+
+## Summary table
+
+| Case | Answerer belief | Expert belief | Friction's read (label) | Match | Surfaced something new? | Label honest? | Usefulness |
+|---|---|---|---|---|---|---|---|
+| C1 Nokia | Software speed, execution | Fear and filtered truth | No clear constraint | miss | No | Copy overstates "weak signal" | 2 |
+| C2 Uber | Growth and PR, need winners | Results-over-conduct culture, leader's permission | No clear constraint | miss | No | Same | 2 |
+| C3 Wells Fargo | A few bad apples | Target pressure, fear, blame, insulated leader | No clear constraint | miss | No | Same; false negative despite "Who did this?" | 1 |
+| C4 Pixar | Candour must be protected | Healthy | No clear constraint | match (by accident) | No | Fine | 3 |
+| C5 Grief | Roles and process | Unprocessed loss | Banner "before anything structural"; headline Workarounds [Emerging]; loss experiment | partial/good | Yes (the loss) | Rivals all "High confidence"; headline contradicts banner | 3 |
+| C6 Harmony | Follow-through | Conflict avoidance, MD's part | Decisions get stuck [Emerging]; decision-rights experiment | miss | No | Fair label, wrong thing | 2 |
+
+## What changed since my v4 review
+
+| My v4 finding | Status |
+|---|---|
+| F1 "Candour = High" shown when not asked | **Partly fixed.** It now says "Decision latency=Not asked" for unasked rows and "Candour=Mixed" where trust was weak. But Candour still read "High" in C5 and C6 where the leader's own answers (went tense or quiet; can't remember anyone telling me anything) say the opposite. Meaning of the row is unclear. |
+| F2 trust under-asked, self-report accepted | **Fixed in form, not in effect.** The ten-second behavioural question is present and I was asked it in all six cases. But answering it honestly ("explained why I saw it differently", "got tense") did not change any read in C1 to C3 or C5. |
+| F3 evidence text stronger than the answer | **Mostly fixed.** "What supports this" now quotes the respondent's own words with [High]/[Medium]/[Low] tags. Good. But a key answer (C5's loss; C6b's "Nobody wants to be the one who says no") is not quoted at all. |
+| F4 "it's me" options | **Fixed.** "I find it hard to let go of it", "I want to be the one who decides", "I get nervous when it's out of my hands", and a new `self` question exist. Nobody who doesn't see themselves uses them, which is the limit. |
+| F5 opener has no "nothing" | **Fixed.** "Nothing major is in the way" and "I'm tired, and I can't tell if it's the business or me" exist. |
+| F6/F7 direction and "nobody wants to say no" | **Partly fixed.** `conflict` and "Nobody wants to be the one who says no" are in the pool; `conflict` was asked only in C3, and "no" did not dominate the read in C6b. |
+| F8 inversion options | **Fixed.** "Take the criticism personally and defend myself" and "Keep things comfortable" added. Used, and reflected as "Reinforcing (from your answers)" in the page, but never decisive. |
+| F9 respondent as the problem | **Partly fixed.** `self` asked in 5 of 6 cases. Used only as a [Low] support line. The page does not say "your own part is...". |
+| F10 sector and structure assumptions | **Not fixed.** "customers, revenue, margin and cash" is still the economics question; no "I am the leadership team" path seen. |
+| F11 negative weights | **Unclear.** "No clear constraint" appears when many answers are mildly reassuring, suggesting reassuring answers still cancel the few worrying ones. |
+| F12 experiment safety | **Partly fixed** for loss (facilitator, wait two weeks). Not seen for blame/direction experiments because they never fired. |
+| F13 blind spot templates | **Not fixed.** C6 got "normalised management intervention" for a team that is the opposite. |
+| F14 healthy case false positive | **Fixed.** Healthy answers produce no problem. |
+| Breadth gap: loss, with stop banner | **Fixed** (C5). Best change in v5. |
+| Breadth gap: conflict avoidance, blame | **Questions added, hypotheses do not carry.** Neither produced a headline read in any of my cases. |
+| Breadth gap: target pressure / incentives, integrity, say-do | **Not fixed.** No question about targets or consequences for missing them. Wells Fargo and Uber are exactly these. |
+| Breadth gap: burnout, appreciation | Not seen. |
+
+## New problems
+
+1. **No discrimination.** C1, C2, C3 and C4 produce a byte-identical page. A diagnostic whose output for Pixar equals its output for Wells Fargo is not telling the user anything; it only declines to say.
+2. **"Nothing you described rose above a weak signal" is false** when the respondent chose "Who did this?", "I can't remember an open disagreement", "They check first", and "explained why I saw it differently". The sentence should be conditional on the answers actually being reassuring, or be replaced with a list of the three most concerning answers the person gave.
+3. **Reassuring answers cancel worrying ones.** The leader's self-report (execution "Almost always", "acted on", "Decisions don't really get stuck") apparently outweighs the behavioural items. These are the same blind spots I flagged in v4 F11, now producing silence instead of wrong answers.
+4. **Contradiction between banner and headline (C5).** The banner says this may not be a structure problem; the headline is a structure read, with "Close behind" and four rivals at "High confidence". Labels on the "Other explanations weighed" list are meaningless when four items share the top label.
+5. **"Candour=High" appears again** in C5 and C6, contradicting the respondent. The row's meaning (high friction or high candour?) is ambiguous.
+6. **Wrong-way blind spot and closing question in C6.** "Which decisions are we still making at the top because we don't trust the organization to make them" is the opposite of what was happening, and still uses "we" rather than "I".
+7. **Conflict and blame questions are rationed.** `conflict` appeared in C3 only. In C6 and C6b, a team defined by conflict avoidance, the question was not asked in 15 questions, while `comeback` and `waiting` were.
+8. **Loss experiment safety.** "With a facilitator if the loss is heavy" is optional wording. For a death or "still raw" it should be a requirement, and the leader should be told to get support first.
+9. **Cost screen invisible to me.** Not tested; no comment.
+
+## Top five recommendations, ranked by impact
+
+1. **Make "No clear constraint" earn itself, and stop it appearing for concerning answers.** Only fire it when the answers are on the healthy side across candour, blame and conflict. Otherwise show a reading that lists the respondent's three most concerning answers verbatim ("You said the first question is 'Who did this?'; you can't remember an open disagreement; managers check first") and say what that pattern usually means. It must not produce the same page for Pixar and Wells Fargo.
+2. **Give behavioural answers veto weight over self-report.** "Who did this?", "I can't remember [an open disagreement / anyone telling me]", "They check first", "Got tense, or went quiet", "explained why I saw it differently" should create or raise `blame`, `conflict_avoidance` and `fear` hypotheses regardless of reassuring structural answers, and a gap between "acted on" and "execution: Sometimes" should be called out. Reassuring answers should be capped at a modest negative weight.
+3. **Always ask `conflict` and `blame_first` (and make "Nobody wants to be the one who says no" strongly weighted).** In C6 and C6b the cause of the problem was never asked about. When `conflict` = "can't remember one"/"Never", `conflict_avoidance` should be the headline, not a rival, with its own experiment (one meeting where each person must state a view different from the previous speaker; a facilitator).
+4. **Add a pressure/targets/consequences hypothesis.** Neither Uber nor Wells Fargo is describable without it: "What happens to a person who misses their number?", "What happens to a high performer who breaks a rule?", "Do you hear about problems from the people who have them or only from their managers?" Without this the tool cannot see organizational fear that comes from incentives, only from relationships.
+5. **Fix the loss path and the labels around it.** When loss is "not talked about" or "still raw", make the headline the loss (not a structural read with a banner above it), quote the answer in "What supports this", require a facilitator, tell the leader to find support for herself first, remove the structural "what not to do", and fix the "(High confidence)" labels on rivals so that only the headline carries a label. Also resolve what "Candour=High" means or remove the row where trust answers conflict with it.
+
+## What it does well now
+
+- The "no clear constraint" page is honest that it is a reading of the person's own answers, and its single piece of advice (ask someone who reports to you the same questions) is the correct first move in C1, C2 and C3. It would be more useful if it were the lead and not a footnote.
+- The `self` question ("Everyone who leads is part of the pattern somewhere. Most tools skip this question.") and the ten-second behavioural question are well written and I would use both in practice.
+- Quoting the respondent's words in "What supports this" is an honest design.
+- The loss banner and the three-step loss experiment (name it, make unhurried room, wait before structural change) are the best new content.
+- Healthy answers no longer produce a manufactured problem.

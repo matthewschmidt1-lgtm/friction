@@ -23,17 +23,23 @@ try {
     const H = h => C.HYPOTHESES[h].name;
     L.push('', 'THE DIAGNOSIS PAGE');
     if (r.low) {
-      L.push(`  01 THE READ: Low friction — ${C.LOW_FRICTION.summary}`, `     ${C.LOW_FRICTION.detail}`, `  WATCH: ${C.LOW_FRICTION.watch}`);
+      if (r.grief) L.push('  BANNER: Before anything structural. This may not be mainly a structure problem. (You named a loss that hasn\'t been talked about or is still raw.)');
+      L.push(`  01 THE READ: ${C.LOW_FRICTION.name} — ${C.LOW_FRICTION.summary}`, `     ${C.LOW_FRICTION.detail}`, `  WATCH: ${C.LOW_FRICTION.watch}`);
     } else {
       const play = r.play, Z = C.ZONES[r.zone], exp = r.experiment;
+      if (r.grief && r.top !== 'loss') L.push('  BANNER: Before anything structural. This may not be mainly a structure problem. Name the loss together first; the experiment is there for when you\'re ready.');
       L.push(`  01 THE READ: ${play.constraint}   [${r.label.label}]`, `     ${play.diagnosis}`);
+      if (r.paired) L.push(`     Close behind: ${H(r.paired)}`);
+      if (r.ownSaid && r.ownSaid.length) L.push('     In your words: ' + r.ownSaid.map(x => `"${x}"`).join(' '));
+      if (r.notes && r.notes.length) L.push(...r.notes.map(x => `     Worth noticing: ${x}`));
+      L.push(`     Confidence explanation: ${r.label.d}`);
       if (r.changedMind) L.push(`     We changed our mind: earlier it pointed to ${H(r.changedMind.from)}.`);
-      L.push('     What supports this:', ...r.supports.slice(0, 3).map(x => `       · [${x.strength}] ${x.obs}`));
+      L.push('     What supports this:', ...r.supports.slice(0, 3).map(x => `       · [${x.strength}] "${x.said}" (${x.q})`));
       if (r.open && r.open.question) L.push(`     Still trying to understand: is it "${H(r.top)}" or "${H(r.second)}"? The question that would tell us: ${r.open.question}`);
       L.push('', `  02 THE GAP: ${Z.name} — ${Z.label}`, `     ${(C.ZONE_BY_CONSTRAINT[r.zone] || {})[r.top] || Z.summary}`);
       L.push('     [expander] Why we think this:', '       Chain: ' + play.chain.join(' → '));
       L.push(...r.forces.map(f => `       Reinforcing (${f.src === 'pattern' ? 'our inference' : 'from your answers'}): ${f.t}`));
-      if (r.contradicts.length) L.push('       What cuts against it:', ...r.contradicts.slice(0, 3).map(x => `         · ${x.obs}`));
+      if (r.contradicts.length) L.push('       What cuts against it:', ...r.contradicts.slice(0, 3).map(x => `         · "${x.said}" (${x.q})`));
       L.push('       Other explanations weighed:', ...r.ranked.slice(0, 5).map(h => `         · ${H(h)} (${r.p[h] >= .8 ? 'High confidence' : r.p[h] >= .65 ? 'Strong pattern' : r.p[h] >= .45 ? 'Emerging pattern' : 'Early signal'})`));
       if (r.mpe && r.mpe.length) L.push('       Most probable configuration: ' + r.mpe.map(H).join(' → '));
       L.push('     [expander] What it\'s costing: ' + play.consequences.join(', ') + (r.econ ? ` | Operating profile suggests: ${r.econ.t} (${r.econ.conf})` : ''));

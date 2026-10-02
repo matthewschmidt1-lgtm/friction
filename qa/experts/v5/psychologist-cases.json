@@ -1,0 +1,363 @@
+{
+ "C1": {
+  "name": "Nokia mobile phones 2009",
+  "who": "CEO Olli-Pekka Kallasvuo, 2009, as he would plausibly have answered at the time (confident in scale and execution, worried about speed of software)",
+  "source": "public record",
+  "answererBelief": "We have the scale, the brand and the distribution. Apple is a niche, high-end player. The problem is that software takes too long and we are not shipping fast enough; we need to execute our Symbian/Maemo roadmap and be more disciplined. Strong leaders, good people.",
+  "expertBelief": "Fear. Per Vuori and Huy, top managers feared the market and shareholders and so pressured middle managers hard; middle managers feared the top (tempers, public rebukes) and so told rosier news upward, hid how bad the software and iPhone gap was. Information was filtered, candour was missing, and the CEO sat at the top of the filter. Secondary: too many parallel platforms and no decision about which to kill.",
+  "answers": {
+   "opener": [
+    7
+   ],
+   "focus": [
+    1
+   ],
+   "execution": [
+    2
+   ],
+   "leverage": [
+    1
+   ],
+   "trust_last": [
+    0
+   ],
+   "self": [
+    6
+   ],
+   "overrule": [
+    3
+   ],
+   "trust": [
+    1
+   ],
+   "loss": [
+    1
+   ],
+   "economics": [
+    0
+   ],
+   "decisions": [
+    1
+   ],
+   "inversion": [
+    0,
+    2
+   ]
+  }
+ },
+ "C2": {
+  "name": "Uber early 2017",
+  "who": "Travis Kalanick, CEO, Feb 2017, before the Holder report (post-Susan Fowler blog, Greyball, Waymo suit looming)",
+  "source": "public record",
+  "answererBelief": "We are growing fast against huge competitors in dozens of countries; people are leaking and PR is unfair. I need results and hard-charging people who win. Maybe HR is slow and we need some process, but the core is that we need to keep winning.",
+  "expertBelief": "Winning-at-all-costs culture with a leader whose behaviour sets the permission structure: results rewarded over conduct, HR complaints not acted on when the offender was a high performer, fear of speaking up, rule-breaking normalised. The leader's own part is central; he does not see it. Integrity / say-do and candour hypotheses.",
+  "answers": {
+   "opener": [
+    4
+   ],
+   "focus": [
+    1
+   ],
+   "execution": [
+    1
+   ],
+   "economics": [
+    0
+   ],
+   "trust_last": [
+    0
+   ],
+   "self": [
+    0
+   ],
+   "overrule": [
+    0
+   ],
+   "trust": [
+    1
+   ],
+   "loss": [
+    0
+   ],
+   "leverage": [
+    2
+   ],
+   "talent": [
+    1
+   ],
+   "decisions": [
+    6
+   ],
+   "direction": [
+    1
+   ],
+   "inversion": [
+    0,
+    2
+   ]
+  }
+ },
+ "C3": {
+  "name": "Wells Fargo community bank 2013-2015",
+  "who": "Carrie Tolstedt, head of community banking, as she would have seen it, c.2014",
+  "source": "public record",
+  "answererBelief": "Our cross-sell strategy (eight is great) is a sound relationship-banking model; a few bad individual employees broke rules and we fired them. Our numbers are the best in the industry. Lines are strong; hotline and HR do their job. Targets are achievable with effort.",
+  "expertBelief": "Impossible sales targets with daily pressure, fear of termination, ethics hotline complaints handled as individual-employee issues rather than system signals, and a leader who defended the model and screened bad news. Pressure to hit numbers produced fraud; the leader's insulation and the incentive system were the cause, not a few bad apples.",
+  "answers": {
+   "opener": [
+    8
+   ],
+   "leverage": [
+    1
+   ],
+   "execution": [
+    0
+   ],
+   "trust_last": [
+    0
+   ],
+   "economics": [
+    0
+   ],
+   "loss": [
+    0
+   ],
+   "overrule": [
+    3
+   ],
+   "self": [
+    6
+   ],
+   "trust": [
+    1
+   ],
+   "decisions": [
+    6
+   ],
+   "talent": [
+    1
+   ],
+   "conflict": [
+    2
+   ],
+   "blame_first": [
+    0
+   ],
+   "authority": [
+    1
+   ],
+   "inversion": [
+    2,
+    6
+   ]
+  }
+ },
+ "C4": {
+  "name": "Pixar around 2010",
+  "who": "Ed Catmull, president, 2010, post-Toy Story 3, running the Braintrust",
+  "source": "public record",
+  "answererBelief": "We are doing well but complacency and hidden problems are our biggest risk. Candor is hard to sustain as we grow; success makes people less willing to tell the truth. We need to keep protecting the Braintrust and keep looking for what we cannot see. Worried about integrating Disney Animation.",
+  "expertBelief": "Healthy, with a leader who actively seeks and models candour; the main risk is the one he names: success dulling it, plus scale. Nothing major is broken. A good diagnostic should say low friction or small, and not invent a crisis.",
+  "answers": {
+   "opener": [
+    8
+   ],
+   "leverage": [
+    1
+   ],
+   "execution": [
+    1
+   ],
+   "focus": [
+    1
+   ],
+   "trust_last": [
+    0
+   ],
+   "overrule": [
+    0
+   ],
+   "loss": [
+    1
+   ],
+   "self": [
+    7
+   ],
+   "trust": [
+    0
+   ],
+   "economics": [
+    0
+   ],
+   "inversion": [
+    9
+   ]
+  }
+ },
+ "C5": {
+  "name": "Manufacturer in grief after founder's death",
+  "who": "Composite from practice: CEO (the founder's daughter) of a 90-person family-owned distributor, 8 months after her father the founder died suddenly; two sales staff were laid off a month later and never discussed",
+  "source": "practice composite",
+  "answererBelief": "We are slower than we used to be. People seem disengaged and decisions take forever; I think we need clearer roles and better processes now that Dad is gone.",
+  "expertBelief": "Unprocessed grief and loss: the founder's death and the layoff are not spoken about; the CEO is grieving, performing competence, and handling it by working harder. The drift is mourning plus an informal decider who is missing (so structure is partly real). First move is a facilitated conversation naming the loss, before any process change.",
+  "answers": {
+   "opener": [
+    7
+   ],
+   "focus": [
+    2
+   ],
+   "execution": [
+    2
+   ],
+   "business_uncertainty": [
+    3
+   ],
+   "self": [
+    4
+   ],
+   "trust_last": [
+    1
+   ],
+   "overrule": [
+    3
+   ],
+   "trust": [
+    2
+   ],
+   "loss": [
+    2
+   ],
+   "execution_why": [
+    1,
+    2
+   ],
+   "economics": [
+    1
+   ],
+   "leverage": [
+    2
+   ],
+   "talent": [
+    3
+   ],
+   "repeat": [
+    3
+   ],
+   "inversion": [
+    3,
+    9
+   ]
+  }
+ },
+ "C6": {
+  "name": "Artificial harmony team, leader part of the problem",
+  "who": "Composite from practice: managing director of a 45-person agency leadership team of 6, warm, praise in every meeting, answering in a quarterly review",
+  "source": "practice composite",
+  "answererBelief": "We have a great, supportive team and everyone gets on. The problem is that things we agree on do not get done and clients are sometimes surprised by late delivery. We need better project management and follow-through.",
+  "expertBelief": "Conflict avoidance: the MD punishes dissent subtly (goes quiet, sulks, rewards agreeableness), so nobody says no, delivery risk is hidden, and decisions are 'agreed' with no commitment. The MD's own need to be liked and to avoid conflict is the cause and she does not see it. Candour is low; tool should find it.",
+  "answers": {
+   "opener": [
+    1
+   ],
+   "execution": [
+    2
+   ],
+   "focus": [
+    1
+   ],
+   "execution_why": [
+    1,
+    7
+   ],
+   "overrule": [
+    1
+   ],
+   "trust_last": [
+    1
+   ],
+   "self": [
+    7
+   ],
+   "trust": [
+    4
+   ],
+   "loss": [
+    0
+   ],
+   "leverage": [
+    1
+   ],
+   "repeat": [
+    1
+   ],
+   "decisions": [
+    0
+   ],
+   "comeback": [
+    0
+   ],
+   "waiting": [
+    3
+   ],
+   "inversion": [
+    3
+   ]
+  }
+ },
+ "C6b": {
+  "name": "C6 sensitivity variant: same MD but one notch more self-aware",
+  "who": "Composite from practice: managing director of a 45-person agency leadership team of 6, warm, praise in every meeting, answering in a quarterly review (variant: she picks 'Nobody wants to be the one who says no' and 'I can't remember' style answers)",
+  "source": "practice composite",
+  "answererBelief": "We have a great, supportive team and everyone gets on. The problem is that things we agree on do not get done and clients are sometimes surprised by late delivery. We need better project management and follow-through.",
+  "expertBelief": "Conflict avoidance: the MD punishes dissent subtly (goes quiet, sulks, rewards agreeableness), so nobody says no, delivery risk is hidden, and decisions are 'agreed' with no commitment. The MD's own need to be liked and to avoid conflict is the cause and she does not see it. Candour is low; tool should find it.",
+  "answers": {
+   "opener": [
+    1
+   ],
+   "execution": [
+    2
+   ],
+   "focus": [
+    1
+   ],
+   "execution_why": [
+    1,
+    7
+   ],
+   "overrule": [
+    1
+   ],
+   "trust_last": [
+    1
+   ],
+   "self": [
+    1
+   ],
+   "trust": [
+    4
+   ],
+   "loss": [
+    0
+   ],
+   "leverage": [
+    1
+   ],
+   "repeat": [
+    1
+   ],
+   "decisions": [
+    0
+   ],
+   "comeback": [
+    0
+   ],
+   "waiting": [
+    5
+   ],
+   "inversion": [
+    3
+   ]
+  }
+ }
+}

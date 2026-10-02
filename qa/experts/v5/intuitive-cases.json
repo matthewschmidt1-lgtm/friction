@@ -1,0 +1,325 @@
+{
+ "C1": {
+  "name": "Nokia mobile phones, 2009",
+  "who": "CEO Olli-Pekka Kallasvuo, 2009, as he might have answered then",
+  "source": "public record",
+  "answererBelief": "We are the global leader with huge scale and margins; the iPhone is a niche high end product and the issue is execution on touch and software, plus a tough recession and aggressive competitors.",
+  "expertBelief": "Fear that nobody dared say upward. A proud engineering company whose middle managers lied up the chain to protect themselves, and a CEO who could not hear that the platform was dying. Grief and denial dressed as confidence.",
+  "recordSays": "Symbian too slow to develop for, fragmented software, internal fear and politics, middle management hiding bad news from top, overconfidence and slow decisions (Vuori/Doz, INSEAD study); Elop's 'burning platform' memo 2011.",
+  "answers": {
+   "opener": [
+    8
+   ],
+   "leverage": [
+    1
+   ],
+   "execution": [
+    1
+   ],
+   "focus": [
+    1
+   ],
+   "trust_last": [
+    0
+   ],
+   "overrule": [
+    1
+   ],
+   "loss": [
+    0
+   ],
+   "self": [
+    6
+   ],
+   "trust": [
+    1
+   ],
+   "economics": [
+    0
+   ],
+   "inversion": [
+    6,
+    0
+   ]
+  }
+ },
+ "C2": {
+  "name": "Theranos, 2015",
+  "who": "Elizabeth Holmes, founder/CEO, autumn 2015 after the WSJ story",
+  "source": "public record",
+  "answererBelief": "We are a visionary company being attacked by an incumbent industry and a hostile press; the technology works and we just need time and to protect our IP.",
+  "expertBelief": "A story that could not be allowed to be wrong. Secrecy was holding up a lie, and the founder was fused with the narrative; anyone who doubted was pushed out. The real thing is truth being unwelcome.",
+  "recordSays": "Technology did not work as claimed, results were inaccurate, secrecy and fear culture, board lacked expertise, dissenters fired or threatened with legal action, regulators found lab violations.",
+  "answers": {
+   "opener": [
+    8
+   ],
+   "leverage": [
+    2
+   ],
+   "talent": [
+    1
+   ],
+   "execution": [
+    1
+   ],
+   "trust_last": [
+    1
+   ],
+   "overrule": [
+    3
+   ],
+   "self": [
+    0
+   ],
+   "trust": [
+    1
+   ],
+   "loss": [
+    0
+   ],
+   "decisions": [
+    6
+   ],
+   "focus": [
+    0
+   ],
+   "authority": [
+    1
+   ],
+   "blame_first": [
+    1
+   ],
+   "economics": [
+    1
+   ],
+   "inversion": [
+    8,
+    1
+   ]
+  }
+ },
+ "C3": {
+  "name": "Twitter, December 2022",
+  "who": "A surviving engineering manager at Twitter after the acquisition and mass layoffs, December 2022",
+  "source": "public record",
+  "answererBelief": "We lost too many people and nobody knows who owns what; priorities change daily and we are firefighting with half the team.",
+  "expertBelief": "Fear and loyalty-by-hostage. People stay for visas and paychecks, not belief. Underneath is grief for the colleagues gone, and no trust that decisions are made for reasons.",
+  "recordSays": "Sudden cuts of about half the staff, loss of institutional knowledge, outages, erratic top-down decisions, an ultimatum to be 'hardcore', unclear ownership, advertisers leaving.",
+  "answers": {
+   "opener": [
+    5
+   ],
+   "leverage": [
+    3
+   ],
+   "repeat": [
+    3
+   ],
+   "talent": [
+    3
+   ],
+   "self": [
+    4
+   ],
+   "overrule": [
+    3
+   ],
+   "trust_last": [
+    2
+   ],
+   "trust": [
+    2
+   ],
+   "loss": [
+    3
+   ],
+   "execution": [
+    2
+   ],
+   "execution_why": [
+    5,
+    2
+   ],
+   "focus": [
+    3
+   ],
+   "business_uncertainty": [
+    0
+   ],
+   "inversion": [
+    1,
+    6
+   ]
+  }
+ },
+ "C4": {
+  "name": "Zappos, 2015",
+  "who": "Tony Hsieh, CEO, 2015 during the holacracy rollout",
+  "source": "public record",
+  "answererBelief": "We need to stay innovative and self-organizing like a city, not a bureaucracy; people just need to adapt and some who resist should take the offer to leave.",
+  "expertBelief": "A founder in love with an idea who has made it a belief system. Staff are unsettled, losing the clear path of management, and afraid to say the experiment is hurting them. Ideology outrunning the human need for clarity.",
+  "recordSays": "Around 18 percent of staff left after the buyout offer, confusion over roles and pay and career paths, loss of managers, culture strain; Zappos later moved away from strict holacracy.",
+  "answers": {
+   "opener": [
+    7
+   ],
+   "focus": [
+    1
+   ],
+   "execution": [
+    2
+   ],
+   "leverage": [
+    1
+   ],
+   "trust_last": [
+    1
+   ],
+   "self": [
+    2
+   ],
+   "overrule": [
+    0
+   ],
+   "trust": [
+    0
+   ],
+   "loss": [
+    1
+   ],
+   "business_uncertainty": [
+    4
+   ],
+   "execution_why": [
+    1,
+    6
+   ],
+   "decisions": [
+    0
+   ],
+   "waiting": [
+    3
+   ],
+   "direction": [
+    1
+   ],
+   "inversion": [
+    1,
+    2
+   ]
+  }
+ },
+ "C5": {
+  "name": "Family business, unspoken between generations (composite)",
+  "who": "Daughter, 41, now running a 60-year-old regional building supply company with her father, 74, still in the office every day",
+  "source": "client composite",
+  "answererBelief": "Cash flow is tight, margins are shrinking, and we have a hard time hiring good counter staff and drivers.",
+  "expertBelief": "Dad has never said she is the successor, and she has never asked. Her brother left and it was never discussed. Every decision is secretly a referendum on whether she is allowed to be in charge. Unspoken: permission, and his fear of being unnecessary.",
+  "recordSays": "",
+  "answers": {
+   "opener": [
+    7
+   ],
+   "focus": [
+    2
+   ],
+   "execution": [
+    2
+   ],
+   "business_uncertainty": [
+    5
+   ],
+   "self": [
+    1
+   ],
+   "trust_last": [
+    4
+   ],
+   "trust": [
+    2
+   ],
+   "overrule": [
+    2
+   ],
+   "loss": [
+    0
+   ],
+   "economics": [
+    1
+   ],
+   "people_limits": [
+    3
+   ],
+   "blame_first": [
+    0
+   ],
+   "gossip": [
+    0
+   ],
+   "comeback": [
+    0
+   ],
+   "inversion": [
+    3,
+    9
+   ]
+  }
+ },
+ "C6": {
+  "name": "Exhausted owner (composite)",
+  "who": "Owner of a 14-person design and print shop, 52, seventeen years in, answering on a Sunday night",
+  "source": "client composite",
+  "answererBelief": "I think the business is just too demanding, or maybe I am burned out, I honestly cannot tell. Customers are fine, money is okay.",
+  "expertBelief": "The business is fine and she is depleted: she is the bottleneck for every decision, hasn't had a real break in years, and quietly grieves the creative work she used to do. Needs permission to rest and to hand things off, not a new strategy.",
+  "recordSays": "",
+  "answers": {
+   "opener": [
+    9
+   ],
+   "loss": [
+    0
+   ],
+   "leverage": [
+    3
+   ],
+   "repeat": [
+    3
+   ],
+   "talent": [
+    2
+   ],
+   "self": [
+    4
+   ],
+   "overrule": [
+    4
+   ],
+   "trust_last": [
+    0
+   ],
+   "trust": [
+    0
+   ],
+   "execution": [
+    1
+   ],
+   "focus": [
+    1
+   ],
+   "decisions": [
+    7
+   ],
+   "authority": [
+    2
+   ],
+   "comeback": [
+    2
+   ],
+   "inversion": [
+    1,
+    7
+   ]
+  }
+ }
+}

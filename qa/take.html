@@ -1,0 +1,27 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"></head><body><pre id="out">pending</pre><script type="module">
+// Takes the diagnostic one question at a time, as a person would. Replays the answers given so far
+// and prints only the next question the app would show, or says the conversation is finished.
+const out = document.getElementById('out');
+try {
+  const P = new URLSearchParams(location.search);
+  const { newSession, applyAnswer, nextQuestion } = await import('../js/engine.js');
+  const all = JSON.parse(await (await fetch('../' + P.get('file') + '?t=' + Date.now())).text());
+  const p = all[P.get('pid')]; if (!p) throw new Error('No case "' + P.get('pid') + '" in that file');
+  const ans = p.answers || {}; const s = newSession(); let q, n = 0; const L = [];
+  while ((q = nextQuestion(s))) {
+    n++;
+    if (!ans[q.id]) {
+      L.push(`QUESTION ${n}  (id: ${q.id})`);
+      if (q.intro) L.push(`  ${q.intro.kicker} ${q.intro.line}`);
+      L.push(`  ${q.eyebrow ? q.eyebrow + ': ' : ''}${q.title}`);
+      if (q.help) L.push(`  ${q.help}`);
+      L.push(q.multi ? `  Choose up to ${q.max || 2}.` : '  Choose one.');
+      q.options.forEach((o, i) => L.push(`    [${i}] ${o.t}`));
+      L.push('', `Record it as "${q.id}": [index] (or [i, j] where more than one is allowed) in the case's "answers", then run this again.`);
+      out.textContent = L.join('\n'); throw 'done';
+    }
+    applyAnswer(s, q.id, ans[q.id]);
+  }
+  out.textContent = `FINISHED after ${n} questions. The app now shows an optional cost screen (managers, hours a week lost, loaded hourly rate, revenue range, profit range). Add "cost" and "ranges" to the case if the person would fill it in, then run diagnose.sh to see the diagnosis page.`;
+} catch (e) { if (e !== 'done') out.textContent = 'ERROR ' + (e.message || e); }
+</script></body></html>
