@@ -118,6 +118,9 @@ saved answer indices.
 
 ## Gotchas
 
+- Text colour must pass WCAG AA (4.5:1) on every surface. Orange text uses `--sun-text`, never
+  `--sun` or `--sun-deep` (those are for fills and buttons). `--ink-faint` is 70% ink; don't lighten
+  it. Tap targets are at least 44px; small controls get a larger hit area, not a bigger look.
 - `css/friction.css` is a stack of passes; a later rule with equal specificity wins. The blind
   spot card is dark navy: any new `.display`-class rule must not remove `color:#fff` there.
 - `localStorage` key `friction.v3` holds history entries with `evidence`, `decision`,

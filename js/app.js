@@ -236,20 +236,7 @@ const SCREENS = {
       </div>
 
       <div class="jstep stagger">
-        ${step('02', 'The gap', Z.label)}
-        ${frictionMap(r)}
-        <h2 class="display md">${esc(Z.name)}</h2>
-        <p class="lead">${esc(zoneSummary)}</p>
-        ${r.coherence ? `<p class="quiet">No single explanation is clearly ahead. The strongest is <strong>${esc(hypName(r.top).toLowerCase())}</strong>, but it is mild. The pattern is the finding.</p>` : ''}
-        <div class="expanders">
-          ${exp_('Why we think this', 'The chain, what reinforces it, what cuts against it', why)}
-          ${exp_('How to read the map', 'Three lenses, and the gaps between them', `<p>Each corner is a lens. The pools show how much of the current evidence sits in each one. The friction point sits on the gap between the lens of the current read and the lens of the strongest competing explanation.</p><div class="bars">${lensRow('B')}${lensRow('S')}${lensRow('P')}</div>`)}
-          ${exp_('What it\'s costing', est ? `≈ ${est.dollars ? '$' + fmt(est.dollars) : fmt(est.hoursYear) + ' hours'} a year in leadership capacity, and what it may lead to` : 'The business consequence, and what the capacity could do instead', costBody)}
-        </div>
-      </div>
-
-      <div class="jstep stagger">
-        ${step('03', r.grief && r.top !== 'loss' ? 'When you\'re ready' : 'What to test', 'One experiment, ' + exp.days + ' days')}
+        ${step('02', r.grief && r.top !== 'loss' ? 'When you\'re ready' : 'What to test', 'One experiment, ' + exp.days + ' days')}
         ${r.decision !== r.top ? `<p class="decision-note"><span class="k">Why this experiment</span>The read is <strong>${esc(hypName(r.top).toLowerCase())}</strong>, but the highest-value move given the uncertainty is to act on <strong>${esc(hypName(r.decision).toLowerCase())}</strong>: it relieves that and part of what sits downstream of it.</p>` : ''}
         <div class="blind compact">
           <p class="eyebrow">First, test the blind spot · untested</p>
@@ -263,9 +250,23 @@ const SCREENS = {
           <p class="k">Steps</p><ol class="steps">${exp.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
           <p class="k">Watch</p><ul class="watchlist">${exp.watch.map(w => `<li>${esc(w)}</li>`).join('')}</ul>
           <p class="watch"><strong>Run it. Come back and tell us what happened.</strong> The point is not to prove the read right. It is to find out where it is wrong.</p>
+          <div class="exp-cta"><button class="btn btn-primary" data-remind>Put a check-in on my calendar <span class="arr">→</span></button><span class="quiet">A reminder in ${exp.days} days to come back with what you saw.</span></div>
           ${exp_('What not to do', play.notDo.t, dontBody)}
           ${r.evs ? exp_('Interventions we weighed', 'Expected value given the uncertainty, minus effort', `<ol class="hyps">${r.evs.slice(0, 5).map(x => `<li><span class="hyp-bar"><i style="width:${Math.round(100 * Math.max(0, x.ev) / Math.max(.001, r.evs[0].ev))}%"></i></span><span class="hyp-n">${esc((x.spec || {}).action || hypName(x.key))}</span><span class="hyp-l">${esc(x.effort)}</span></li>`).join('')}</ol>`) : ''}
           ${exp_('Further reading', 'You are not the first to run into this', reading, 'further')}
+        </div>
+      </div>
+
+      <div class="jstep stagger">
+        ${step('03', 'The gap', Z.label)}
+        ${frictionMap(r)}
+        <h2 class="display md">${esc(Z.name)}</h2>
+        <p class="lead">${esc(zoneSummary)}</p>
+        ${r.coherence ? `<p class="quiet">No single explanation is clearly ahead. The strongest is <strong>${esc(hypName(r.top).toLowerCase())}</strong>, but it is mild. The pattern is the finding.</p>` : ''}
+        <div class="expanders">
+          ${exp_('Why we think this', 'The chain, what reinforces it, what cuts against it', why)}
+          ${exp_('How to read the map', 'Three lenses, and the gaps between them', `<p>Each corner is a lens. The pools show how much of the current evidence sits in each one. The friction point sits on the gap between the lens of the current read and the lens of the strongest competing explanation.</p><div class="bars">${lensRow('B')}${lensRow('S')}${lensRow('P')}</div>`)}
+          ${exp_('What it\'s costing', est ? `≈ ${est.dollars ? '$' + fmt(est.dollars) : fmt(est.hoursYear) + ' hours'} a year in leadership capacity, and what it may lead to` : 'The business consequence, and what the capacity could do instead', costBody)}
         </div>
       </div>
 
@@ -347,6 +348,7 @@ function bind() {
   app.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => { const to = b.dataset.go; if (to === 'begin') return begin(); go(to); }));
   app.querySelectorAll('[data-opt]').forEach(b => b.addEventListener('click', () => choose(+b.dataset.opt)));
   app.querySelector('[data-back]')?.addEventListener('click', back);
+  app.querySelector('[data-remind]')?.addEventListener('click', remind);
   app.querySelector('[data-next]')?.addEventListener('click', next);
   app.querySelectorAll('[data-cost]').forEach(i => i.addEventListener('input', e => { state.cost[e.target.dataset.cost] = e.target.value; }));
   app.querySelectorAll('select[data-cost]').forEach(i => i.addEventListener('change', e => { state.cost[e.target.dataset.cost] = e.target.value; }));
@@ -402,6 +404,18 @@ function reveal(skip) {
     blindTest: r.low ? null : r.blind.test, blindStep: r.low ? null : r.blind.step, blindWatch: r.low ? null : r.blind.watch, constraint: r.low ? (r.mixed ? LOW_MIXED.name : LOW_FRICTION.name) : r.play.constraint, experimentTitle: r.low ? 'Hold the picture' : (r.decisionPlay || r.play).move.t, watch: r.low ? ['Whether this picture holds'] : r.experiment.watch, days: r.low ? 90 : r.experiment.days, closed: false });
   if (state.history.length > 12) state.history = state.history.slice(-12);
   persist(); go('result');
+}
+// A calendar file for the day the experiment ends, so the learning loop has a date on it.
+function remind() {
+  const r = state.result; if (!r || r.low) return;
+  const days = r.experiment.days, when = new Date(Date.now() + days * 864e5);
+  const d = when.toISOString().slice(0, 10).replace(/-/g, ''), stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+  const clean = t => String(t).replace(/[\\,;]/g, m => '\\' + m).replace(/\n/g, '\\n');
+  const url = location.origin + location.pathname;
+  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Friction//EN', 'BEGIN:VEVENT', `UID:${stamp}-friction@friction`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${d}`, `SUMMARY:${clean('Friction check-in: ' + (r.decisionPlay || r.play).move.t.replace(/\.$/, ''))}`,
+    `DESCRIPTION:${clean('What did you see? Watch: ' + r.experiment.watch.join('; ') + '. Open Friction to record it: ' + url)}`, `URL:${url}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = 'friction-check-in.ics';
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
 }
 function interpret() {
   const last = state.history.at(-1);

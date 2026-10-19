@@ -1,11 +1,11 @@
 /* Friction — Low Tide */
 :root{
   --foam:#F7F3EA; --foam-raised:#FFFDF8;
-  --sand:#E9DCC4; --sand-deep:#8A6A38; --sand-mid:#B8996A; --sand-line:rgba(120,92,50,.16);
+  --sand:#E9DCC4; --sand-deep:#7A5C2E; --sand-mid:#B8996A; --sand-line:rgba(120,92,50,.16);
   --shallow:#BFE3E6; --tide:#2C8C9E; --tide-deep:#1E6E7E; --deep:#123F5A;
-  --sun:#F08A3E; --sun-deep:#D8702A; --sun-soft:#FBE3D0;
+  --sun:#F08A3E; --sun-deep:#D8702A; --sun-soft:#FBE3D0; --sun-text:#A04A16; /* orange for text: passes 4.5:1 on every surface */
   --kelp:#3E8A6A; --kelp-deep:#2F6E53; --kelp-soft:#D6E9DC;
-  --ink:#10303F; --ink-dim:rgba(16,48,63,.72); --ink-faint:rgba(16,48,63,.5);
+  --ink:#10303F; --ink-dim:rgba(16,48,63,.72); --ink-faint:rgba(16,48,63,.7);
   --lens-B:var(--sun); --lens-S:var(--tide); --lens-P:var(--kelp);
   --font-display: var(--font-body); /* Fraunces retired site-wide; kept as an alias so nothing regresses if referenced */
   --font-body:'Manrope', ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -68,7 +68,7 @@ button{font:inherit; color:inherit}
 
 /* ---------- type ---------- */
 .eyebrow{font-family:var(--font-mono); font-size:.88rem; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--sand-deep); margin-bottom:.9rem}
-.eyebrow.lens-B{color:var(--sun-deep)}.eyebrow.lens-S{color:var(--tide-deep)}.eyebrow.lens-P{color:var(--kelp-deep)}
+.eyebrow.lens-B{color:var(--sun-text)}.eyebrow.lens-S{color:var(--tide-deep)}.eyebrow.lens-P{color:var(--kelp-deep)}
 .display{font-family:var(--font-body); font-weight:800; letter-spacing:-.015em; line-height:1.15; color:var(--deep)}
 .display.xl{font-size:clamp(2.6rem, 9vw, 4.6rem)}
 .display.lg{font-size:clamp(1.9rem, 5.6vw, 2.7rem); line-height:1.12}
@@ -129,7 +129,7 @@ button{font:inherit; color:inherit}
 .choice .t{font-weight:500; color:var(--deep); line-height:1.4}
 .choice .sub{font-size:.92rem; color:var(--ink-dim)}
 .choice .lens-tag{font-family:var(--font-mono); font-size:.68rem; letter-spacing:.14em; text-transform:uppercase}
-.choice.lens-B .lens-tag{color:var(--sun-deep)}.choice.lens-S .lens-tag{color:var(--tide-deep)}.choice.lens-P .lens-tag{color:var(--kelp-deep)}
+.choice.lens-B .lens-tag{color:var(--sun-text)}.choice.lens-S .lens-tag{color:var(--tide-deep)}.choice.lens-P .lens-tag{color:var(--kelp-deep)}
 .other-wrap{margin-top:.6rem}
 .other-wrap input{width:100%; min-height:48px; padding:.7rem 1rem; border:1.5px solid var(--sand-line); border-radius:12px; background:var(--foam-raised); font:inherit; color:var(--deep)}
 .other-wrap input::placeholder{color:var(--ink-faint)}
@@ -162,7 +162,7 @@ button{font:inherit; color:inherit}
 .map .ring{fill:none; stroke:var(--sun); stroke-width:1.5; transform-box:fill-box; transform-origin:center; animation:ring 2.6s ease-out 1.6s infinite}
 .map .ring.r2{animation-delay:2.4s}
 @keyframes ring{0%{transform:scale(.4); opacity:.9} 100%{transform:scale(2.6); opacity:0}}
-.map .fp-label{font-family:var(--font-mono); font-size:10px; letter-spacing:.18em; fill:var(--sun-deep); font-weight:500; animation:rise .6s var(--ease-out) 1.6s both}
+.map .fp-label{font-family:var(--font-mono); font-size:10px; letter-spacing:.18em; fill:var(--sun-text); font-weight:500; animation:rise .6s var(--ease-out) 1.6s both}
 
 .bars{display:grid; gap:.7rem}
 .bar{display:grid; grid-template-columns:6.6rem 1fr; gap:.8rem; align-items:center; font-size:.88rem}
@@ -175,7 +175,7 @@ button{font:inherit; color:inherit}
 .friction-item{display:grid; gap:.3rem; padding-left:1.1rem; border-left:3px solid var(--sand)}
 .friction-item.primary{border-color:var(--sun)}
 .friction-item .k{font-family:var(--font-mono); font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--sand-deep)}
-.friction-item.primary .k{color:var(--sun-deep)}
+.friction-item.primary .k{color:var(--sun-text)}
 .friction-item .n{font-family:var(--font-display); font-size:clamp(1.3rem,3.6vw,1.6rem); color:var(--deep); letter-spacing:-.015em}
 .friction-item p{color:var(--ink-dim)}
 .hyp{margin-top:.2rem; padding:1rem 1.1rem; border-radius:14px; background:rgba(44,140,158,.08); color:var(--ink); font-size:.98rem}
@@ -194,7 +194,7 @@ button{font:inherit; color:inherit}
 .move .t{font-family:var(--font-display); font-size:clamp(1.3rem,3.8vw,1.7rem); color:var(--deep); letter-spacing:-.015em; margin-bottom:.4rem}
 .move .d{color:var(--ink-dim)}
 .loop{display:flex; flex-wrap:wrap; gap:.3rem .5rem; align-items:center; font-family:var(--font-mono); font-size:.76rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-dim); margin:.6rem 0 1rem}
-.loop i{color:var(--sun); font-style:normal}
+.loop i{color:var(--sun-text); font-style:normal}
 .loop b{font-weight:500; color:var(--deep)}
 .result-actions{display:flex; flex-wrap:wrap; gap:.7rem; align-items:center}
 .saved{font-size:.85rem; color:var(--kelp-deep); display:inline-flex; align-items:center; gap:.4rem}
@@ -229,7 +229,7 @@ textarea::placeholder{color:var(--ink-faint)}
   .map .edge{stroke-dashoffset:0}
 }
 @media print{
-  .tide,.topbar,.actionbar,.foot,.result-actions{display:none!important}
+  .tide,.topbar,.actionbar,.foot,.result-actions,.exp-cta{display:none!important}
   body{background:#fff}
   .app{padding:0}
   .blind{background:#fff; color:#000; border:1px solid #000}
@@ -284,7 +284,7 @@ details.lens-B .lens-dot{background:var(--lens-B)}details.lens-S .lens-dot{backg
 .book-a{font-family:var(--font-body); font-style:normal; font-size:.82rem; color:var(--ink-faint)}
 .book p{color:var(--ink-dim); font-size:.95rem; margin:0}
 .steps{margin:0; padding-left:1.2rem; display:grid; gap:.5rem; color:var(--ink)}
-.steps li::marker{color:var(--sun-deep); font-weight:600}
+.steps li::marker{color:var(--sun-text); font-weight:600}
 .watch{padding:.8rem 1rem; border-radius:12px; background:var(--kelp-soft); color:var(--ink)}
 .choice.nudge{animation:nudge .35s var(--ease)}
 @keyframes nudge{0%,100%{transform:none}30%{transform:translateX(-4px)}60%{transform:translateX(4px)}}
@@ -294,7 +294,7 @@ details.lens-B .lens-dot{background:var(--lens-B)}details.lens-S .lens-dot{backg
 .jstep{position:relative; padding:0 0 2.4rem 0; margin-bottom:.4rem}
 .jstep+.jstep{padding-top:2.2rem; border-top:1px solid var(--sand-line)}
 .step-head{display:flex; align-items:baseline; gap:.7rem; margin-bottom:1.1rem; flex-wrap:wrap}
-.step-n{font-family:var(--font-mono); font-size:.9rem; letter-spacing:.14em; color:var(--sun-deep); font-weight:500}
+.step-n{font-family:var(--font-mono); font-size:.9rem; letter-spacing:.14em; color:var(--sun-text); font-weight:500}
 .step-name{font-family:var(--font-body); font-weight:700; font-size:1.3rem; color:var(--deep); letter-spacing:-.01em}
 .step-tag{font-size:1.02rem; color:var(--ink); font-weight:500}
 .own-words{margin:0; padding:1.3rem 1.4rem; border-radius:20px; background:var(--foam-raised); border:1px solid var(--sand-line); border-left:5px solid var(--sun); box-shadow:var(--shadow)}
@@ -322,7 +322,7 @@ details.lens-B .lens-dot{background:var(--lens-B)}details.lens-S .lens-dot{backg
 .journey .blind{margin:0}
 .journey .blind details.more{margin-top:1rem}
 details.further{margin-top:.2rem; background:transparent; border-style:dashed}
-details.further summary{min-height:40px; padding:.5rem .9rem; font-size:.88rem}
+details.further summary{min-height:44px; padding:.5rem .9rem; font-size:.88rem}
 details.further .more-body{padding-top:0}
 details.further .book{background:transparent; padding:.2rem .9rem .6rem}
 details.more.on-dark details.further{border-color:rgba(255,255,255,.25)}
@@ -351,14 +351,14 @@ details.more.on-dark details.further summary{color:#fff}
 .conf-k{font-family:var(--font-mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--sand-deep)}
 .conf-v{font-weight:700; color:var(--deep)}
 .conf-d{grid-column:1/-1; color:var(--ink-dim); font-size:.92rem}
-.conf-high .conf-v{color:var(--kelp-deep)}.conf-moderate .conf-v{color:var(--sun-deep)}.conf-emerging .conf-v{color:var(--tide-deep)}
+.conf-high .conf-v{color:var(--kelp-deep)}.conf-moderate .conf-v{color:var(--sun-text)}.conf-emerging .conf-v{color:var(--tide-deep)}
 .chain{list-style:none; margin:1.4rem 0 0; padding:0; display:grid; gap:0; counter-reset:c}
 .chain li{position:relative; padding:.55rem 0 .55rem 2rem; color:var(--deep); font-weight:500; line-height:1.4}
 .chain li::before{content:''; position:absolute; left:.55rem; top:0; bottom:0; width:2px; background:var(--sand)}
 .chain li:first-child::before{top:50%}.chain li:last-child::before{bottom:50%}
 .chain li::after{content:''; position:absolute; left:.2rem; top:calc(50% - .4rem); width:.8rem; height:.8rem; border-radius:50%; background:var(--foam); border:2px solid var(--sun)}
 .chain li:last-child::after{background:var(--sun)}
-.chain li:last-child{color:var(--sun-deep); font-weight:600}
+.chain li:last-child{color:var(--sun-text); font-weight:600}
 .forces{margin-top:1.6rem}
 .forces ul{list-style:none; margin:0; padding:0; display:grid; gap:.6rem}
 .forces li{display:grid; gap:.1rem; padding:.8rem 1rem; border-radius:12px; background:var(--foam-raised); border:1px solid var(--sand-line); color:var(--ink)}
@@ -371,7 +371,7 @@ details.more.on-dark details.further summary{color:#fff}
 .estimate{margin-top:1.4rem; padding:1.2rem 1.3rem; border-radius:18px; background:var(--foam-raised); border:1px solid var(--sand-line); box-shadow:var(--shadow); display:grid; gap:.3rem}
 .est-line{color:var(--ink-dim); font-size:.95rem}
 .est-big{font-family:var(--font-body); font-weight:800; font-size:clamp(1.5rem,4.6vw,2.05rem); color:var(--deep); letter-spacing:-.015em; line-height:1.15}
-.est-big.est-sun{color:var(--sun-deep)}
+.est-big.est-sun{color:var(--sun-text)}
 .leverage{margin-top:1.6rem}
 .leverage>p{color:var(--ink)}
 .leverage ul{list-style:none; margin:.8rem 0 0; padding:0; display:grid; gap:.5rem}
@@ -379,7 +379,7 @@ details.more.on-dark details.further summary{color:#fff}
 .leverage b{color:var(--deep); font-weight:600}
 .leverage span{color:var(--ink-dim); font-size:.95rem}
 .dont{padding:1.2rem 1.3rem; border-radius:18px; background:#FFF3EA; border:1px solid rgba(240,138,62,.35)}
-.dont-t{font-family:var(--font-display); font-size:clamp(1.3rem,4vw,1.6rem); color:var(--sun-deep); letter-spacing:-.015em; margin-bottom:.5rem}
+.dont-t{font-family:var(--font-display); font-size:clamp(1.3rem,4vw,1.6rem); color:var(--sun-text); letter-spacing:-.015em; margin-bottom:.5rem}
 .dont p:last-child{color:var(--ink)}
 .policy{font-family:var(--font-display); font-style:italic; font-size:clamp(1.3rem,4vw,1.6rem); color:var(--tide-deep); margin:-.4rem 0 1rem; letter-spacing:-.01em}
 .journey .move .steps{margin-top:.4rem}
@@ -394,7 +394,7 @@ details.more.on-dark details.further summary{color:#fff}
 
 /* ---------- readability pass 2: remaining sentence-length Fraunces usage ---------- */
 .display.md{font-family:var(--font-body); font-weight:600; font-size:clamp(1.25rem,3.9vw,1.6rem); line-height:1.4; letter-spacing:-.01em; color:var(--deep)}
-.dont-t{font-family:var(--font-body); font-style:normal; font-weight:700; font-size:clamp(1.15rem,3.6vw,1.4rem); line-height:1.4; color:var(--sun-deep); margin-bottom:.5rem}
+.dont-t{font-family:var(--font-body); font-style:normal; font-weight:700; font-size:clamp(1.15rem,3.6vw,1.4rem); line-height:1.4; color:var(--sun-text); margin-bottom:.5rem}
 .journey .move .t{font-family:var(--font-body); font-weight:700; font-size:clamp(1.15rem,3.6vw,1.4rem); line-height:1.4; color:var(--deep); margin-bottom:.4rem}
 .watch-metric{font-family:var(--font-body); font-weight:700; font-size:clamp(1.05rem,3.2vw,1.2rem); line-height:1.45; letter-spacing:normal}
 
@@ -449,7 +449,7 @@ details.more.on-dark details.further summary{color:#fff}
 .jstep>h2.display.md{margin-bottom:.7rem}
 
 /* ---------- v3: focus pass — compact confidence, chips, tucked metric ---------- */
-.friction-head{display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; flex-wrap:wrap-reverse}
+.friction-head{display:flex; flex-direction:column; align-items:flex-start; gap:.9rem}
 .friction-head .edge-name{margin:0}
 details.conf-pill{align-self:flex-start; border:1px solid var(--sand-line); border-radius:999px; background:var(--foam-raised)}
 details.conf-pill summary{list-style:none; cursor:pointer; display:flex; align-items:center; gap:.4rem; padding:.4rem .85rem; font-family:var(--font-mono); font-size:.76rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-dim); white-space:nowrap}
@@ -457,11 +457,11 @@ details.conf-pill summary::-webkit-details-marker{display:none}
 details.conf-pill .caret{width:6px; height:6px; border-right:1.5px solid var(--ink-faint); border-bottom:1.5px solid var(--ink-faint); transform:rotate(45deg); transition:transform .2s var(--ease-out)}
 details.conf-pill[open] .caret{transform:rotate(-135deg)}
 details.conf-pill.conf-high summary{color:var(--kelp-deep)}
-details.conf-pill.conf-moderate summary{color:var(--sun-deep)}
+details.conf-pill.conf-moderate summary{color:var(--sun-text)}
 details.conf-pill.conf-emerging summary{color:var(--tide-deep)}
 details.conf-pill .conf-body{padding:0 1rem .8rem; font-family:var(--font-body); text-transform:none; letter-spacing:normal; font-size:.92rem; color:var(--ink-dim); max-width:26rem}
 .cons-chips{display:flex; flex-wrap:wrap; gap:.4rem}
-.cons-chips .chip{background:rgba(240,138,62,.1); color:var(--sun-deep); font-size:.9rem; padding:.35rem .85rem}
+.cons-chips .chip{background:rgba(240,138,62,.1); color:var(--sun-text); font-size:.9rem; padding:.35rem .85rem}
 .watch-metric{font-family:var(--font-display); font-size:clamp(1.1rem,3.4vw,1.35rem); color:var(--deep); letter-spacing:-.01em; margin-top:.15rem}
 @media (max-width:640px){
   details.conf-pill summary{font-size:.8rem}
@@ -471,7 +471,7 @@ details.conf-pill .conf-body{padding:0 1rem .8rem; font-family:var(--font-body);
 /* ---------- how-it-works: readable title, mission highlight ---------- */
 .how-title{font-family:var(--font-body); font-weight:700; font-size:clamp(1.5rem,4.4vw,1.95rem); line-height:1.3; letter-spacing:-.01em; color:var(--deep)}
 .mission{margin:1.4rem 0; padding:1.3rem 1.4rem; border-radius:20px; background:var(--foam-raised); border:1px solid var(--sand-line); border-left:5px solid var(--sun); box-shadow:var(--shadow)}
-.mission-label{font-family:var(--font-mono); font-size:.8rem; letter-spacing:.14em; text-transform:uppercase; color:var(--sun-deep); margin-bottom:.5rem}
+.mission-label{font-family:var(--font-mono); font-size:.8rem; letter-spacing:.14em; text-transform:uppercase; color:var(--sun-text); margin-bottom:.5rem}
 .mission-t{font-family:var(--font-body); font-weight:600; font-size:clamp(1.1rem,3.4vw,1.3rem); line-height:1.5; color:var(--deep); letter-spacing:-.005em}
 @media (max-width:640px){
   .mission{padding:1.1rem 1.2rem}
@@ -487,7 +487,7 @@ details.conf-pill .conf-body{padding:0 1rem .8rem; font-family:var(--font-body);
 .sig li{display:flex; gap:.7rem; align-items:flex-start; padding:.7rem .9rem; border-radius:12px; background:var(--foam-raised); border:1px solid var(--sand-line); color:var(--ink); line-height:1.45}
 .sig.against li{border-left:3px solid var(--sand-mid)}
 .sig-s{flex:none; font-family:var(--font-mono); font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; padding:.2rem .5rem; border-radius:999px; margin-top:.15rem}
-.sig-high{background:var(--sun-soft); color:var(--sun-deep)} .sig-medium{background:rgba(44,140,158,.12); color:var(--tide-deep)} .sig-low{background:rgba(184,153,106,.14); color:var(--sand-deep)}
+.sig-high{background:var(--sun-soft); color:var(--sun-text)} .sig-medium{background:rgba(44,140,158,.12); color:var(--tide-deep)} .sig-low{background:rgba(184,153,106,.14); color:var(--sand-deep)}
 .open{margin-top:1.4rem; padding:1.1rem 1.2rem; border-radius:16px; background:rgba(44,140,158,.08); border:1px solid rgba(44,140,158,.2)}
 .open .eyebrow{color:var(--tide-deep); margin-bottom:.5rem}
 .open-t{font-weight:600; color:var(--ink); font-size:1.05rem; line-height:1.45}
@@ -495,7 +495,7 @@ details.conf-pill .conf-body{padding:0 1rem .8rem; font-family:var(--font-body);
 .open-q .k{display:block; font-family:var(--font-mono); font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--tide-deep); margin-bottom:.2rem}
 .open.settled{background:var(--kelp-soft); border-color:rgba(62,138,106,.25)} .open.settled .eyebrow{color:var(--kelp-deep)}
 .changed{margin-top:1rem; padding:.9rem 1.1rem; border-radius:14px; background:var(--sun-soft); color:var(--ink); line-height:1.5}
-.changed .k{display:block; font-family:var(--font-mono); font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--sun-deep); margin-bottom:.2rem}
+.changed .k{display:block; font-family:var(--font-mono); font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--sun-text); margin-bottom:.2rem}
 .hyps{list-style:none; margin:0; padding:0; display:grid; gap:.55rem}
 .hyps li{display:grid; grid-template-columns:5.5rem minmax(0,1fr) auto; gap:.7rem; align-items:center; font-size:.95rem}
 .hyp-bar{height:8px; background:var(--sand); border-radius:4px; overflow:hidden; display:block}
@@ -511,7 +511,7 @@ table.profile{border-collapse:collapse; width:100%; font-size:.92rem}
 table.profile th{text-align:left; font-family:var(--font-mono); font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--sand-deep); font-weight:500; padding:.4rem .5rem; border-bottom:1px solid var(--sand-line)}
 table.profile td{padding:.55rem .5rem; border-bottom:1px solid var(--sand-line); color:var(--ink); vertical-align:top}
 table.profile td.obs{font-weight:700; white-space:nowrap}
-td.obs-high{color:var(--sun-deep)} td.obs-moderate,td.obs-mixed{color:var(--tide-deep)} td.obs-low{color:var(--kelp-deep)}
+td.obs-high{color:var(--sun-text)} td.obs-moderate,td.obs-mixed{color:var(--tide-deep)} td.obs-low{color:var(--kelp-deep)}
 .experiment .k{font-family:var(--font-mono); font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--sand-deep); margin:.6rem 0 .2rem}
 .experiment .k:first-child{margin-top:0}
 .watchlist{margin:0; padding-left:1.2rem; color:var(--ink); display:grid; gap:.3rem}
@@ -530,7 +530,7 @@ td.obs-high{color:var(--sun-deep)} td.obs-moderate,td.obs-mixed{color:var(--tide
 
 .open-ev{margin-top:.6rem; color:var(--ink-dim); font-size:.95rem; line-height:1.5}
 .open-ev .k{display:block; font-family:var(--font-mono); font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--tide-deep); margin-bottom:.2rem}
-td.obs-ok{color:var(--kelp-deep)} td.obs-off{color:var(--sun-deep)} td .flag{font-size:.7em; vertical-align:middle}
+td.obs-ok{color:var(--kelp-deep)} td.obs-off{color:var(--sun-text)} td .flag{font-size:.7em; vertical-align:middle}
 
 /* ---------- critic pass ---------- */
 .chain.staged li{padding-left:2rem; display:grid; grid-template-columns:7.2rem minmax(0,1fr); gap:.6rem; align-items:baseline}
@@ -545,10 +545,10 @@ td.obs-ok{color:var(--kelp-deep)} td.obs-off{color:var(--sun-deep)} td .flag{fon
 .downstream{margin-top:1.1rem}
 .arrows{list-style:none; margin:.2rem 0 0; padding:0; display:grid; gap:.35rem}
 .arrows li{display:grid; gap:.05rem; padding-left:1.3rem; position:relative}
-.arrows li::before{content:'→'; position:absolute; left:0; color:var(--sun-deep); font-weight:700}
+.arrows li::before{content:'→'; position:absolute; left:0; color:var(--sun-text); font-weight:700}
 .arrows b{color:var(--ink); font-weight:600} .arrows span{color:var(--ink-dim); font-size:.92rem}
 table.profile td small{display:block; font-family:var(--font-mono); font-size:.64rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint); margin-top:.15rem}
-table.profile tr.primary td small{color:var(--sun-deep)}
+table.profile tr.primary td small{color:var(--sun-text)}
 table.profile tr.primary td:first-child{font-weight:700}
 .blind-meta{display:grid; gap:.7rem; margin-top:1.1rem; padding-top:1rem; border-top:1px solid rgba(255,255,255,.18)}
 .blind-meta>div{display:grid; gap:.15rem} .blind-meta .k{color:rgba(255,255,255,.65)} .blind-meta span:last-child{color:#fff}
@@ -561,7 +561,7 @@ table.profile tr.primary td:first-child{font-weight:700}
 
 .config{margin:0; padding-left:1.2rem; display:grid; gap:.3rem; color:var(--ink)}
 .config li::marker{color:var(--sand-mid)}
-.config li.lead{font-weight:700; color:var(--sun-deep)}
+.config li.lead{font-weight:700; color:var(--sun-text)}
 .decision-note{margin:0 0 .9rem; padding:.9rem 1.1rem; border-radius:14px; background:rgba(44,140,158,.08); color:var(--ink); line-height:1.5}
 .decision-note .k{display:block; font-family:var(--font-mono); font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--tide-deep); margin-bottom:.2rem}
 
@@ -619,3 +619,16 @@ td.obs-na{color:var(--ink-dim); font-weight:500}
 .low-detail{color:var(--ink-dim); line-height:1.65; margin-top:.4rem}
 .concerns{margin:1.2rem 0 .4rem} .concerns .sig small{display:block; margin-top:.2rem; color:var(--ink-dim)}
 .grief.tired{border-left-color:var(--sun, #E08A3C)}
+
+/* ---------- critique fixes: tap targets of at least 44px, without changing how things look ---------- */
+.wordmark{padding:8px 0; margin:-8px 0}
+.foot a{display:inline-block; padding:12px 0; margin:-12px 0}
+.btn-link{min-height:44px; display:inline-flex; align-items:center}
+details.conf-pill summary{position:relative}
+details.conf-pill summary::before{content:''; position:absolute; inset:-6px 0}
+details.more > summary{min-height:44px}
+.btn-primary:hover{color:#1F1408}
+/* the experiment's one primary action */
+.exp-cta{display:flex; flex-wrap:wrap; align-items:center; gap:.6rem 1rem; margin:1.4rem 0 .4rem}
+.exp-cta .quiet{flex:1 1 14rem}
+@media (max-width:640px){ .exp-cta .btn{width:100%} }
