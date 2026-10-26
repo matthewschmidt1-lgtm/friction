@@ -220,18 +220,18 @@ const SCREENS = {
       <ol class="hyps">${r.ranked.slice(0, 5).map(h => `<li><span class="hyp-bar"><i style="width:${Math.round(r.p[h] * 100)}%"></i></span><span class="hyp-n">${esc(hypName(h))}</span><span class="hyp-l">${esc(h === r.top ? 'The read' : rivalText(r.p[h], r.p[r.top]))}</span></li>`).join('')}</ol>
       ${r.mpe && r.mpe.length ? `<p class="eyebrow" style="margin-top:1rem">The picture that best explains your answers</p><ol class="config">${r.mpe.map(h => `<li class="${h === r.top ? 'lead' : ''}">${esc(hypName(h))}</li>`).join('')}</ol>` : ''}
       <p class="quiet">Confidence is shown as a label rather than a number on purpose. About ten answers can rank explanations; they can't measure them.</p>`;
-    const costBody = `
-      ${est ? `<div class="visible-cost"><p class="k">Capacity cost</p><p class="est-big est-sun">≈ ${est.dollars ? `$${fmt(est.dollars)}` : fmt(est.hoursYear) + ' hours'} a year</p><p class="quiet">${fmt(est.managers)} managers × ${fmt(est.hours)} hours a week × 48 weeks${est.dollars ? `, at $${fmt(est.rate)} per loaded hour` : ''}. Illustrative, based on your inputs. Leadership capacity consumed, not revenue lost.</p></div>` : ''}
-      <div class="downstream"><p class="k">Potential downstream effects</p><ol class="arrows">${play.consequences.map(c => `<li><b>${esc(c)}</b><span>${esc(CONSEQUENCE_WHY[c] || '')}</span></li>`).join('')}</ol></div>
-      ${r.econ ? `<div class="econ"><p class="eyebrow">What your operating profile suggests <span class="econ-conf">· ${esc(r.econ.conf)} confidence</span></p><p class="econ-t">${esc(r.econ.t)}</p><p>${esc(r.econ.d)}</p></div>` : ''}
-      <div class="leverage" style="margin-top:1.2rem"><p class="eyebrow">What that capacity could be doing instead</p><ul>${play.leverage.map(l => `<li><b>${esc(l)}</b><span>${esc(LEVERAGE_WHY[l])}</span></li>`).join('')}</ul></div>
-      <p class="eyebrow" style="margin-top:1.2rem">Expected vs observed</p>
-      <div class="tablewrap"><table class="profile"><thead><tr><th>Trait</th><th>Expected</th><th>Observed</th></tr></thead><tbody>${r.profile.map(row => `<tr class="${row.primary ? 'primary' : ''}"><td>${esc(row.k)}<small>${!row.asked ? 'We didn\'t ask about this' : row.primary ? 'Primary signal' : 'Not a primary signal'}</small></td><td>${esc(row.expected)}</td><td class="obs ${!row.asked ? 'obs-na' : row.good && row.good.includes(row.observed) ? 'obs-ok' : 'obs-off'}">${esc(row.observed)}${!row.asked || (row.good && row.good.includes(row.observed)) ? '' : ' <span class="flag" title="outside the expected range">◆</span>'}</td></tr>`).join('')}</tbody></table></div>
-      <p class="quiet">Expected is what a business of your shape usually looks like, not a benchmark. Observed comes from your answers.</p>`;
-    const dontBody = `
-      ${COUNTERFACTUALS[r.top] ? `<p class="cf"><span class="k">Counterfactual</span>If this read is right, ${esc(COUNTERFACTUALS[r.top].should)} should ${esc(COUNTERFACTUALS[r.top].worse)}.</p>` : ''}
-      <p class="dont-t">${esc(play.notDo.t)}</p>
-      <p><span class="k">Because</span> ${COUNTERFACTUALS[r.top] ? esc(COUNTERFACTUALS[r.top].because.charAt(0).toUpperCase() + COUNTERFACTUALS[r.top].because.slice(1)) + '. ' : ''}${esc(play.notDo.d)}</p>`;
+    // Reasoning groups, built for reading top to bottom: a title, one line on what it shows, then a panel.
+    const rows = (items, cls = '') => `<ul class="r-rows ${cls}">${items.map(([t, d, tag, tags]) => `<li><div class="r-row-t"><span>${t}</span>${tag || ''}</div>${tags ? `<div class="r-tags">${tags}</div>` : ''}${d ? `<p>${d}</p>` : ''}</li>`).join('')}</ul>`;
+    const costBody = (est ? `<div class="r-figure"><p class="r-figure-n">≈ ${est.dollars ? `$${fmt(est.dollars)}` : fmt(est.hoursYear) + ' hours'} a year</p><p>${fmt(est.managers)} managers × ${fmt(est.hours)} hours a week × 48 weeks${est.dollars ? `, at $${fmt(est.rate)} an hour` : ''}. Leadership time, not revenue lost. Illustrative, from your inputs.</p></div>` : '')
+      + rows(play.consequences.map(c => [esc(c), esc(CONSEQUENCE_WHY[c] || '')]))
+      + (r.econ ? `<div class="r-econ"><p class="r-label">What your figures suggest · ${esc(r.econ.conf)} confidence</p><p><b>${esc(r.econ.t)}</b> ${esc(r.econ.d)}</p></div>` : '');
+    const capacityBody = rows(play.leverage.map(l => [esc(l), esc(String(LEVERAGE_WHY[l] || '').replace(/^./, c => c.toUpperCase()))]));
+    const verdict = row => !row.asked ? ['Not asked', 'na'] : row.good && row.good.includes(row.observed) ? ['As expected', 'ok'] : ['Outside the usual range', 'off'];
+    const profileBody = rows(r.profile.slice().sort((x, y) => (y.primary ? 1 : 0) - (x.primary ? 1 : 0)).map(row => {
+      const [v, cls] = verdict(row);
+      return [esc(row.k), row.asked ? `Usually: ${esc(row.expected.charAt(0).toLowerCase() + row.expected.slice(1))}. From your answers: ${esc(row.observed.toLowerCase())}.` : `Usually: ${esc(row.expected.charAt(0).toLowerCase() + row.expected.slice(1))}. We didn't ask about this.`, '', `<span class="r-pill r-pill-${cls}">${v}</span>${row.primary ? '<span class="r-key">Key to this read</span>' : ''}`];
+    }));
+    const dontBody = `<p class="r-dont-t">${esc(play.notDo.t)}</p><p>${COUNTERFACTUALS[r.top] ? esc(COUNTERFACTUALS[r.top].because.charAt(0).toUpperCase() + COUNTERFACTUALS[r.top].because.slice(1)) + '. ' : ''}${esc(play.notDo.d)}</p>${COUNTERFACTUALS[r.top] ? `<p class="r-test"><b>A test of the read:</b> if it's right, ${esc(COUNTERFACTUALS[r.top].should)} should ${esc(COUNTERFACTUALS[r.top].worse)}.</p>` : ''}`;
 
     // ---------- the report: answer first, one action, reasoning on request ----------
     const firstSentence = t => (String(t).match(/^.*?[.!?](\s|$)/) || [t])[0].trim();
@@ -241,19 +241,22 @@ const SCREENS = {
     if (r.paired) notes.push(`<b>Close behind:</b> ${esc(hypName(r.paired).toLowerCase())}. They may be one problem seen from two sides; the experiment tests the first.`);
     for (const t of (r.notes || [])) notes.push(`<b>Worth noticing:</b> ${esc(t)}`);
     const ready = r.grief && r.top !== 'loss';
-    const sub = (title, body) => body ? `<section class="r-sub"><h3>${title}</h3>${body}</section>` : '';
+    const group = (title, intro, body, cls = '') => body ? `<section class="r-group ${cls}"><h3>${title}</h3>${intro ? `<p class="r-intro">${intro}</p>` : ''}<div class="r-panel">${body}</div></section>` : '';
 
     const reasoning = [
-      sub('Where the friction sits', `${frictionMap(r)}<p><b>${esc(Z.name)}.</b> ${esc(zoneSummary)}</p>${r.coherence ? `<p>No single explanation is clearly ahead. The pattern is the finding.</p>` : ''}<div class="bars">${lensRow('B')}${lensRow('S')}${lensRow('P')}</div><p class="r-caption">Each corner is a lens. The friction sits on the gap between the lens of the read and the lens of the strongest alternative.</p>`),
-      sub('How it holds together', `<ol class="r-chain">${play.chain.map(c => `<li>${esc(c)}</li>`).join('')}</ol><p class="r-label">What keeps it in place</p><ul class="r-list">${r.forces.map(f => `<li>${esc(f.t)} <span class="r-src">${f.src === 'pattern' ? 'Our inference' : 'You named this'}</span></li>`).join('')}</ul>`),
-      sub('What cuts against it', (r.contradicts.length ? `<ul class="r-quotes">${r.contradicts.slice(0, 3).map(x => `<li><q>${esc(unq(x.said))}</q><span>${esc(x.q)}</span></li>`).join('')}</ul>` : '') + (r.open && r.open.question ? `<p>We're still trying to tell <b>${esc(hypName(r.top).toLowerCase())}</b> apart from <b>${esc(hypName(r.second).toLowerCase())}</b>. The question that would settle it: ${esc(r.open.question)}</p>` : '') || ''),
-      sub('Other explanations we weighed', `<ol class="r-rivals">${r.ranked.slice(0, 5).map(h => `<li><span>${esc(hypName(h))}</span><span class="r-src">${esc(h === r.top ? 'The read' : rivalText(r.p[h], r.p[r.top]))}</span></li>`).join('')}</ol>`),
-      sub('How confident this is', `<p>${esc(r.label.d)}</p><p class="r-caption">Confidence is a label, not a number, on purpose. A dozen answers can rank explanations; they can't measure them.</p>`),
-      sub('What it may be costing', costBody),
-      sub('If the blind spot holds', `<dl class="r-dl"><dt>If it's true</dt><dd>${esc(r.blind.ifTrue || '')}</dd><dt>If it's false</dt><dd>${esc(r.blind.ifFalse || '')}</dd><dt>If it holds</dt><dd>Add this step: ${esc(r.blind.step || '')} Watch: ${esc(r.blind.watch || '')}.</dd></dl>`),
-      sub('Why not the obvious fix', dontBody),
-      r.evs ? sub('Moves we weighed', `<ol class="r-rivals">${r.evs.slice(0, 5).map(x => `<li><span>${esc((x.spec || {}).action || hypName(x.key))}</span><span class="r-src">${esc(x.effort)}</span></li>`).join('')}</ol>`) : '',
-      sub('Further reading', reading),
+      group('Where the friction sits', 'Three lenses: the business, the system and the people. The friction sits between two of them.', `${frictionMap(r)}<p class="r-zone"><b>${esc(Z.name)}</b>${esc(zoneSummary)}</p>${r.coherence ? `<p>No single explanation is clearly ahead. The pattern is the finding.</p>` : ''}<div class="bars">${lensRow('B')}${lensRow('S')}${lensRow('P')}</div>`),
+      group('How it holds together', 'How the problem starts, spreads and keeps itself going.', `<ol class="r-chain">${play.chain.map((c, i) => `<li><span class="r-chain-n">${i + 1}</span><span>${esc(c)}</span></li>`).join('')}</ol>`),
+      group('What keeps it in place', 'The forces that make it hard to shift.', rows(r.forces.map(f => [esc(f.t), '', '', `<span class="r-src">${f.src === 'pattern' ? 'Our inference' : 'You named this as a way to make it worse'}</span>`]), 'r-rows-plain')),
+      group('What cuts against it', 'Answers that point the other way, and what is still open.', (r.contradicts.length ? `<ul class="r-quotes">${r.contradicts.slice(0, 3).map(x => `<li><q>${esc(unq(x.said))}</q><span>${esc(x.q)}</span></li>`).join('')}</ul>` : '') + (r.open && r.open.question ? `<p class="r-open">We can't yet tell <b>${esc(hypName(r.top).toLowerCase())}</b> apart from <b>${esc(hypName(r.second).toLowerCase())}</b>. The question that would settle it: ${esc(r.open.question)}</p>` : '')),
+      group('Other explanations we weighed', 'Ranked against the read.', rows(r.ranked.slice(0, 5).map(h => [esc(hypName(h)), '', `<span class="r-src">${esc(h === r.top ? 'The read' : rivalText(r.p[h], r.p[r.top]))}</span>`]), 'r-rows-rank')),
+      group('How confident this is', '', `<p>${esc(r.label.d)}</p><p class="r-caption">Confidence is a label, not a number, on purpose. A dozen answers can rank explanations; they can't measure them.</p>`),
+      group('What it may be costing', 'Where this kind of friction tends to show up.', costBody),
+      group('What that time could go to instead', '', capacityBody),
+      group('Your answers against a typical business', 'What a business of your shape usually looks like, and what your answers suggest. Not a benchmark.', profileBody),
+      group('If the blind spot holds', 'What the check in the experiment would show either way.', rows([['If it\'s true', esc(r.blind.ifTrue || '')], ['If it\'s false', esc(r.blind.ifFalse || '')], ['If it holds', `Add this step: ${esc(r.blind.step || '')} Then watch: ${esc(r.blind.watch || '')}.`]])),
+      group('Why not the obvious fix', '', dontBody),
+      r.evs ? group('Moves we weighed', 'Expected value given the uncertainty, minus the effort.', rows(r.evs.slice(0, 5).map(x => [esc((x.spec || {}).action || hypName(x.key)), esc(x.effort)]))) : '',
+      group('Further reading', 'You are not the first to run into this.', reading, 'r-group-books'),
     ].join('');
 
     return `<section class="screen result report">
