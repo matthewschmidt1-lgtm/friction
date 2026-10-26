@@ -632,3 +632,91 @@ details.more > summary{min-height:44px}
 .exp-cta{display:flex; flex-wrap:wrap; align-items:center; gap:.6rem 1rem; margin:1.4rem 0 .4rem}
 .exp-cta .quiet{flex:1 1 14rem}
 @media (max-width:640px){ .exp-cta .btn{width:100%} }
+
+/* ---------- the report: the results page as a document ---------- */
+/* One type scale, one accent, hairline dividers instead of tinted boxes, one card (the experiment). */
+.report{--r-gap:clamp(1.8rem, 5vw, 2.75rem); --r-line:rgba(16,48,63,.12); max-width:40rem}
+.report > * + *{margin-top:var(--r-gap)}
+.report .r-block, .report .r-reasoning, .report .r-foot{padding-top:var(--r-gap); border-top:1px solid var(--r-line)}
+.report p{line-height:1.6}
+
+.r-meta{font-size:.82rem; font-weight:600; color:var(--ink-faint); letter-spacing:.01em}
+.r-title{font-size:clamp(1.85rem, 6.2vw, 2.6rem); line-height:1.12; font-weight:750; letter-spacing:-.022em; color:var(--deep); margin-top:.6rem; text-wrap:balance}
+.r-conf{display:flex; flex-wrap:wrap; align-items:baseline; gap:.2rem .45rem; margin-top:1rem; font-size:.92rem; color:var(--ink-dim)}
+.r-conf b{color:var(--ink); font-weight:650}
+.r-dot{width:.55rem; height:.55rem; border-radius:50%; background:var(--tide); align-self:center; flex:none}
+.r-conf.conf-high .r-dot{background:var(--kelp)} .r-conf.conf-strong .r-dot{background:var(--tide)}
+.r-conf.conf-emerging .r-dot{background:var(--sand-mid)} .r-conf.conf-early .r-dot{background:transparent; box-shadow:inset 0 0 0 1.5px var(--sand-mid)}
+.r-lead{font-size:clamp(1.05rem, 2.6vw, 1.15rem); color:var(--ink); margin-top:1.2rem; max-width:38rem}
+
+.r-h2{display:flex; align-items:baseline; justify-content:space-between; gap:1rem; font-size:1.12rem; font-weight:700; letter-spacing:-.01em; color:var(--deep); margin-bottom:1rem}
+.r-h2-meta{font-size:.82rem; font-weight:600; color:var(--ink-faint); white-space:nowrap}
+.r-label{font-size:.82rem; font-weight:650; color:var(--ink-dim); margin:1.2rem 0 .45rem}
+.r-caption{font-size:.88rem; color:var(--ink-faint); margin-top:.9rem}
+
+.r-quotes{list-style:none; margin:0; padding:0; display:grid; gap:.9rem}
+.r-quotes li{padding-left:1rem; border-left:2px solid var(--tide)}
+.r-quotes q{display:block; font-weight:600; color:var(--ink); quotes:'\201C' '\201D'}
+.r-quotes span{display:block; font-size:.86rem; color:var(--ink-faint); margin-top:.1rem}
+.r-notes{list-style:none; margin:1.4rem 0 0; padding:0; display:grid; gap:.6rem; font-size:.95rem; color:var(--ink-dim)}
+.r-notes b{color:var(--ink); font-weight:650}
+
+.r-card{background:var(--foam-raised); border:1px solid var(--r-line); border-radius:16px; padding:clamp(1.2rem, 4vw, 1.8rem); box-shadow:0 1px 2px rgba(18,63,90,.04)}
+.r-action{font-size:1.2rem; font-weight:700; color:var(--deep); letter-spacing:-.01em}
+.r-target{font-size:.92rem; color:var(--ink-dim); margin-top:.15rem}
+.r-why{font-size:.92rem; color:var(--ink-dim); margin-top:.8rem}
+.r-check{margin-top:1.2rem; padding:.9rem 1rem; border-radius:10px; background:rgba(44,140,158,.07)}
+.r-check .r-label{margin-top:0}
+.r-check p:last-child{font-size:.95rem; color:var(--ink)}
+.r-check b{font-weight:650}
+.r-steps{margin:1.2rem 0 0; padding:0; list-style:none; counter-reset:s; display:grid; gap:.75rem}
+.r-steps li{counter-increment:s; position:relative; padding-left:2.1rem}
+.r-steps li::before{content:counter(s); position:absolute; left:0; top:.05rem; width:1.45rem; height:1.45rem; border-radius:50%; background:var(--deep); color:#fff; font-size:.78rem; font-weight:700; display:grid; place-items:center}
+.r-watch{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:.45rem}
+.r-watch li{font-size:.86rem; padding:.3rem .7rem; border-radius:999px; border:1px solid var(--r-line); color:var(--ink)}
+.r-dont{margin-top:1.2rem; font-size:.95rem; color:var(--ink-dim)}
+.r-dont b{color:var(--sun-text); font-weight:700}
+.r-cta{display:flex; flex-wrap:wrap; gap:.6rem; margin-top:1.5rem}
+@media (max-width:640px){ .r-cta .btn{flex:1 1 100%} }
+
+.r-question{font-size:clamp(1.15rem, 3.4vw, 1.35rem); line-height:1.45; font-weight:600; color:var(--deep); letter-spacing:-.01em; text-wrap:pretty}
+
+.r-reasoning > summary{list-style:none; cursor:pointer; display:grid; grid-template-columns:1fr auto; gap:.15rem 1rem; align-items:center; min-height:44px}
+.r-reasoning > summary::-webkit-details-marker{display:none}
+.r-sum-t{font-size:1.12rem; font-weight:700; color:var(--deep)}
+.r-sum-s{grid-column:1; font-size:.9rem; color:var(--ink-faint)}
+.r-reasoning > summary .caret{grid-column:2; grid-row:1 / span 2; width:9px; height:9px; border-right:2px solid var(--ink-dim); border-bottom:2px solid var(--ink-dim); transform:rotate(45deg); transition:transform .2s var(--ease)}
+.r-reasoning[open] > summary .caret{transform:rotate(-135deg)}
+.r-reasoning-body{margin-top:1.4rem}
+.r-sub{padding:1.4rem 0; border-top:1px solid var(--r-line)}
+.r-sub:first-child{border-top:0; padding-top:0}
+.r-sub h3{font-size:.98rem; font-weight:700; color:var(--deep); margin:0 0 .7rem}
+.r-sub p + p{margin-top:.6rem}
+.r-sub .map{max-width:22rem; margin:0 auto 1rem}
+.r-sub .bars{margin-top:1.2rem}
+.r-sub .bar{grid-template-columns:minmax(0, 9.5rem) minmax(0, 1fr)}
+.r-sub .bar small{white-space:normal}
+.r-chain{margin:0; padding-left:1.2rem; display:grid; gap:.35rem}
+.r-chain li::marker{color:var(--ink-faint); font-weight:600}
+.r-chain li:last-child{font-weight:650}
+.r-list{margin:0; padding-left:1.1rem; display:grid; gap:.4rem}
+.r-src{font-size:.8rem; color:var(--ink-faint); margin-left:.3rem}
+.r-rivals .r-src{text-align:right; max-width:48%}
+.r-rivals{list-style:none; margin:0; padding:0}
+.r-rivals li{display:flex; justify-content:space-between; gap:1rem; padding:.5rem 0; border-bottom:1px solid var(--r-line); font-size:.95rem}
+.r-rivals li:first-child{font-weight:650}
+.r-dl{margin:0; display:grid; grid-template-columns:auto 1fr; gap:.5rem 1rem; font-size:.95rem}
+.r-dl dt{font-weight:650; color:var(--ink-dim)} .r-dl dd{margin:0}
+@media (max-width:480px){ .r-dl{grid-template-columns:1fr} .r-dl dd{margin-bottom:.4rem} }
+.r-sub .visible-cost, .r-sub .downstream, .r-sub .econ, .r-sub .leverage{margin-top:0}
+.r-sub .reading .book{background:transparent; padding:0; border:0} .r-sub .reading .book + .book{margin-top:.9rem}
+
+.r-foot{display:flex; flex-wrap:wrap; align-items:center; gap:.6rem 1rem}
+.r-foot .r-caption{flex:1 1 100%; margin-top:.4rem}
+.r-foot .saved{font-size:.88rem; color:var(--ink-faint)}
+@media print{ .r-reasoning > summary .caret, .r-cta, .r-foot .btn{display:none!important} .r-reasoning .r-reasoning-body{display:block} }
+.report > .jstep{padding:0; border:0; margin-bottom:0}
+.report .grief .eyebrow{font-family:var(--font-body); text-transform:none; letter-spacing:0; font-size:.82rem; font-weight:650; color:var(--kelp-deep)}
+.report .grief.tired .eyebrow{color:var(--sun-text)}
+.report .grief .display{font-size:1.15rem; font-weight:700}
+.r-sub-lead{font-size:.98rem; color:var(--ink-dim); margin-top:.8rem; max-width:38rem}

@@ -49,7 +49,7 @@ async function render() {
 }
 function updateChrome() {
   const st = stageFor();
-  $('#stageCode').textContent = st ? `${st.code} — ${st.name}` : '';
+  $('#stageCode').textContent = st ? `${st.code} · ${st.name}` : '';
   const pct = Math.round(progressFor() * 100);
   $('#progressFill').style.width = pct + '%'; $('#progress').setAttribute('aria-valuenow', pct);
   $('#actionbar')?.remove();
@@ -152,8 +152,6 @@ const SCREENS = {
 
   result() {
     const r = state.result; const play = r.play; const Z = ZONES[r.zone]; const exp = r.experiment; const dplay = r.decisionPlay || play;
-    const exp_ = (title, sub, body, cls = '') => `<details class="more ${cls}"><summary><b>${title}</b>${sub ? `<span class="sum-line">${sub}</span>` : ''}<i class="caret"></i></summary><div class="more-body">${body}</div></details>`;
-    const step = (n, name, tag) => `<div class="step-head"><span class="step-n">${n}</span><span class="step-name">${name}</span>${tag ? `<span class="step-tag">${tag}</span>` : ''}</div>`;
     const est = r.estimate;
     const lensRow = k => `<div class="bar"><b>${LENSES[k].name}<small>${esc(LENSES[k].line)}</small></b><div class="track"><div class="fill" style="--c:var(--lens-${k})" data-w="${Math.round(15 + 85 * r.lensNorm[k])}"></div></div></div>`;
     const reading = `<div class="reading">${play.reading.map(b => `<div class="book"><span class="book-t">${esc(b.title)} <span class="book-a">· ${esc(b.author)}</span></span><p>${esc(b.idea)}</p></div>`).join('')}</div>`;
@@ -173,18 +171,36 @@ const SCREENS = {
     if (r.low) {
       const inv = (state.session.answers.inversion || []).map(i => INVERSION.options[i]);
       const L = r.mixed ? LOW_MIXED : LOW_FRICTION;
-      const concernsBlock = r.mixed ? `<div class="concerns"><p class="eyebrow">Answers worth a second look</p><ul class="sig">${r.concerns.map(c => `<li><span><q>${esc(unq(c.said))}</q><small>${esc(c.q)}${c.means ? ` · usually points to: ${esc(c.means.toLowerCase())}` : ''}</small></span></li>`).join('')}</ul></div>` : '';
-      return `<section class="screen result journey">
+      return `<section class="screen result report">
       ${r.grief ? griefBlock(false) : ''}${tiredBlock}
-      <div class="jstep stagger">${step('01', 'Our current read', r.mixed ? 'Worth a second look' : 'Nothing to fix yet')}
-        <h1 class="display lg edge-name">${esc(L.name)}</h1><p class="lead">${esc(L.summary)}</p>${concernsBlock}${frictionMap(r)}<p class="low-detail">${esc(L.detail)}</p></div>
-      <div class="jstep stagger">${step('02', 'Your guards', 'What would make it worse')}
-        <ul class="cons">${inv.map(o => `<li><b>${esc(o.t)}</b></li>`).join('')}</ul></div>
-      <div class="jstep stagger">${step('03', 'Watch', 'The only metric that matters here')}
-        <div class="metric"><p class="metric-t">Whether this picture holds</p><p>${esc(L.watch)}</p></div></div>
-      <div class="jstep stagger">${step('04', 'Learn', 'Close the loop')}
-        <div class="card"><div class="loop"><b>Signal</b><i>→</i>Hypothesis<i>→</i>Question<i>→</i>Evidence<i>→</i>Act<i>→</i><b>Learn</b></div>
-        <div class="result-actions"><button class="btn btn-deep" data-copy>Copy the read</button><button class="btn btn-ghost" data-go="begin">Run it again</button><span class="saved">✓ Saved on this device</span></div></div></div>
+
+      <header class="r-head">
+        <p class="r-meta">Your read · ${esc(fmtDate(Date.now()))}</p>
+        <h1 class="r-title">${esc(L.name)}</h1>
+        <p class="r-lead">${esc(L.summary)}</p>
+        <p class="r-sub-lead">${esc(L.detail)}</p>
+      </header>
+
+      ${r.mixed ? `<section class="r-block">
+        <h2 class="r-h2">Answers worth a second look</h2>
+        <ul class="r-quotes">${r.concerns.map(c => `<li><q>${esc(unq(c.said))}</q><span>${esc(c.q)}${c.means ? `. Usually points to: ${esc(c.means.toLowerCase())}` : ''}</span></li>`).join('')}</ul>
+      </section>` : ''}
+
+      <section class="r-block r-try">
+        <h2 class="r-h2">What to do next <span class="r-h2-meta">90 days</span></h2>
+        <div class="r-card">
+          <p class="r-action">Ask two or three people who report to you to run Friction</p>
+          <p class="r-target">Same questions, answered on their own. Where their reads differ from yours is where to look first.</p>
+          ${inv.length ? `<p class="r-label">What you said would make it worse</p><ul class="r-watch">${inv.map(o => `<li>${esc(o.t)}</li>`).join('')}</ul><p class="r-caption">If any of these are already happening, start there.</p>` : ''}
+          <div class="r-cta"><button class="btn btn-primary" data-remind>Put a check-in on my calendar</button><button class="btn btn-ghost" data-copy>Copy the read</button></div>
+        </div>
+      </section>
+
+      <footer class="r-foot">
+        <button class="btn btn-ghost" data-go="begin">Run it again</button>
+        <span class="saved">Saved on this device</span>
+        <p class="r-caption">The thinking behind this: <a href="https://matthew-schmidt-production.up.railway.app/#lenses" rel="noopener">The Three Lenses, the Blind Spot and the Learning Loop</a>.</p>
+      </footer>
     </section>`;
     }
 
@@ -217,74 +233,75 @@ const SCREENS = {
       <p class="dont-t">${esc(play.notDo.t)}</p>
       <p><span class="k">Because</span> ${COUNTERFACTUALS[r.top] ? esc(COUNTERFACTUALS[r.top].because.charAt(0).toUpperCase() + COUNTERFACTUALS[r.top].because.slice(1)) + '. ' : ''}${esc(play.notDo.d)}</p>`;
 
-    return `<section class="screen result journey lean">
+    // ---------- the report: answer first, one action, reasoning on request ----------
+    const firstSentence = t => (String(t).match(/^.*?[.!?](\s|$)/) || [t])[0].trim();
+    const quotes = []; const seenQ = new Set();
+    for (const x of r.supports) { const k = unq(x.said); if (!seenQ.has(k) && quotes.length < 3) { seenQ.add(k); quotes.push({ said: k, q: x.q }); } }
+    const notes = [];
+    if (r.paired) notes.push(`<b>Close behind:</b> ${esc(hypName(r.paired).toLowerCase())}. They may be one problem seen from two sides; the experiment tests the first.`);
+    for (const t of (r.notes || [])) notes.push(`<b>Worth noticing:</b> ${esc(t)}`);
+    const ready = r.grief && r.top !== 'loss';
+    const sub = (title, body) => body ? `<section class="r-sub"><h3>${title}</h3>${body}</section>` : '';
 
+    const reasoning = [
+      sub('Where the friction sits', `${frictionMap(r)}<p><b>${esc(Z.name)}.</b> ${esc(zoneSummary)}</p>${r.coherence ? `<p>No single explanation is clearly ahead. The pattern is the finding.</p>` : ''}<div class="bars">${lensRow('B')}${lensRow('S')}${lensRow('P')}</div><p class="r-caption">Each corner is a lens. The friction sits on the gap between the lens of the read and the lens of the strongest alternative.</p>`),
+      sub('How it holds together', `<ol class="r-chain">${play.chain.map(c => `<li>${esc(c)}</li>`).join('')}</ol><p class="r-label">What keeps it in place</p><ul class="r-list">${r.forces.map(f => `<li>${esc(f.t)} <span class="r-src">${f.src === 'pattern' ? 'Our inference' : 'You named this'}</span></li>`).join('')}</ul>`),
+      sub('What cuts against it', (r.contradicts.length ? `<ul class="r-quotes">${r.contradicts.slice(0, 3).map(x => `<li><q>${esc(unq(x.said))}</q><span>${esc(x.q)}</span></li>`).join('')}</ul>` : '') + (r.open && r.open.question ? `<p>We're still trying to tell <b>${esc(hypName(r.top).toLowerCase())}</b> apart from <b>${esc(hypName(r.second).toLowerCase())}</b>. The question that would settle it: ${esc(r.open.question)}</p>` : '') || ''),
+      sub('Other explanations we weighed', `<ol class="r-rivals">${r.ranked.slice(0, 5).map(h => `<li><span>${esc(hypName(h))}</span><span class="r-src">${esc(h === r.top ? 'The read' : rivalText(r.p[h], r.p[r.top]))}</span></li>`).join('')}</ol>`),
+      sub('How confident this is', `<p>${esc(r.label.d)}</p><p class="r-caption">Confidence is a label, not a number, on purpose. A dozen answers can rank explanations; they can't measure them.</p>`),
+      sub('What it may be costing', costBody),
+      sub('If the blind spot holds', `<dl class="r-dl"><dt>If it's true</dt><dd>${esc(r.blind.ifTrue || '')}</dd><dt>If it's false</dt><dd>${esc(r.blind.ifFalse || '')}</dd><dt>If it holds</dt><dd>Add this step: ${esc(r.blind.step || '')} Watch: ${esc(r.blind.watch || '')}.</dd></dl>`),
+      sub('Why not the obvious fix', dontBody),
+      r.evs ? sub('Moves we weighed', `<ol class="r-rivals">${r.evs.slice(0, 5).map(x => `<li><span>${esc((x.spec || {}).action || hypName(x.key))}</span><span class="r-src">${esc(x.effort)}</span></li>`).join('')}</ol>`) : '',
+      sub('Further reading', reading),
+    ].join('');
+
+    return `<section class="screen result report">
       ${r.grief && r.top !== 'loss' ? griefBlock(true) : ''}${tiredBlock}
-      <div class="jstep stagger">
-        ${step('01', 'The read', 'What appears to be getting in the way')}
-        <div class="friction-head">
-          <h1 class="display lg edge-name">${esc(play.constraint)}</h1>
-          <details class="conf-pill conf-${r.label.key}"><summary>${esc(r.label.label)}<i class="caret"></i></summary><div class="conf-body">${esc(r.label.d)}</div></details>
-        </div>
-        <p class="lead">${esc(play.diagnosis)}</p>
-        ${r.ownSaid && r.ownSaid.length ? `<p class="own-note"><span class="k">In your words</span>${r.ownSaid.map(x => `<q>${esc(unq(x))}</q>`).join(' ')}</p>` : ''}
-        ${r.paired ? `<p class="paired"><span class="k">Close behind</span><strong>${esc(hypName(r.paired))}</strong>. These may be one problem seen from two sides; the experiment below tests the first.</p>` : ''}
-        ${r.changedMind ? `<p class="changed"><span class="k">We changed our mind</span>Earlier in the conversation the pattern pointed to <strong>${esc(hypName(r.changedMind.from).toLowerCase())}</strong>. Your later answers moved it.</p>` : ''}
-        ${r.notes && r.notes.length ? `<div class="notice"><span class="k">Worth noticing</span>${r.notes.map(t => `<p>${esc(t)}</p>`).join('')}</div>` : ''}
-        <div class="evidence"><p class="eyebrow">What supports this</p><ul class="sig">${r.supports.slice(0, 3).map(sig).join('') || '<li><span>Only the opening signal so far.</span></li>'}</ul></div>
-        ${openBlock}
-      </div>
 
-      <div class="jstep stagger">
-        ${step('02', r.grief && r.top !== 'loss' ? 'When you\'re ready' : 'What to test', 'One experiment, ' + exp.days + ' days')}
-        ${r.decision !== r.top ? `<p class="decision-note"><span class="k">Why this experiment</span>The read is <strong>${esc(hypName(r.top).toLowerCase())}</strong>, but the highest-value move given the uncertainty is to act on <strong>${esc(hypName(r.decision).toLowerCase())}</strong>: it relieves that and part of what sits downstream of it.</p>` : ''}
-        <div class="blind compact">
-          <p class="eyebrow">First, test the blind spot · untested</p>
-          <h2 class="display md">${esc(play.blind)}</h2>
-          <p><strong>${esc(r.blind.test || '')}</strong></p>
-          ${exp_('What you\'d see, and why it matters', '', `<div class="blind-meta"><div><span class="k">If it's true</span><span>${esc(r.blind.ifTrue || '')}</span></div><div><span class="k">If it's false</span><span>${esc(r.blind.ifFalse || '')}</span></div><div><span class="k">If it holds</span><span>Add this step to the experiment: <strong>${esc(r.blind.step || '')}</strong> And watch: <strong>${esc(r.blind.watch || '')}</strong>. If it doesn't hold, the read weakens and the lighter experiment is enough.</span></div></div>`, 'on-dark')}
-        </div>
-        <div class="card move experiment">
-          <p class="k">Hypothesis</p><p class="t">${esc(exp.hypothesis)}</p>
-          ${r.spec ? `<p class="spec-line"><b>${esc(r.spec.action)}</b> · ${esc(r.spec.target)} · ${exp.days} days</p>` : ''}
-          <p class="k">Steps</p><ol class="steps">${exp.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
-          <p class="k">Watch</p><ul class="watchlist">${exp.watch.map(w => `<li>${esc(w)}</li>`).join('')}</ul>
-          <p class="watch"><strong>Run it. Come back and tell us what happened.</strong> The point is not to prove the read right. It is to find out where it is wrong.</p>
-          <div class="exp-cta"><button class="btn btn-primary" data-remind>Put a check-in on my calendar <span class="arr">→</span></button><span class="quiet">A reminder in ${exp.days} days to come back with what you saw.</span></div>
-          ${exp_('What not to do', play.notDo.t, dontBody)}
-          ${r.evs ? exp_('Interventions we weighed', 'Expected value given the uncertainty, minus effort', `<ol class="hyps">${r.evs.slice(0, 5).map(x => `<li><span class="hyp-bar"><i style="width:${Math.round(100 * Math.max(0, x.ev) / Math.max(.001, r.evs[0].ev))}%"></i></span><span class="hyp-n">${esc((x.spec || {}).action || hypName(x.key))}</span><span class="hyp-l">${esc(x.effort)}</span></li>`).join('')}</ol>`) : ''}
-          ${exp_('Further reading', 'You are not the first to run into this', reading, 'further')}
-        </div>
-      </div>
+      <header class="r-head">
+        <p class="r-meta">Your read · ${esc(fmtDate(Date.now()))}</p>
+        <h1 class="r-title">${esc(play.constraint)}</h1>
+        <p class="r-conf conf-${r.label.key}"><span class="r-dot" aria-hidden="true"></span><b>${esc(r.label.label)}.</b> ${esc(firstSentence(r.label.d))}</p>
+        <p class="r-lead">${esc(play.diagnosis)}</p>
+      </header>
 
-      <div class="jstep stagger">
-        ${step('03', 'The gap', Z.label)}
-        ${frictionMap(r)}
-        <h2 class="display md">${esc(Z.name)}</h2>
-        <p class="lead">${esc(zoneSummary)}</p>
-        ${r.coherence ? `<p class="quiet">No single explanation is clearly ahead. The strongest is <strong>${esc(hypName(r.top).toLowerCase())}</strong>, but it is mild. The pattern is the finding.</p>` : ''}
-        <div class="expanders">
-          ${exp_('Why we think this', 'The chain, what reinforces it, what cuts against it', why)}
-          ${exp_('How to read the map', 'Three lenses, and the gaps between them', `<p>Each corner is a lens. The pools show how much of the current evidence sits in each one. The friction point sits on the gap between the lens of the current read and the lens of the strongest competing explanation.</p><div class="bars">${lensRow('B')}${lensRow('S')}${lensRow('P')}</div>`)}
-          ${exp_('What it\'s costing', est ? `≈ ${est.dollars ? '$' + fmt(est.dollars) : fmt(est.hoursYear) + ' hours'} a year in leadership capacity, and what it may lead to` : 'The business consequence, and what the capacity could do instead', costBody)}
-        </div>
-      </div>
+      <section class="r-block">
+        <h2 class="r-h2">What you told us</h2>
+        <ul class="r-quotes">${quotes.map(x => `<li><q>${esc(x.said)}</q><span>${esc(x.q)}</span></li>`).join('') || '<li><span>Only the opening signal so far.</span></li>'}</ul>
+        ${notes.length ? `<ul class="r-notes">${notes.map(n => `<li>${n}</li>`).join('')}</ul>` : ''}
+      </section>
 
-      <div class="jstep stagger">
-        ${step('04', 'One question', 'For your next leadership meeting')}
-        <p class="q-inv">${esc(play.question)}</p>
-      </div>
-
-      <div class="jstep stagger">
-        ${step('05', 'Learn', 'Close the loop')}
-        <div class="card">
-          <div class="loop"><b>Signal</b><i>→</i>Hypothesis<i>→</i>Question<i>→</i>Evidence<i>→</i>Act<i>→</i><b>Learn</b></div>
-          <p class="lede" style="font-size:1rem">The goal isn't a better score. It's to find out whether the gap has narrowed. This page will remember the read and the experiment, and update both when you come back.</p>
-          <div class="rule"></div>
-          <div class="result-actions"><button class="btn btn-deep" data-copy>Copy the read</button><button class="btn btn-ghost" data-go="begin">Run it again</button><span class="saved">✓ Saved on this device</span></div>
-          <p class="quiet" style="margin-top:1.2rem">Don't work harder on the symptom. Find the constraint. The thinking behind this: <a href="https://matthew-schmidt-production.up.railway.app/#lenses" rel="noopener">The Three Lenses, the Blind Spot and the Learning Loop</a>.</p>
+      <section class="r-block r-try">
+        <h2 class="r-h2">${ready ? 'When you\'re ready' : 'What to try'} <span class="r-h2-meta">${exp.days} days</span></h2>
+        <div class="r-card">
+          ${r.spec ? `<p class="r-action">${esc(r.spec.action)}</p><p class="r-target">${esc(r.spec.target)}</p>` : `<p class="r-action">${esc(dplay.move.t)}</p>`}
+          ${r.decision !== r.top ? `<p class="r-why">The read is ${esc(hypName(r.top).toLowerCase())}, but acting on ${esc(hypName(r.decision).toLowerCase())} is the higher-value move: it relieves that and part of what sits downstream.</p>` : ''}
+          <div class="r-check"><p class="r-label">Check this first</p><p><b>${esc(play.blind)}</b> ${esc(r.blind.test || '')}</p></div>
+          <ol class="r-steps">${exp.steps.map(x => `<li>${esc(x)}</li>`).join('')}</ol>
+          <p class="r-label">Watch</p>
+          <ul class="r-watch">${exp.watch.map(w => `<li>${esc(w)}</li>`).join('')}</ul>
+          <p class="r-dont"><b>Don't</b> ${esc(play.notDo.t.replace(/^Don't\s*/i, '').replace(/^./, c => c.toLowerCase()))}</p>
+          <div class="r-cta"><button class="btn btn-primary" data-remind>Put a check-in on my calendar</button><button class="btn btn-ghost" data-copy>Copy the read</button></div>
+          <p class="r-caption">The point isn't to prove the read right. It's to find out where it's wrong. Come back in ${exp.days} days and tell Friction what happened.</p>
         </div>
-      </div>
+      </section>
+
+      <section class="r-block">
+        <h2 class="r-h2">One question for your next leadership meeting</h2>
+        <p class="r-question">${esc(play.question)}</p>
+      </section>
+
+      <details class="r-reasoning">
+        <summary><span class="r-sum-t">How we got here</span><span class="r-sum-s">The map, the chain, the alternatives, the cost and further reading</span><i class="caret" aria-hidden="true"></i></summary>
+        <div class="r-reasoning-body">${reasoning}</div>
+      </details>
+
+      <footer class="r-foot">
+        <button class="btn btn-ghost" data-go="begin">Run it again</button>
+        <span class="saved">Saved on this device</span>
+        <p class="r-caption">The thinking behind this: <a href="https://matthew-schmidt-production.up.railway.app/#lenses" rel="noopener">The Three Lenses, the Blind Spot and the Learning Loop</a>.</p>
+      </footer>
     </section>`;
   },
 
@@ -292,7 +309,7 @@ const SCREENS = {
     const last = state.history.at(-1); const res = state.learn.results; const done = last.watch.every(w => res[w]);
     const outcome = state.learn.outcome;
     return `<section class="screen stagger">
-      <p class="eyebrow">07 — Learning</p>
+      <p class="eyebrow">07 · Learning</p>
       <h1 class="display lg">What happened?</h1>
       <div class="card recap" style="margin-top:1.4rem">
         <div class="row"><span class="k">The read · ${esc(fmtDate(last.at))}</span><span class="v">${esc(last.constraint)}</span></div>
@@ -407,13 +424,13 @@ function reveal(skip) {
 }
 // A calendar file for the day the experiment ends, so the learning loop has a date on it.
 function remind() {
-  const r = state.result; if (!r || r.low) return;
-  const days = r.experiment.days, when = new Date(Date.now() + days * 864e5);
+  const r = state.result; if (!r) return;
+  const days = r.low ? 90 : r.experiment.days, when = new Date(Date.now() + days * 864e5);
   const d = when.toISOString().slice(0, 10).replace(/-/g, ''), stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
   const clean = t => String(t).replace(/[\\,;]/g, m => '\\' + m).replace(/\n/g, '\\n');
   const url = location.origin + location.pathname;
-  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Friction//EN', 'BEGIN:VEVENT', `UID:${stamp}-friction@friction`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${d}`, `SUMMARY:${clean('Friction check-in: ' + (r.decisionPlay || r.play).move.t.replace(/\.$/, ''))}`,
-    `DESCRIPTION:${clean('What did you see? Watch: ' + r.experiment.watch.join('; ') + '. Open Friction to record it: ' + url)}`, `URL:${url}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Friction//EN', 'BEGIN:VEVENT', `UID:${stamp}-friction@friction`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${d}`, `SUMMARY:${clean(r.low ? 'Friction check-in: run it again, with two or three of your reports' : 'Friction check-in: ' + (r.decisionPlay || r.play).move.t.replace(/\.$/, ''))}`,
+    `DESCRIPTION:${clean(r.low ? (r.mixed ? LOW_MIXED : LOW_FRICTION).watch + ' ' + url : 'What did you see? Watch: ' + r.experiment.watch.join('; ') + '. Open Friction to record it: ' + url)}`, `URL:${url}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = 'friction-check-in.ics';
   document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
 }
@@ -430,17 +447,17 @@ function closeLoop() {
 }
 function summaryText() {
   const r = state.result;
-  if (r.low) { const L = r.mixed ? LOW_MIXED : LOW_FRICTION; return ['FRICTION — CURRENT READ', '', L.name, L.summary, ...(r.concerns || []).map(c => `  · "${c.said}" (${c.q}${c.means ? `; usually points to: ${c.means.toLowerCase()}` : ''})`), '', L.detail, '', location.origin + location.pathname].join('\n'); }
+  if (r.low) { const L = r.mixed ? LOW_MIXED : LOW_FRICTION; return ['FRICTION: CURRENT READ', '', L.name, L.summary, ...(r.concerns || []).map(c => `  · "${c.said}" (${c.q}${c.means ? `; usually points to: ${c.means.toLowerCase()}` : ''})`), '', L.detail, '', 'NEXT: ' + L.watch, '', location.origin + location.pathname].join('\n'); }
   const p = r.play, e = r.experiment, est = r.estimate;
   return [
-    'FRICTION — CURRENT READ', '',
+    'FRICTION: CURRENT READ', '',
     `${p.constraint} (${r.label.label})`, p.diagnosis, '',
-    'CRITIC STATE', `Primary: ${r.critic.primary.name} — ${r.critic.primary.confidence}`, ...r.critic.supporting.map(x => `  + ${x}`), `Competing: ${r.critic.competing.name} — ${r.critic.competing.confidence}`, ...r.critic.competing.evidence.map(x => `  ~ ${x}`), ...r.critic.disconfirming.map(x => `  - ${x}`), `Next test: ${r.critic.nextTest.t}`, '',
-    'What supports this (your answers):', ...r.supports.slice(0, 5).map(x => `  · "${x.said}" — ${x.q}`),
-    r.contradicts.length ? 'What cuts against it:\n' + r.contradicts.slice(0, 3).map(x => `  · "${x.said}" — ${x.q}`).join('\n') : '',
+    'CRITIC STATE', `Primary: ${r.critic.primary.name} (${r.critic.primary.confidence})`, ...r.critic.supporting.map(x => `  + ${x}`), `Competing: ${r.critic.competing.name} (${r.critic.competing.confidence})`, ...r.critic.competing.evidence.map(x => `  ~ ${x}`), ...r.critic.disconfirming.map(x => `  - ${x}`), `Next test: ${r.critic.nextTest.t}`, '',
+    'What supports this (your answers):', ...r.supports.slice(0, 5).map(x => `  · "${x.said}" (${x.q})`),
+    r.contradicts.length ? 'What cuts against it:\n' + r.contradicts.slice(0, 3).map(x => `  · "${x.said}" (${x.q})`).join('\n') : '',
     r.notes && r.notes.length ? 'Worth noticing: ' + r.notes.join(' ') : '',
     r.open ? `Still to understand: is it ${hypName(r.top).toLowerCase()}, or ${hypName(r.second).toLowerCase()}?${r.open.question ? ' Ask: ' + r.open.question : ''}` : '', '',
-    `WHERE IT SITS: ${ZONES[r.zone].name} — ${ZONES[r.zone].label}`, '',
+    `WHERE IT SITS: ${ZONES[r.zone].name}, ${ZONES[r.zone].label}`, '',
     'WHAT IT\'S COSTING: ' + p.consequences.join(', '), est ? `Illustrative estimate: ${fmt(est.hoursYear)} hours a year${est.dollars ? ` (≈ $${fmt(est.dollars)})` : ''}.` : '', r.econ ? `${r.econ.t} (${r.econ.conf} confidence)` : '', '',
     `POSSIBLE BLIND SPOT (untested): ${p.blind}`, `Test: ${r.blind.test}`, `If true: ${r.blind.ifTrue}`, `If false: ${r.blind.ifFalse}`, `If it holds, add to the experiment: ${r.blind.step} Watch: ${r.blind.watch}`, '', `WHAT NOT TO DO: ${p.notDo.t} ${p.notDo.d}`, '',
     `EXPERIMENT (${e.days} days): ${e.hypothesis}`, ...e.steps.map((s, i) => `  ${i + 1}. ${s}`), 'Watch: ' + e.watch.join('; '), '',

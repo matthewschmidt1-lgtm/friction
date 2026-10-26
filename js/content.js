@@ -897,7 +897,7 @@ export const PROFILE_ROWS = [
 export const LOW_FRICTION = {
   name: 'No clear constraint',
   summary: 'Your answers didn\'t point to a constraint.',
-  detail: 'That doesn\'t rule one out. It means nothing you described rose above a weak signal, and this is a reading of your own answers. The most useful next step is to ask two or three people who report to you the same questions and see whether their answers match yours.',
+  detail: 'That doesn\'t rule one out. It means nothing you described rose above a weak signal, and this is a reading of your own answers.',
   watch: 'Run Friction again in a quarter, and ask someone who reports to you to run it too. If both pictures match, you can trust it more.',
 };
 
@@ -906,7 +906,7 @@ export const LOW_FRICTION = {
 export const LOW_MIXED = {
   name: 'No single constraint stood out',
   summary: 'But some of your answers usually mean something, and they are worth a second look before you conclude nothing is wrong.',
-  detail: 'Leaders tend to describe their organizations more favourably than the people who work in them do. That isn\'t a flaw in you; it is where you sit. The most useful next step is to ask two or three people who report to you the same questions and compare.',
+  detail: 'Leaders tend to describe their organizations more favourably than the people who work in them do. That isn\'t a flaw in you; it is where you sit.',
   watch: 'Ask two or three people who report to you to run Friction. Where their answers differ from yours is where to look first.',
 };
 // How answers are weighed. Leaders over-report health, so reassuring answers about general impressions count for less than

@@ -16,7 +16,11 @@ https://friction-production.up.railway.app. `package.json` exists only for Railw
 - One experiment, three things to watch. The point is to find where the read is wrong, not to
   prove it right.
 - Make the important thing obvious; hide complexity until it's needed; leave things out. The
-  diagnosis page is five sections; everything else is behind an expander.
+  diagnosis page is a short report (`.report` in the CSS): the finding with a one-line
+  confidence, "What you told us" (up to three quoted answers), "What to try" (the one card, with
+  the calendar check-in), one question, then a single "How we got here" disclosure holding the
+  map, chain, alternatives, cost, blind-spot detail and reading. One card, hairline dividers,
+  sentence-case headings. Don't add sections; add to the disclosure. No em dashes in any copy.
 - One typeface (Manrope), light theme, blues, tans, oranges, greens. No Fraunces anywhere.
   Sentence-length text is never in a display face.
 - No AI filler. Specific beats clever. Don't name the books to sell the read; name them under
