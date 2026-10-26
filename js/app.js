@@ -154,7 +154,7 @@ const SCREENS = {
     const r = state.result; const play = r.play; const Z = ZONES[r.zone]; const exp = r.experiment; const dplay = r.decisionPlay || play;
     const est = r.estimate;
     const lensRow = k => `<div class="bar"><b>${LENSES[k].name}<small>${esc(LENSES[k].line)}</small></b><div class="track"><div class="fill" style="--c:var(--lens-${k})" data-w="${Math.round(15 + 85 * r.lensNorm[k])}"></div></div></div>`;
-    const reading = `<div class="reading">${play.reading.map(b => `<div class="book"><span class="book-t">${esc(b.title)} <span class="book-a">· ${esc(b.author)}</span></span><p>${esc(b.idea)}</p></div>`).join('')}</div>`;
+    const reading = `<div class="reading">${play.reading.map(b => `<div class="book"><span class="book-t">${esc(b.title)}</span><span class="book-a">${esc(b.author)}</span><p>${esc(b.idea)}</p></div>`).join('')}</div>`;
 
     const griefBlock = withExperiment => `<div class="jstep stagger"><div class="grief">
         <p class="eyebrow">Before anything structural</p>

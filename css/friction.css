@@ -709,7 +709,13 @@ details.more > summary{min-height:44px}
 .r-dl dt{font-weight:650; color:var(--ink-dim)} .r-dl dd{margin:0}
 @media (max-width:480px){ .r-dl{grid-template-columns:1fr} .r-dl dd{margin-bottom:.4rem} }
 .r-sub .visible-cost, .r-sub .downstream, .r-sub .econ, .r-sub .leverage{margin-top:0}
-.r-sub .reading .book{background:transparent; padding:0; border:0} .r-sub .reading .book + .book{margin-top:.9rem}
+/* further reading: a plain list, one book per row, matching the rest of the report */
+.r-sub .reading{display:block; margin:0}
+.r-sub .reading .book{display:block; background:none; border:0; border-radius:0; box-shadow:none; padding:1rem 0; border-top:1px solid var(--r-line)}
+.r-sub .reading .book:first-child{border-top:0; padding-top:0}
+.r-sub .reading .book-t{display:block; font-size:1rem; font-weight:650; line-height:1.4; color:var(--deep)}
+.r-sub .reading .book-a{display:block; font-size:.85rem; font-weight:500; color:var(--ink-faint); margin-top:.1rem}
+.r-sub .reading .book p{font-size:.95rem; line-height:1.6; color:var(--ink-dim); margin-top:.5rem; max-width:36rem}
 
 .r-foot{display:flex; flex-wrap:wrap; align-items:center; gap:.6rem 1rem}
 .r-foot .r-caption{flex:1 1 100%; margin-top:.4rem}
